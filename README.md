@@ -91,9 +91,27 @@ appels à un compte.
 npx ng build       # sortie : dist/sereno/browser
 ```
 
-Sur Cloudflare Pages : *build command* `npx ng build`, *output directory*
-`dist/sereno/browser`. Le fichier `public/_redirects` gère le fallback SPA, et
-les variables `NG_APP_*` se définissent dans les settings du projet Pages.
+Le déploiement est automatisé par `.github/workflows/deploy.yml` : chaque push
+sur `main` déclenche deux jobs GitHub Actions — `build` (install, `ng build`
+avec les variables `NG_APP_*`, upload de l'artefact) puis `deploy` (téléchargement
+de l'artefact, publication sur Cloudflare Pages via `cloudflare/pages-action`).
+
+Secrets à renseigner une fois dans *Settings → Secrets and variables → Actions*
+du repo GitHub :
+
+| Secret | Où le trouver |
+|---|---|
+| `CLOUDFLARE_API_TOKEN` | [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) — template *Edit Cloudflare Workers* ou permission `Cloudflare Pages: Edit` |
+| `CLOUDFLARE_ACCOUNT_ID` | Dashboard Cloudflare → colonne de droite de n'importe quelle page du compte |
+| `NG_APP_SUPABASE_URL` | Même valeur que dans `.env` |
+| `NG_APP_SUPABASE_PUBLISHABLE_KEY` | Même valeur que dans `.env` |
+
+Le projet Cloudflare Pages (`projectName: sereno` dans le workflow) doit exister
+avant le premier déploiement — créable en une fois depuis le dashboard
+(*Workers & Pages → Create → Pages → Direct Upload*, un upload vide suffit) ou
+via `npx wrangler pages project create sereno --production-branch=main`.
+
+Le fichier `public/_redirects` gère le fallback SPA une fois déployé.
 
 Le service worker n'est actif qu'en production (`ng build`). Pour vérifier le
 comportement PWA en local :
