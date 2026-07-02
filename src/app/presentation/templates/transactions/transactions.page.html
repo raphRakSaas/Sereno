@@ -1,0 +1,43 @@
+<div class="page">
+  <div class="head">
+    <h1 class="page-title">Activité</h1>
+    <app-month-switcher [month]="month()" (monthChange)="month.set($event)" />
+  </div>
+
+  @if (transactions.error()) {
+    <p class="notice">{{ transactions.error() }}</p>
+  }
+
+  @if (monthTransactions().length > 0) {
+    <div class="totals card">
+      <span class="in">
+        <span class="k">Entrées</span>
+        <app-amount [value]="monthIncome()" size="lg" />
+      </span>
+      <span class="rule"></span>
+      <span class="out">
+        <span class="k">Sorties</span>
+        <app-amount [value]="monthExpense()" size="lg" />
+      </span>
+    </div>
+
+    @for (group of groups(); track group.date) {
+      <section>
+        <p class="day">{{ group.label }}</p>
+        <div class="card list-card">
+          @for (t of group.items; track t.id) {
+            <app-transaction-list-item [transaction]="t" [category]="categories.byId().get(t.categoryId)" />
+          }
+        </div>
+      </section>
+    }
+  } @else {
+    <div class="card">
+      <div class="empty">
+        <h3>Un mois silencieux</h3>
+        <p>Aucune transaction en {{ month() + 'T00:00:00' | date: 'MMMM' }}. C’est calme, et c’est très bien.</p>
+        <a routerLink="/transactions/nouvelle" class="btn btn-primary">Ajouter une transaction</a>
+      </div>
+    </div>
+  }
+</div>

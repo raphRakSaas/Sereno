@@ -1,0 +1,241 @@
+/* Sereno — feuille de style globale.
+   Aplats nets, pas de dégradés, pas d'ombres portées : les surfaces se
+   distinguent par la couleur et des filets 1px. Voir docs/DESIGN.md. */
+
+@use '@fontsource-variable/fraunces' as fraunces;
+@use '@fontsource/ibm-plex-sans/400.css' as plex400;
+@use '@fontsource/ibm-plex-sans/500.css' as plex500;
+@use '@fontsource/ibm-plex-sans/600.css' as plex600;
+
+:root {
+  /* Encres */
+  --ink: #1f2a24;
+  --ink-soft: #5a665e;
+  --ink-faint: #8b948c;
+
+  /* Surfaces */
+  --paper: #ece9df;
+  --surface: #fbfaf6;
+  --sage-pale: #dce3da;
+
+  /* Accents */
+  --sage: #3f5548;
+  --sage-deep: #2e4036;
+  --mist: #8fa9b8;
+  --mist-deep: #5f7e93;
+  --sand: #c2b28f;
+  --amber: #a97c2f;
+  --amber-pale: #f0e6d2;
+
+  /* Structure */
+  --line: #d8d4c6;
+  --radius: 10px;
+
+  /* Typo */
+  --font-display: 'Fraunces Variable', georgia, serif;
+  --font-text: 'IBM Plex Sans', system-ui, sans-serif;
+
+  /* Espacements */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Zones sûres PWA */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 560;
+  font-variation-settings: 'opsz' 40;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-text);
+}
+
+input,
+select,
+textarea {
+  font-family: var(--font-text);
+  font-size: 16px; /* évite le zoom iOS au focus */
+}
+
+a {
+  color: var(--sage);
+}
+
+/* Montants : chiffres tabulaires, toujours */
+.amount {
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus clavier visible partout */
+:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- Vocabulaire partagé des pages ---- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: calc(var(--space-5) + var(--safe-top)) var(--space-4) var(--space-6);
+}
+
+.page-title {
+  font-size: 26px;
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 13px 18px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--sage);
+  color: var(--surface);
+}
+
+.btn-primary:active {
+  background: var(--sage-deep);
+}
+
+.btn-primary:disabled {
+  background: var(--line);
+  color: var(--ink-faint);
+  cursor: default;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--sage);
+  border-color: var(--line);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field > label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--sage);
+}
+
+/* Bandeau d'information calme (erreurs comprises : on explique, on n'alarme pas) */
+.notice {
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--amber-pale);
+  color: var(--ink);
+  font-size: 14px;
+  border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+}
+
+/* État vide : une invitation, pas un vide */
+.empty {
+  padding: var(--space-6) var(--space-5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.empty h3 {
+  font-size: 21px;
+}
+
+.empty p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 15px;
+  max-width: 30ch;
+}

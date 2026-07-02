@@ -1,0 +1,106 @@
+/* Le hero est un aplat sauge pâle, net, sans dégradé ni ombre : le solde y est
+   traité comme un gros titre éditorial. */
+.hero {
+  background: var(--sage-pale);
+  padding: calc(var(--space-4) + var(--safe-top)) var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.brand-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-4);
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--sage-deep);
+}
+
+.date {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.date::first-letter {
+  text-transform: uppercase;
+}
+
+.weather {
+  margin: 4px 0 0;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  max-width: 34ch;
+}
+
+.flows {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: var(--space-3);
+}
+
+.flow {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.flow.in {
+  color: var(--mist-deep);
+}
+
+.flow.out {
+  color: var(--ink);
+}
+
+.flow-label {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-3);
+}
+
+.section-head h2 {
+  font-size: 20px;
+}
+
+.caption {
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-transform: capitalize;
+}
+
+.see-all {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sage);
+  text-decoration: none;
+}
+
+.strata-card {
+  padding: var(--space-4);
+}
+
+.list-card {
+  padding: 4px 10px;
+}
+
+.list-card app-transaction-list-item + app-transaction-list-item {
+  display: block;
+  border-top: 1px solid var(--line);
+}

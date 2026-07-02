@@ -1,0 +1,107 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.icon-btn.danger {
+  color: var(--amber);
+  width: auto;
+  min-width: 40px;
+  padding: 0 10px;
+}
+
+.confirm-label {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.spacer {
+  width: 40px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Le montant d'abord : c'est le geste principal, il a droit au gros titre. */
+.amount-field {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.amount {
+  width: 60%;
+  max-width: 240px;
+  border: none;
+  background: none;
+  text-align: right;
+  font-size: 52px;
+  font-weight: 600;
+  color: var(--ink);
+  font-feature-settings: 'tnum';
+  padding: 0;
+}
+
+.amount:focus {
+  outline: none;
+}
+
+.amount::placeholder {
+  color: var(--line);
+}
+
+.euro {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.seg button {
+  padding: 11px 0;
+  border: none;
+  background: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.seg button.on {
+  background: var(--sage);
+  color: var(--surface);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--ink-faint);
+}

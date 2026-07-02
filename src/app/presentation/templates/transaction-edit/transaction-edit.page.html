@@ -1,0 +1,105 @@
+<div class="page">
+  <div class="head">
+    <button type="button" class="icon-btn" (click)="close()" aria-label="Fermer">
+      <app-icon name="close" />
+    </button>
+    <h1 class="page-title">{{ editedId() ? 'Modifier' : 'Ajouter' }}</h1>
+    @if (editedId()) {
+      <button type="button" class="icon-btn danger" (click)="remove()">
+        @if (confirmingDelete()) {
+          <span class="confirm-label">Confirmer ?</span>
+        } @else {
+          <app-icon name="trash" />
+        }
+      </button>
+    } @else {
+      <span class="spacer"></span>
+    }
+  </div>
+
+  <form (ngSubmit)="save()">
+    <div class="seg" role="radiogroup" aria-label="Type">
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="type() === 'expense'"
+        [class.on]="type() === 'expense'"
+        (click)="setType('expense')"
+      >
+        Dépense
+      </button>
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="type() === 'income'"
+        [class.on]="type() === 'income'"
+        (click)="setType('income')"
+      >
+        Revenu
+      </button>
+    </div>
+
+    <label class="amount-field" for="amount">
+      <input
+        id="amount"
+        name="amount"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        placeholder="0"
+        [ngModel]="amountText()"
+        (ngModelChange)="amountText.set($event)"
+        class="amount"
+        autofocus
+      />
+      <span class="euro">€</span>
+    </label>
+
+    @if (hint()) {
+      <p class="notice">{{ hint() }}</p>
+    }
+
+    <div class="field">
+      <label>Catégorie</label>
+      <app-category-picker
+        [categories]="pickableCategories()"
+        [selectedId]="categoryId()"
+        (select)="categoryId.set($event)"
+      />
+    </div>
+
+    @if (accounts.items().length > 1) {
+      <div class="field">
+        <label for="account">Compte</label>
+        <select id="account" name="account" class="input" [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
+          @for (account of accounts.items(); track account.id) {
+            <option [value]="account.id">{{ account.name }}</option>
+          }
+        </select>
+      </div>
+    }
+
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="date.set($event)" />
+    </div>
+
+    <div class="field">
+      <label for="note">Note <span class="optional">— facultatif</span></label>
+      <input
+        id="note"
+        name="note"
+        type="text"
+        class="input"
+        placeholder="Marché du samedi…"
+        maxlength="120"
+        [ngModel]="note()"
+        (ngModelChange)="note.set($event)"
+      />
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">
+      {{ editedId() ? 'Enregistrer' : 'Ajouter' }}
+    </button>
+  </form>
+</div>

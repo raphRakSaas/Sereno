@@ -1,0 +1,12 @@
+<div class="frame">
+  <main>
+    <router-outlet />
+  </main>
+  <app-bottom-nav />
+</div>
+
+<div class="toasts" aria-live="polite">
+  @for (toast of toasts.toasts(); track toast.id) {
+    <div class="toast" [class.attention]="toast.tone === 'attention'">{{ toast.message }}</div>
+  }
+</div>
