@@ -129,3 +129,20 @@
   cursor: pointer;
   padding: 2px 4px;
 }
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 1000px;
+  }
+
+  .budget-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .form {
+    max-width: 560px;
+  }
+}

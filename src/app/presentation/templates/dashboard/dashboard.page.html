@@ -1,69 +1,75 @@
-<header class="hero">
-  <div class="brand-row">
-    <span class="brand">Sereno</span>
-    <span class="date">{{ today | date: 'EEEE d MMMM' }}</span>
-  </div>
-  <p class="eyebrow">Solde total</p>
-  <app-amount [value]="totalBalance()" size="hero" />
-  @if (weather()) {
-    <p class="weather">{{ weather() }}</p>
-  }
-  <div class="flows">
-    <span class="flow in">
-      <app-icon name="arrow-in" [size]="16" />
-      <app-amount [value]="monthIncome()" size="sm" />
-    </span>
-    <span class="flow out">
-      <app-icon name="arrow-out" [size]="16" />
-      <app-amount [value]="monthExpense()" size="sm" />
-    </span>
-    <span class="flow-label">ce mois-ci</span>
-  </div>
-</header>
-
-<div class="page">
-  @if (transactions.error()) {
-    <p class="notice">{{ transactions.error() }}</p>
-  }
-
-  <section>
-    <div class="section-head">
-      <h2>Où va ton argent</h2>
-      <span class="caption">{{ month + 'T00:00:00' | date: 'MMMM' }}</span>
+<div class="dash">
+  <header class="hero">
+    <div class="brand-row">
+      <span class="brand">Sereno</span>
+      <span class="date">{{ today | date: 'EEEE d MMMM' }}</span>
     </div>
-    <div class="card strata-card">
-      @if (slices().length > 0) {
-        <app-strata-chart [slices]="slices()" [caption]="(month + 'T00:00:00' | date: 'MMMM yyyy') ?? ''" />
-      } @else {
-        <div class="empty">
-          <h3>Couche après couche</h3>
-          <p>Tes dépenses du mois se déposeront ici, les plus importantes en premier.</p>
-          <a routerLink="/transactions/nouvelle" class="btn btn-primary">Noter une dépense</a>
-        </div>
-      }
-    </div>
-  </section>
-
-  <section>
-    <div class="section-head">
-      <h2>Activité récente</h2>
-      @if (recent().length > 0) {
-        <a routerLink="/transactions" class="see-all">Tout voir</a>
-      }
-    </div>
-    @if (recent().length > 0) {
-      <div class="card list-card">
-        @for (t of recent(); track t.id) {
-          <app-transaction-list-item [transaction]="t" [category]="categories.byId().get(t.categoryId)" />
+    <div class="hero-main">
+      <div class="hero-balance">
+        <p class="eyebrow">Solde total</p>
+        <app-amount [value]="totalBalance()" size="hero" />
+        @if (weather()) {
+          <p class="weather">{{ weather() }}</p>
         }
       </div>
-    } @else {
-      <div class="card">
-        <div class="empty">
-          <h3>Rien pour l’instant</h3>
-          <p>Deux gestes suffisent : le montant, la catégorie. Sereno s’occupe du reste.</p>
-        </div>
+      <div class="flows">
+        <span class="flow in">
+          <app-icon name="arrow-in" [size]="16" />
+          <app-amount [value]="monthIncome()" size="sm" />
+        </span>
+        <span class="flow out">
+          <app-icon name="arrow-out" [size]="16" />
+          <app-amount [value]="monthExpense()" size="sm" />
+        </span>
+        <span class="flow-label">ce mois-ci</span>
       </div>
+    </div>
+  </header>
+
+  <div class="dash-grid">
+    @if (transactions.error()) {
+      <p class="notice full">{{ transactions.error() }}</p>
     }
-  </section>
+
+    <section class="col-strata">
+      <div class="section-head">
+        <h2>Où va ton argent</h2>
+        <span class="caption">{{ month + 'T00:00:00' | date: 'MMMM' }}</span>
+      </div>
+      <div class="card strata-card">
+        @if (slices().length > 0) {
+          <app-strata-chart [slices]="slices()" [caption]="(month + 'T00:00:00' | date: 'MMMM yyyy') ?? ''" />
+        } @else {
+          <div class="empty">
+            <h3>Couche après couche</h3>
+            <p>Tes dépenses du mois se déposeront ici, les plus importantes en premier.</p>
+            <a routerLink="/transactions/nouvelle" class="btn btn-primary">Noter une dépense</a>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="col-recent">
+      <div class="section-head">
+        <h2>Activité récente</h2>
+        @if (recent().length > 0) {
+          <a routerLink="/transactions" class="see-all">Tout voir</a>
+        }
+      </div>
+      @if (recent().length > 0) {
+        <div class="card list-card">
+          @for (t of recent(); track t.id) {
+            <app-transaction-list-item [transaction]="t" [category]="categories.byId().get(t.categoryId)" />
+          }
+        </div>
+      } @else {
+        <div class="card">
+          <div class="empty">
+            <h3>Rien pour l’instant</h3>
+            <p>Deux gestes suffisent : le montant, la catégorie. Sereno s’occupe du reste.</p>
+          </div>
+        </div>
+      }
+    </section>
+  </div>
 </div>

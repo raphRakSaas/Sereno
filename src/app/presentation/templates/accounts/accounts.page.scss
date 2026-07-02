@@ -82,3 +82,9 @@
   padding: 6px;
   text-align: center;
 }
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 860px;
+  }
+}

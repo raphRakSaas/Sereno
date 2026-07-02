@@ -95,3 +95,9 @@ form {
   background: var(--sage-pale);
   color: var(--sage-deep);
 }
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 560px;
+  }
+}

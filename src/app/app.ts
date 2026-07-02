@@ -7,10 +7,11 @@ import { CategoriesStore } from './application/stores/categories.store';
 import { TransactionsStore } from './application/stores/transactions.store';
 import { BottomNavComponent } from './presentation/organisms/bottom-nav/bottom-nav.component';
 import { ConversionModalComponent } from './presentation/organisms/conversion-modal/conversion-modal.component';
+import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BottomNavComponent, ConversionModalComponent],
+  imports: [RouterOutlet, BottomNavComponent, ConversionModalComponent, SideNavComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

@@ -1,18 +1,33 @@
-/* Cadre mobile-first : l'app occupe tout l'écran ; sur desktop elle reste une
-   colonne de téléphone centrée — Sereno est pensée pour la poche, pas le bureau. */
+/* Deux postures, un seul vocabulaire :
+   - mobile (< 768px) : colonne plein écran + navigation basse ;
+   - desktop (≥ 768px) : rail de navigation à gauche + zone de contenu scrollable. */
 .frame {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
-  max-width: 480px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0;
   background: var(--paper);
 }
 
-@media (min-width: 481px) {
+.side-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
   .frame {
-    border-left: 1px solid var(--line);
-    border-right: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr);
+    max-width: none;
+    min-height: 100dvh;
+  }
+
+  .side-nav {
+    display: block;
+  }
+
+  .bottom-nav {
+    display: none;
   }
 }
 
@@ -20,9 +35,18 @@ main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
-app-bottom-nav {
+@media (min-width: 768px) {
+  main {
+    overflow-y: auto;
+    min-height: 100dvh;
+    background: var(--paper);
+  }
+}
+
+.bottom-nav {
   position: sticky;
   bottom: 0;
   z-index: 10;
@@ -39,6 +63,13 @@ app-bottom-nav {
   z-index: 50;
   width: max-content;
   max-width: min(92vw, 440px);
+}
+
+@media (min-width: 768px) {
+  .toasts {
+    bottom: 32px;
+    left: calc(50% + 130px);
+  }
 }
 
 .toast {

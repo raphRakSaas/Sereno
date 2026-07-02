@@ -126,6 +126,11 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     .links app-icon:last-child {
       color: var(--ink-faint);
     }
+    @media (min-width: 768px) {
+      .page {
+        max-width: 760px;
+      }
+    }
   `,
 })
 export class SettingsPage {

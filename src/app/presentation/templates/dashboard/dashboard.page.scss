@@ -1,5 +1,6 @@
 /* Le hero est un aplat sauge pâle, net, sans dégradé ni ombre : le solde y est
-   traité comme un gros titre éditorial. */
+   traité comme un gros titre éditorial. Plein bord sur mobile, panneau large
+   arrondi sur desktop. */
 .hero {
   background: var(--sage-pale);
   padding: calc(var(--space-4) + var(--safe-top)) var(--space-4) var(--space-5);
@@ -30,6 +31,18 @@
 
 .date::first-letter {
   text-transform: uppercase;
+}
+
+.hero-main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hero-balance {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .weather {
@@ -103,4 +116,100 @@
 .list-card app-transaction-list-item + app-transaction-list-item {
   display: block;
   border-top: 1px solid var(--line);
+}
+
+.dash-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: 0 var(--space-4) var(--space-6);
+}
+
+/* ---- Desktop (≥ 768px) : shell dashboard, hero + grille 2 colonnes ---- */
+@media (min-width: 768px) {
+  .dash {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 48px 64px;
+    gap: var(--space-6);
+  }
+
+  .hero {
+    width: 100%;
+    margin: 0;
+    border-radius: 16px;
+    padding: var(--space-6) var(--space-6) var(--space-5);
+  }
+
+  /* La sidebar porte déjà la marque : le hero garde seulement la date. */
+  .brand {
+    display: none;
+  }
+
+  .brand-row {
+    justify-content: flex-end;
+    margin-bottom: var(--space-2);
+  }
+
+  .date {
+    font-size: 14px;
+  }
+
+  .hero-main {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .weather {
+    max-width: 48ch;
+    font-size: 15px;
+  }
+
+  .flows {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-top: 0;
+    flex-shrink: 0;
+  }
+
+  .flow {
+    padding: 7px 14px;
+    font-size: 15px;
+  }
+
+  .dash-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+    padding: 0;
+    max-width: none;
+    margin: 0;
+  }
+
+  .dash-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .section-head h2 {
+    font-size: 22px;
+  }
+
+  .strata-card {
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .col-recent .list-card {
+    max-height: 480px;
+    overflow-y: auto;
+  }
 }

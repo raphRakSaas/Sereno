@@ -115,3 +115,9 @@
   cursor: pointer;
   padding: 6px;
 }
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 860px;
+  }
+}

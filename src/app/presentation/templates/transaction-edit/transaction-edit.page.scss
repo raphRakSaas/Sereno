@@ -105,3 +105,10 @@ form {
   font-weight: 400;
   color: var(--ink-faint);
 }
+
+/* Desktop : le geste rapide reste une fiche étroite, centrée. */
+@media (min-width: 768px) {
+  .page {
+    max-width: 620px;
+  }
+}
