@@ -9,7 +9,7 @@
 -- ============================================================
 
 create extension if not exists pg_cron;
-create extension if not exists pg_net;
+create extension if not exists pg_net with schema extensions;
 
 -- Rejouable : on déprogramme l'éventuel job existant avant de recréer.
 do $$

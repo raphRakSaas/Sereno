@@ -3,11 +3,13 @@ import localeFr from '@angular/common/locales/fr';
 import {
   ApplicationConfig,
   inject,
+  isDevMode,
   LOCALE_ID,
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
+import { provideServiceWorker } from '@angular/service-worker';
 
 import { AuthService } from './application/services/auth.service';
 import { routes } from './app.routes';
@@ -31,6 +33,10 @@ export const appConfig: ApplicationConfig = {
         await dexie.ensureSeeded();
         await auth.init();
       })();
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
 };

@@ -39,10 +39,17 @@ Rayon : 10px (cartes), 999px uniquement pour les puces de catégorie.
 - **Texte & chiffres** : IBM Plex Sans 400/500/600. Montants toujours en
   `font-feature-settings: "tnum"`.
 
-## Couleurs de catégories (tons minéraux, désaturés)
+## Couleurs de catégories (données)
 
-`#5C7A6B` `#7C9885` `#5F7E93` `#8FA9B8` `#A89A77` `#C2B28F` `#7E7F6B` `#96837B`
-`#6E6A8A` `#4E5D5A`
+Palette **validée par calcul** (validateur dataviz : bande de luminosité, plancher
+de chroma OKLCH ≥ 0.10, séparation daltonisme toutes-paires ≥ 8 ΔE avec labels
+directs obligatoires, contraste ≥ 3:1 sur `--surface`) :
+
+`#1E6D9C` `#3694BC` `#196E44` `#018472` `#7D8F3A` `#A07417` `#6D9755` `#7B6CBF`
+`#8D4826` `#A85769` `#945818`
+
+Un cran plus affirmées que les accents UI — c'est voulu : les strates sont
+l'élément signature, le reste de l'interface reste sourd autour.
 
 ## Motion
 
