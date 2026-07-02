@@ -29,3 +29,4 @@ export function provideInfrastructure(): Provider[] {
     { provide: AUTH_GATEWAY, useExisting: SupabaseAuthGateway },
   ];
 }
+  

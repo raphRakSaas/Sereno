@@ -1,0 +1,131 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.lock {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--sage-pale);
+  color: var(--sage-deep);
+}
+
+.form {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.form h2 {
+  font-size: 19px;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.actions .btn {
+  flex: 1;
+}
+
+.budget-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.budget {
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.budget-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+}
+
+.badge {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+}
+
+.name {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.limit {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+/* Jauge plate : sauge tant que ça va, ambre une fois la limite passée.
+   Jamais de rouge. */
+.track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--sage);
+  transition: width 0.3s ease;
+}
+
+.budget.over .fill {
+  background: var(--amber);
+}
+
+.status {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.budget.over .status {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.remove {
+  align-self: flex-end;
+  border: none;
+  background: none;
+  color: var(--ink-faint);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 4px;
+}

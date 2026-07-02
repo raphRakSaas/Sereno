@@ -1,0 +1,82 @@
+<div class="page">
+  <div class="head">
+    <h1 class="page-title">Comptes</h1>
+    <button type="button" class="btn btn-ghost" (click)="openCreate()">
+      <app-icon name="plus" [size]="18" />
+      Ajouter
+    </button>
+  </div>
+
+  @if (accounts.error()) {
+    <p class="notice">{{ accounts.error() }}</p>
+  }
+
+  <div class="card list">
+    @for (account of accounts.items(); track account.id) {
+      <button type="button" class="row" (click)="openEdit(account)">
+        <span class="badge">
+          <app-icon [name]="typeIcons[account.type]" [size]="19" />
+        </span>
+        <span class="text">
+          <span class="name">{{ account.name }}</span>
+          <span class="kind">{{ typeLabels[account.type] }}</span>
+        </span>
+        <app-amount [value]="balances().get(account.id) ?? 0" size="lg" />
+      </button>
+    }
+  </div>
+
+  @if (formOpen()) {
+    <form class="card form" (ngSubmit)="save()">
+      <h2>{{ editedId() ? 'Modifier le compte' : 'Nouveau compte' }}</h2>
+      @if (hint()) {
+        <p class="notice">{{ hint() }}</p>
+      }
+      <div class="field">
+        <label for="name">Nom</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="input"
+          placeholder="Livret A"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+        />
+      </div>
+      <div class="field">
+        <label for="type">Type</label>
+        <select id="type" name="type" class="input" [ngModel]="type()" (ngModelChange)="type.set($event)">
+          @for (option of typeOptions; track option[0]) {
+            <option [value]="option[0]">{{ option[1] }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="balance">Solde de départ</label>
+        <input
+          id="balance"
+          name="balance"
+          type="text"
+          inputmode="decimal"
+          class="input amount"
+          [ngModel]="initialBalanceText()"
+          (ngModelChange)="initialBalanceText.set($event)"
+        />
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">{{ editedId() ? 'Enregistrer' : 'Créer' }}</button>
+        <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>
+      </div>
+      @if (editedId() && accounts.items().length > 1) {
+        <button type="button" class="delete" (click)="remove(editedId()!)">
+          {{
+            confirmingDelete() === editedId()
+              ? 'Confirmer ? Les transactions de ce compte partiront aussi.'
+              : 'Supprimer ce compte'
+          }}
+        </button>
+      }
+    </form>
+  }
+</div>

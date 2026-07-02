@@ -1,0 +1,142 @@
+<div class="page">
+  <div class="head">
+    <h1 class="page-title">Catégories</h1>
+    <button type="button" class="btn btn-ghost" (click)="openCreate()">
+      <app-icon name="plus" [size]="18" />
+      Créer
+    </button>
+  </div>
+
+  @if (categories.error()) {
+    <p class="notice">{{ categories.error() }}</p>
+  }
+
+  @if (formOpen()) {
+    <form class="card form" (ngSubmit)="save()">
+      <h2>{{ editedId() ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h2>
+      @if (hint()) {
+        <p class="notice">{{ hint() }}</p>
+      }
+      <div class="field">
+        <label for="name">Nom</label>
+        <input
+          id="name"
+          name="name"
+          type="text"
+          class="input"
+          placeholder="Animaux"
+          maxlength="40"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+        />
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Type">
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="type() === 'expense'"
+          [class.on]="type() === 'expense'"
+          (click)="type.set('expense')"
+        >
+          Dépense
+        </button>
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="type() === 'income'"
+          [class.on]="type() === 'income'"
+          (click)="type.set('income')"
+        >
+          Revenu
+        </button>
+      </div>
+      <div class="field">
+        <label>Couleur</label>
+        <div class="swatches">
+          @for (choice of colorChoices; track choice) {
+            <button
+              type="button"
+              class="swatch"
+              [style.background]="choice"
+              [class.on]="color() === choice"
+              (click)="color.set(choice)"
+              [attr.aria-label]="'Couleur ' + choice"
+              [attr.aria-pressed]="color() === choice"
+            ></button>
+          }
+        </div>
+      </div>
+      <div class="field">
+        <label>Pictogramme</label>
+        <div class="icons">
+          @for (choice of iconChoices; track choice) {
+            <button
+              type="button"
+              class="icon-choice"
+              [class.on]="icon() === choice"
+              (click)="icon.set(choice)"
+              [attr.aria-label]="'Pictogramme ' + choice"
+              [attr.aria-pressed]="icon() === choice"
+            >
+              <app-icon [name]="choice" [size]="20" />
+            </button>
+          }
+        </div>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">{{ editedId() ? 'Enregistrer' : 'Créer' }}</button>
+        <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>
+      </div>
+      @if (editedId()) {
+        <button type="button" class="delete" (click)="remove(editedId()!)">
+          {{
+            confirmingDelete() === editedId()
+              ? 'Confirmer la suppression ?'
+              : 'Supprimer cette catégorie'
+          }}
+        </button>
+      }
+    </form>
+  }
+
+  <section>
+    <p class="eyebrow">Tes catégories</p>
+    @if (categories.customCategories().length > 0) {
+      <div class="card list">
+        @for (category of categories.customCategories(); track category.id) {
+          <button type="button" class="row" (click)="openEdit(category)">
+            <span class="badge" [style.color]="category.color">
+              <app-icon [name]="category.icon" [size]="19" />
+            </span>
+            <span class="name">{{ category.name }}</span>
+            <span class="kind">{{ category.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
+            <app-icon name="pencil" [size]="16" />
+          </button>
+        }
+      </div>
+    } @else {
+      <div class="card">
+        <div class="empty">
+          <p>Aucune catégorie personnelle pour l’instant. Crée la tienne pour ranger tes dépenses à ta façon.</p>
+        </div>
+      </div>
+    }
+  </section>
+
+  <section>
+    <p class="eyebrow">Catégories Sereno</p>
+    <div class="card list">
+      @for (category of categories.items(); track category.id) {
+        @if (category.isDefault) {
+          <div class="row readonly">
+            <span class="badge" [style.color]="category.color">
+              <app-icon [name]="category.icon" [size]="19" />
+            </span>
+            <span class="name">{{ category.name }}</span>
+            <span class="kind">{{ category.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
+          </div>
+        }
+      }
+    </div>
+  </section>
+</div>

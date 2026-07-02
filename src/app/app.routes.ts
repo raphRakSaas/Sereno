@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { cloudOnlyGuard } from './presentation/guards/cloud-only.guard';
 
 export const routes: Routes = [
   {
@@ -39,6 +40,26 @@ export const routes: Routes = [
     path: 'compte',
     loadComponent: () => import('./presentation/templates/auth/auth.page').then((m) => m.AuthPage),
     title: 'Ton compte — Sereno',
+  },
+  {
+    path: 'comptes',
+    loadComponent: () => import('./presentation/templates/accounts/accounts.page').then((m) => m.AccountsPage),
+    canActivate: [cloudOnlyGuard('les comptes multiples')],
+    title: 'Comptes — Sereno',
+  },
+  {
+    path: 'categories',
+    loadComponent: () =>
+      import('./presentation/templates/categories/categories.page').then((m) => m.CategoriesPage),
+    canActivate: [cloudOnlyGuard('les catégories personnalisées')],
+    title: 'Catégories — Sereno',
+  },
+  {
+    path: 'recurrences',
+    loadComponent: () =>
+      import('./presentation/templates/recurring/recurring.page').then((m) => m.RecurringPage),
+    canActivate: [cloudOnlyGuard('les récurrences')],
+    title: 'Récurrences — Sereno',
   },
   { path: '**', redirectTo: '' },
 ];

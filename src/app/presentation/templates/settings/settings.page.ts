@@ -41,6 +41,24 @@ import { IconComponent } from '../../atoms/icon/icon.component';
         }
       </section>
 
+      <section class="card links">
+        <a routerLink="/comptes">
+          <app-icon name="wallet" [size]="19" />
+          <span>Comptes</span>
+          <app-icon name="chevron-right" [size]="16" />
+        </a>
+        <a routerLink="/categories">
+          <app-icon name="dots" [size]="19" />
+          <span>Catégories</span>
+          <app-icon name="chevron-right" [size]="16" />
+        </a>
+        <a routerLink="/recurrences">
+          <app-icon name="repeat" [size]="19" />
+          <span>Récurrences</span>
+          <app-icon name="chevron-right" [size]="16" />
+        </a>
+      </section>
+
       <section class="card block">
         <div class="block-head">
           <app-icon name="sparkle" />
@@ -80,6 +98,33 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     .fine {
       color: var(--ink-faint);
       font-size: 13px;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      padding: 4px 0;
+    }
+    .links a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px var(--space-4);
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .links a + a {
+      border-top: 1px solid var(--line);
+    }
+    .links a span {
+      flex: 1;
+    }
+    .links app-icon:first-child {
+      color: var(--sage-deep);
+    }
+    .links app-icon:last-child {
+      color: var(--ink-faint);
     }
   `,
 })

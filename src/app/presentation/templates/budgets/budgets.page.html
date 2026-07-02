@@ -1,0 +1,116 @@
+<div class="page">
+  @if (!mode.isCloud()) {
+    <h1 class="page-title">Budgets</h1>
+    <div class="card">
+      <div class="empty">
+        <span class="lock">
+          <app-icon name="lock" [size]="26" />
+        </span>
+        <h3>Les budgets, en douceur</h3>
+        <p>
+          Fixe une limite par catégorie et Sereno te prévient posément quand tu t’en approches — jamais
+          d’alarme rouge. Disponible avec un compte gratuit.
+        </p>
+        <button type="button" class="btn btn-primary" (click)="conversion.requestLockedFeature('les budgets')">
+          Débloquer les budgets
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="head">
+      <h1 class="page-title">Budgets</h1>
+      <app-month-switcher [month]="budgets.month()" (monthChange)="changeMonth($event)" />
+    </div>
+
+    @if (budgets.error()) {
+      <p class="notice">{{ budgets.error() }}</p>
+    }
+
+    @if (formOpen()) {
+      <form class="card form" (ngSubmit)="save()">
+        <h2>{{ editingExisting() ? 'Modifier le budget' : 'Nouveau budget' }}</h2>
+        @if (hint()) {
+          <p class="notice">{{ hint() }}</p>
+        }
+        <div class="field">
+          <label for="category">Catégorie</label>
+          <select
+            id="category"
+            name="category"
+            class="input"
+            [ngModel]="formCategoryId()"
+            (ngModelChange)="formCategoryId.set($event)"
+          >
+            @for (category of formCategories(); track category.id) {
+              <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="limit">Limite mensuelle</label>
+          <input
+            id="limit"
+            name="limit"
+            type="text"
+            inputmode="decimal"
+            class="input amount"
+            placeholder="250"
+            [ngModel]="limitText()"
+            (ngModelChange)="limitText.set($event)"
+          />
+        </div>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+          <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>
+        </div>
+      </form>
+    }
+
+    @if (lines().length > 0) {
+      <div class="budget-list">
+        @for (line of lines(); track line.budget.id) {
+          <article class="card budget" [class.over]="line.ratio > 1">
+            <button type="button" class="budget-head" (click)="openEdit(line)">
+              <span class="badge" [style.color]="line.category?.color ?? 'var(--ink-soft)'">
+                <app-icon [name]="line.category?.icon ?? 'dots'" [size]="19" />
+              </span>
+              <span class="name">{{ line.category?.name ?? 'Catégorie' }}</span>
+              <span class="numbers">
+                <app-amount [value]="line.spent" size="md" />
+                <span class="limit">/ <app-amount [value]="line.budget.limitAmount" size="sm" /></span>
+              </span>
+            </button>
+            <div
+              class="track"
+              role="progressbar"
+              [attr.aria-valuenow]="(line.ratio * 100).toFixed(0)"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [attr.aria-label]="'Budget ' + (line.category?.name ?? '')"
+            >
+              <div class="fill" [style.width.%]="line.fillPercent"></div>
+            </div>
+            <p class="status">{{ statusText(line) }}</p>
+            <button type="button" class="remove" (click)="remove(line.budget.id)">
+              {{ confirmingDelete() === line.budget.id ? 'Confirmer ?' : 'Retirer' }}
+            </button>
+          </article>
+        }
+      </div>
+    } @else if (!formOpen()) {
+      <div class="card">
+        <div class="empty">
+          <h3>Aucun budget ce mois-ci</h3>
+          <p>Choisis une catégorie à suivre — Sereno t’indiquera où tu en es, sans jamais te presser.</p>
+        </div>
+      </div>
+    }
+
+    @if (!formOpen() && availableCategories().length > 0) {
+      <button type="button" class="btn btn-ghost btn-block" (click)="openCreate()">
+        <app-icon name="plus" [size]="18" />
+        Ajouter un budget
+      </button>
+    }
+  }
+</div>
