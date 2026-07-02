@@ -35,5 +35,10 @@ export const routes: Routes = [
     loadComponent: () => import('./presentation/templates/settings/settings.page').then((m) => m.SettingsPage),
     title: 'Réglages — Sereno',
   },
+  {
+    path: 'compte',
+    loadComponent: () => import('./presentation/templates/auth/auth.page').then((m) => m.AuthPage),
+    title: 'Ton compte — Sereno',
+  },
   { path: '**', redirectTo: '' },
 ];

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { AppModeService } from '../../../application/services/app-mode.service';
+import { ConversionService } from '../../../application/services/conversion.service';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
 @Component({
@@ -21,6 +22,9 @@ import { IconComponent } from '../../atoms/icon/icon.component';
               Fixe une limite par catégorie et Sereno te prévient posément quand tu t’en approches — jamais
               d’alarme rouge. Disponible avec un compte gratuit.
             </p>
+            <button type="button" class="btn btn-primary" (click)="conversion.requestLockedFeature('les budgets')">
+              Débloquer les budgets
+            </button>
           </div>
         </div>
       }
@@ -40,4 +44,10 @@ import { IconComponent } from '../../atoms/icon/icon.component';
 })
 export class BudgetsPage {
   protected readonly mode = inject(AppModeService);
+  protected readonly conversion = inject(ConversionService);
+
+  constructor() {
+    // Accéder à une fonctionnalité verrouillée est l'un des trois déclencheurs.
+    this.conversion.requestLockedFeature('les budgets');
+  }
 }

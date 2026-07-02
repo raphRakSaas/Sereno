@@ -7,8 +7,8 @@ import { ChangeDetectionStrategy, Component, computed, input, LOCALE_ID, inject 
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <span class="amount wrap" [class]="'s-' + size()">
-      @if (sign()) {
-        <span class="sign">{{ sign() }}</span>
+      @if (effectiveSign()) {
+        <span class="sign">{{ effectiveSign() }}</span>
       }
       <span class="int">{{ parts().int }}</span>
       <span class="frac">{{ parts().frac }}</span>
@@ -46,6 +46,9 @@ export class AmountComponent {
   readonly size = input<'hero' | 'lg' | 'md' | 'sm'>('md');
   /** '+' pour marquer un revenu, '−' pour une dépense dans une liste mixte. */
   readonly sign = input<'' | '+' | '−'>('');
+
+  /** Sans signe explicite, une valeur négative (ex. solde) affiche son moins. */
+  protected readonly effectiveSign = computed(() => this.sign() || (this.value() < 0 ? '−' : ''));
 
   protected readonly parts = computed(() => {
     const formatter = new Intl.NumberFormat(this.locale, {

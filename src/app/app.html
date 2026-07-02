@@ -5,6 +5,8 @@
   <app-bottom-nav />
 </div>
 
+<app-conversion-modal />
+
 <div class="toasts" aria-live="polite">
   @for (toast of toasts.toasts(); track toast.id) {
     <div class="toast" [class.attention]="toast.tone === 'attention'">{{ toast.message }}</div>

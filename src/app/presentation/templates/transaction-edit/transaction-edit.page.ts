@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
+import { ConversionService } from '../../../application/services/conversion.service';
 import { ToastService } from '../../../application/services/toast.service';
 import { CategoryKind } from '../../../domain/models/category.model';
 import { IconComponent } from '../../atoms/icon/icon.component';
@@ -35,6 +36,7 @@ export class TransactionEditPage {
   protected readonly accounts = inject(AccountsStore);
   protected readonly categories = inject(CategoriesStore);
   protected readonly transactions = inject(TransactionsStore);
+  private readonly conversion = inject(ConversionService);
   private readonly toast = inject(ToastService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -130,6 +132,10 @@ export class TransactionEditPage {
     if (success) {
       this.toast.show(id ? 'Modifié. Tout est à jour.' : 'C’est noté.');
       this.close();
+      if (!id) {
+        // Déclencheur "20 transactions" — vérifié après chaque création.
+        void this.conversion.checkQuotaTriggers();
+      }
     }
   }
 

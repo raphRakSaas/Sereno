@@ -31,11 +31,20 @@ export class DexieService {
     return entry ? new Date(entry.value) : null;
   }
 
-  /** Vide toutes les données locales (après migration réussie vers Supabase). */
+  /** Vide toutes les données locales (après migration réussie vers Supabase).
+      La méta est vidée aussi : un prochain passage en mode invité repartira
+      d'un environnement fraîchement seedé via ensureSeeded(). */
   async clearAllData(): Promise<void> {
     await this.db.transaction(
       'rw',
-      [this.db.accounts, this.db.categories, this.db.transactions, this.db.budgets, this.db.recurringRules],
+      [
+        this.db.accounts,
+        this.db.categories,
+        this.db.transactions,
+        this.db.budgets,
+        this.db.recurringRules,
+        this.db.meta,
+      ],
       async () => {
         await Promise.all([
           this.db.accounts.clear(),
@@ -43,6 +52,7 @@ export class DexieService {
           this.db.transactions.clear(),
           this.db.budgets.clear(),
           this.db.recurringRules.clear(),
+          this.db.meta.clear(),
         ]);
       },
     );

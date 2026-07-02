@@ -1,28 +1,43 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { AppModeService } from '../../../application/services/app-mode.service';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../../../application/services/auth.service';
+import { ToastService } from '../../../application/services/toast.service';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
 @Component({
   selector: 'app-settings-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconComponent],
+  imports: [IconComponent, RouterLink],
   template: `
     <div class="page">
       <h1 class="page-title">Réglages</h1>
 
       <section class="card block">
         <div class="block-head">
-          <app-icon [name]="mode.isCloud() ? 'cloud' : 'user'" />
+          <app-icon [name]="auth.isSignedIn() ? 'cloud' : 'user'" />
           <h2>Tes données</h2>
         </div>
-        @if (mode.isCloud()) {
-          <p>Ton compte est actif : tes données sont synchronisées et te suivent d’un appareil à l’autre.</p>
+        @if (auth.isSignedIn()) {
+          <p>
+            Connecté en tant que <strong>{{ auth.user()?.email }}</strong
+            >. Tes données sont synchronisées et te suivent d’un appareil à l’autre.
+          </p>
+          <button type="button" class="btn btn-ghost" (click)="signOut()" [disabled]="busy()">
+            <app-icon name="log-out" [size]="18" />
+            {{ busy() ? 'Un instant…' : 'Me déconnecter' }}
+          </button>
+          <p class="fine">Tes données restent en sécurité dans ton compte.</p>
         } @else {
           <p>
-            Tu utilises Sereno en mode invité : tout vit sur cet appareil, rien ne part ailleurs. Un compte
-            gratuit permet de synchroniser tes données et d’ouvrir les comptes multiples, les budgets et les
-            récurrences.
+            Tu utilises Sereno en mode invité : tout vit sur cet appareil, rien ne part ailleurs.
+            Un compte gratuit synchronise tes données et ouvre les comptes multiples, les budgets
+            et les récurrences.
           </p>
+          @if (auth.available) {
+            <a routerLink="/compte" class="btn btn-primary">Créer un compte gratuit</a>
+          } @else {
+            <p class="fine">Synchronisation non configurée sur cette installation (voir README).</p>
+          }
         }
       </section>
 
@@ -32,10 +47,10 @@ import { IconComponent } from '../../atoms/icon/icon.component';
           <h2>À propos</h2>
         </div>
         <p>
-          Sereno t’aide à voir où va ton argent, calmement. Pas de rouge, pas de culpabilisation : des
-          chiffres clairs et des constats posés.
+          Sereno t’aide à voir où va ton argent, calmement. Pas de rouge, pas de culpabilisation :
+          des chiffres clairs et des constats posés.
         </p>
-        <p class="version">Version 1.0</p>
+        <p class="fine">Version 1.0</p>
       </section>
     </div>
   `,
@@ -44,7 +59,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       padding: var(--space-4);
       display: flex;
       flex-direction: column;
-      gap: var(--space-2);
+      gap: var(--space-3);
+      align-items: flex-start;
     }
     .block-head {
       display: flex;
@@ -61,12 +77,25 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       color: var(--ink-soft);
       line-height: 1.55;
     }
-    .version {
+    .fine {
       color: var(--ink-faint);
       font-size: 13px;
     }
   `,
 })
 export class SettingsPage {
-  protected readonly mode = inject(AppModeService);
+  protected readonly auth = inject(AuthService);
+  private readonly toast = inject(ToastService);
+
+  protected readonly busy = signal(false);
+
+  protected async signOut(): Promise<void> {
+    this.busy.set(true);
+    try {
+      await this.auth.signOut();
+      this.toast.show('À bientôt. Tu es repassé en mode invité.');
+    } finally {
+      this.busy.set(false);
+    }
+  }
 }
