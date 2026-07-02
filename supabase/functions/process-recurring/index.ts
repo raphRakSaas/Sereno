@@ -49,7 +49,11 @@ Deno.serve(async () => {
     // Rattrapage : si des échéances ont été manquées, chacune est générée.
     const due: string[] = [];
     let next = rule.next_run_date as string;
+    const endDate = rule.end_date as string | null;
     while (next <= today) {
+      if (endDate && next > endDate) {
+        break;
+      }
       due.push(next);
       next = advance(next, rule.frequency as Frequency);
     }
@@ -65,31 +69,37 @@ Deno.serve(async () => {
       continue;
     }
     const already = new Set((existing ?? []).map((t) => t.date));
-    const rows = due
-      .filter((date) => !already.has(date))
-      .map((date) => ({
-        user_id: rule.user_id,
-        account_id: rule.account_id,
-        category_id: rule.category_id,
-        amount: rule.amount,
-        type,
-        date,
-        note: null,
-        recurring_rule_id: rule.id,
-      }));
+    const pendingDates = due.filter((date) => !already.has(date));
 
-    if (rows.length > 0) {
-      const { error: insertError } = await admin.from('transactions').insert(rows);
-      if (insertError) {
+    for (const date of pendingDates) {
+      const { error: rpcError } = await admin.rpc('create_transaction_with_entries_core', {
+        p_user_id: rule.user_id,
+        payload: {
+          account_id: rule.account_id,
+          category_id: rule.category_id,
+          amount: rule.amount,
+          type,
+          date,
+          note: null,
+        },
+        idempotency_key: `${rule.id}:${date}`,
+        p_recurring_rule_id: rule.id,
+      });
+      if (rpcError) {
         failures.push(rule.id);
-        continue;
+        break;
       }
-      created += rows.length;
+      created += 1;
     }
 
+    if (failures.includes(rule.id)) {
+      continue;
+    }
+
+    const reachedEnd = endDate && next > endDate;
     const { error: updateError } = await admin
       .from('recurring_rules')
-      .update({ next_run_date: next })
+      .update(reachedEnd ? { next_run_date: next, active: false } : { next_run_date: next })
       .eq('id', rule.id);
     if (updateError) {
       failures.push(rule.id);

@@ -11,6 +11,7 @@ function toRow(input: Partial<NewRecurringRule>): Record<string, unknown> {
   if (input.amount !== undefined) row['amount'] = input.amount;
   if (input.frequency !== undefined) row['frequency'] = input.frequency;
   if (input.nextRunDate !== undefined) row['next_run_date'] = input.nextRunDate;
+  if (input.endDate !== undefined) row['end_date'] = input.endDate;
   if (input.active !== undefined) row['active'] = input.active;
   return row;
 }

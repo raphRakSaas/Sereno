@@ -4,19 +4,231 @@
     <app-month-switcher [month]="month()" (monthChange)="month.set($event)" />
   </div>
 
+  <div class="toolbar">
+    <label class="search">
+      <span class="sr-only">Rechercher</span>
+      <input
+        #searchInput
+        type="search"
+        class="input"
+        placeholder="Note, catégorie, compte, montant…"
+        [ngModel]="searchQuery()"
+        (ngModelChange)="searchQuery.set($event)"
+        autocomplete="off"
+      />
+    </label>
+    <div class="field sort-field">
+      <label for="sort-order" class="sr-only">Tri</label>
+      <select
+        id="sort-order"
+        class="input sort-select"
+        [ngModel]="preferences.transactionSort()"
+        (ngModelChange)="setSortFromSelect($event)"
+      >
+        @for (option of sortOptions; track option[0]) {
+          <option [value]="option[0]">{{ option[1] }}</option>
+        }
+      </select>
+    </div>
+    <button type="button" class="btn btn-ghost filter-toggle" (click)="toggleFilters()" [class.on]="filtersOpen()">
+      <app-icon name="sliders" [size]="18" />
+      Filtres
+      @if (activeFilterCount() > 0) {
+        <span class="badge">{{ activeFilterCount() }}</span>
+      }
+    </button>
+  </div>
+
+  @if (filtersOpen()) {
+    <div class="card filters">
+      <div class="filter-grid">
+        <div class="field">
+          <label for="filter-type">Type</label>
+          <select
+            id="filter-type"
+            class="input"
+            [ngModel]="typeFilter()"
+            (ngModelChange)="setTypeFromSelect($event)"
+          >
+            @for (option of typeOptions; track option[0]) {
+              <option [value]="option[0]">{{ option[1] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filter-account">Compte</label>
+          <select
+            id="filter-account"
+            class="input"
+            [ngModel]="accountFilter()"
+            (ngModelChange)="accountFilter.set($event || null)"
+          >
+            <option [ngValue]="null">Tous</option>
+            @for (account of accounts.items(); track account.id) {
+              <option [ngValue]="account.id">{{ account.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filter-card">Carte</label>
+          <select
+            id="filter-card"
+            class="input"
+            [ngModel]="cardAccountFilter()"
+            (ngModelChange)="cardAccountFilter.set($event || null)"
+          >
+            <option [ngValue]="null">Toutes</option>
+            @for (account of cardAccountOptions(); track account.id) {
+              <option [ngValue]="account.id">{{ account.name }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filter-category">Catégorie</label>
+          <select
+            id="filter-category"
+            class="input"
+            [ngModel]="categoryFilter()"
+            (ngModelChange)="categoryFilter.set($event || null)"
+          >
+            <option [ngValue]="null">Toutes</option>
+            @for (category of filterCategoryOptions(); track category.id) {
+              <option [ngValue]="category.id">{{ categoryLabel(category) }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filter-recurring">Récurrence</label>
+          <select
+            id="filter-recurring"
+            class="input"
+            [ngModel]="recurringFilter()"
+            (ngModelChange)="setRecurringFilter($event)"
+          >
+            @for (option of recurringOptions; track option[0]) {
+              <option [value]="option[0]">{{ option[1] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filter-photo">Photo</label>
+          <select
+            id="filter-photo"
+            class="input"
+            [ngModel]="photoFilter()"
+            (ngModelChange)="setPhotoFilter($event)"
+          >
+            @for (option of photoOptions; track option[0]) {
+              <option [value]="option[0]">{{ option[1] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="filter-date-from">Du</label>
+          <input
+            id="filter-date-from"
+            type="date"
+            class="input"
+            [ngModel]="dateFromFilter()"
+            (ngModelChange)="dateFromFilter.set($event || null)"
+          />
+        </div>
+
+        <div class="field">
+          <label for="filter-date-to">Au</label>
+          <input
+            id="filter-date-to"
+            type="date"
+            class="input"
+            [ngModel]="dateToFilter()"
+            (ngModelChange)="dateToFilter.set($event || null)"
+          />
+        </div>
+
+        <div class="field">
+          <label for="filter-min">Montant min</label>
+          <input
+            id="filter-min"
+            type="text"
+            inputmode="decimal"
+            class="input amount"
+            placeholder="0"
+            [ngModel]="amountMinText()"
+            (ngModelChange)="amountMinText.set($event)"
+          />
+        </div>
+
+        <div class="field">
+          <label for="filter-max">Montant max</label>
+          <input
+            id="filter-max"
+            type="text"
+            inputmode="decimal"
+            class="input amount"
+            placeholder="∞"
+            [ngModel]="amountMaxText()"
+            (ngModelChange)="amountMaxText.set($event)"
+          />
+        </div>
+      </div>
+
+      <div class="field marker-filter">
+        <span class="label">Marqueur</span>
+        <div class="marker-swatches">
+          <button
+            type="button"
+            class="chip"
+            [class.on]="markerColorFilter() === 'all'"
+            (click)="setMarkerColorFilter('all')"
+          >
+            Toutes
+          </button>
+          <button
+            type="button"
+            class="chip"
+            [class.on]="markerColorFilter() === 'none'"
+            (click)="setMarkerColorFilter('none')"
+          >
+            Aucune
+          </button>
+          @for (color of markerColors; track color) {
+            <button
+              type="button"
+              class="swatch"
+              [style.background]="color"
+              [class.on]="markerColorFilter() === color"
+              [attr.aria-label]="'Marqueur ' + color"
+              (click)="setMarkerColorFilter(color)"
+            ></button>
+          }
+        </div>
+      </div>
+
+      @if (activeFilterCount() > 0) {
+        <button type="button" class="reset" (click)="resetFilters()">Réinitialiser les filtres</button>
+      }
+    </div>
+  }
+
   @if (transactions.error()) {
     <p class="notice">{{ transactions.error() }}</p>
   }
 
-  @if (monthTransactions().length > 0) {
+  @if (hasFilteredResults()) {
     <div class="totals card">
       <span class="in">
-        <span class="k">Entrées</span>
+        <span class="k">Entrées@if (isFiltered()) { (filtré) }</span>
         <app-amount [value]="monthIncome()" size="lg" />
       </span>
       <span class="rule"></span>
       <span class="out">
-        <span class="k">Sorties</span>
+        <span class="k">Sorties@if (isFiltered()) { (filtré) }</span>
         <app-amount [value]="monthExpense()" size="lg" />
       </span>
     </div>
@@ -25,12 +237,27 @@
       <section>
         <p class="day">{{ group.label }}</p>
         <div class="card list-card">
-          @for (t of group.items; track t.id) {
-            <app-transaction-list-item [transaction]="t" [category]="categories.byId().get(t.categoryId)" />
+          @for (transaction of group.items; track transaction.id) {
+            <app-transaction-list-item
+              [transaction]="transaction"
+              [category]="categories.byId().get(transaction.categoryId ?? '')"
+              [categoriesById]="categories.byId()"
+              [accountsById]="accounts.byId()"
+            />
           }
         </div>
       </section>
     }
+  } @else if (hasMonthData()) {
+    <div class="card">
+      <div class="empty">
+        <h3>Aucun résultat</h3>
+        <p>Rien ne correspond à ta recherche ou à tes filtres pour ce mois.</p>
+        @if (isFiltered()) {
+          <button type="button" class="btn btn-primary" (click)="resetFilters()">Réinitialiser</button>
+        }
+      </div>
+    </div>
   } @else {
     <div class="card">
       <div class="empty">

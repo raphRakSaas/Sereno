@@ -1,0 +1,110 @@
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.explain {
+  margin: 0 0 var(--space-4);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.icon-btn.danger {
+  color: var(--amber);
+  width: auto;
+  min-width: 40px;
+  padding: 0 10px;
+}
+
+.confirm-label {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.spacer {
+  width: 40px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.amount-field {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  padding: var(--space-4) 0;
+}
+
+.amount-field .amount {
+  width: min(220px, 70vw);
+  border: none;
+  background: none;
+  font-family: var(--font-text);
+  font-size: clamp(42px, 10vw, 56px);
+  font-weight: 600;
+  font-feature-settings: 'tnum';
+  text-align: right;
+  color: var(--ink);
+}
+
+.amount-field .amount:focus {
+  outline: none;
+}
+
+.euro {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.fine {
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.actions .btn {
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 520px;
+  }
+}

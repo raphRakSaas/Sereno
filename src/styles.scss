@@ -268,3 +268,58 @@ a {
   font-size: 15px;
   max-width: 30ch;
 }
+
+/* Forcer le mode clair même si le système est sombre */
+:root[data-theme='light'] {
+  --ink: #1f2a24;
+  --ink-soft: #5a665e;
+  --ink-faint: #8b948c;
+  --paper: #ece9df;
+  --surface: #fbfaf6;
+  --sage-pale: #dce3da;
+  --sage: #3f5548;
+  --sage-deep: #2e4036;
+  --mist: #8fa9b8;
+  --mist-deep: #5f7e93;
+  --sand: #c2b28f;
+  --amber: #a97c2f;
+  --amber-pale: #f0e6d2;
+  --line: #d8d4c6;
+}
+
+/* Mode sombre — fond noir neutre (pas de teinte verte) */
+:root[data-theme='dark'] {
+  --ink: #ececec;
+  --ink-soft: #9ca3af;
+  --ink-faint: #6b7280;
+  --paper: #000000;
+  --surface: #111111;
+  --sage-pale: #1a1a1a;
+  --sage: #4d6356;
+  --sage-deep: #d4d4d4;
+  --mist: #7a9aab;
+  --mist-deep: #9ab8c8;
+  --sand: #8a7d62;
+  --amber: #c49a4a;
+  --amber-pale: #2a2218;
+  --line: #262626;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ink: #ececec;
+    --ink-soft: #9ca3af;
+    --ink-faint: #6b7280;
+    --paper: #000000;
+    --surface: #111111;
+    --sage-pale: #1a1a1a;
+    --sage: #4d6356;
+    --sage-deep: #d4d4d4;
+    --mist: #7a9aab;
+    --mist-deep: #9ab8c8;
+    --sand: #8a7d62;
+    --amber: #c49a4a;
+    --amber-pale: #2a2218;
+    --line: #262626;
+  }
+}

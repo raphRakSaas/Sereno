@@ -9,6 +9,8 @@ export interface RecurringRule {
   frequency: Frequency;
   /** Prochaine date d'exécution, format `yyyy-MM-dd`. */
   nextRunDate: string;
+  /** Dernière date d'exécution autorisée, ou null = sans fin. */
+  endDate: string | null;
   active: boolean;
 }
 

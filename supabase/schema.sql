@@ -76,6 +76,10 @@ create table public.transactions (
   type text not null check (type in ('income', 'expense')),
   date date not null,
   note text,
+  marker_color text check (
+    marker_color is null
+    or marker_color ~ '^#[0-9A-Fa-f]{6}$'
+  ),
   recurring_rule_id uuid references public.recurring_rules (id) on delete set null,
   created_at timestamptz not null default now()
 );
@@ -84,6 +88,8 @@ create index transactions_user_date_idx on public.transactions (user_id, date de
 create index transactions_account_id_idx on public.transactions (account_id);
 create index transactions_category_id_idx on public.transactions (category_id);
 create index transactions_recurring_rule_id_idx on public.transactions (recurring_rule_id);
+create index transactions_marker_color_idx on public.transactions (user_id, marker_color)
+  where marker_color is not null;
 
 -- ------------------------------------------------------------
 -- budgets : une limite mensuelle par (utilisateur, catégorie, mois)
@@ -183,20 +189,31 @@ create trigger on_auth_user_created
 -- Dexie → Supabase n'a aucun remappage à faire.
 -- ============================================================
 
-insert into public.categories (id, user_id, name, type, icon, color) values
-  ('c0000000-0000-4000-8000-000000000001', null, 'Salaire', 'income', 'work', '#1E6D9C'),
-  ('c0000000-0000-4000-8000-000000000002', null, 'Autres revenus', 'income', 'sparkle', '#3694BC'),
-  ('c0000000-0000-4000-8000-000000000003', null, 'Logement', 'expense', 'home', '#196E44'),
-  ('c0000000-0000-4000-8000-000000000004', null, 'Courses', 'expense', 'basket', '#018472'),
-  ('c0000000-0000-4000-8000-000000000005', null, 'Transports', 'expense', 'transit', '#7D8F3A'),
-  ('c0000000-0000-4000-8000-000000000006', null, 'Restaurants & cafés', 'expense', 'dining', '#A07417'),
-  ('c0000000-0000-4000-8000-000000000007', null, 'Santé', 'expense', 'health', '#6D9755'),
-  ('c0000000-0000-4000-8000-000000000008', null, 'Loisirs', 'expense', 'leisure', '#7B6CBF'),
-  ('c0000000-0000-4000-8000-000000000009', null, 'Abonnements', 'expense', 'repeat', '#8D4826'),
-  ('c0000000-0000-4000-8000-000000000010', null, 'Vêtements', 'expense', 'clothing', '#A85769'),
-  ('c0000000-0000-4000-8000-000000000011', null, 'Autres dépenses', 'expense', 'dots', '#945818')
+insert into public.categories (id, user_id, name, type, icon, color, display_order, is_archived) values
+  ('c0000000-0000-4000-8000-000000000001', null, 'Salaire', 'income', 'work', '#1E6D9C', 0, false),
+  ('c0000000-0000-4000-8000-000000000012', null, 'Freelance & indépendant', 'income', 'pencil', '#3694BC', 1, false),
+  ('c0000000-0000-4000-8000-000000000013', null, 'Allocations & aides familiales', 'income', 'gift', '#5F7E93', 2, false),
+  ('c0000000-0000-4000-8000-000000000014', null, 'APL & aide au logement', 'income', 'home', '#018472', 3, false),
+  ('c0000000-0000-4000-8000-000000000015', null, 'Prestations sociales', 'income', 'health', '#6D9755', 4, false),
+  ('c0000000-0000-4000-8000-000000000016', null, 'Pension & retraite', 'income', 'wallet', '#7D8F3A', 5, false),
+  ('c0000000-0000-4000-8000-000000000017', null, 'Revenus locatifs', 'income', 'building', '#7B6CBF', 6, false),
+  ('c0000000-0000-4000-8000-000000000018', null, 'Dividendes & intérêts', 'income', 'chart', '#8FA9B8', 7, false),
+  ('c0000000-0000-4000-8000-000000000019', null, 'Plus-values & placements', 'income', 'sparkle', '#A07417', 8, false),
+  ('c0000000-0000-4000-8000-00000000001a', null, 'Remboursements reçus', 'income', 'arrow-in', '#A85769', 9, false),
+  ('c0000000-0000-4000-8000-000000000002', null, 'Autres revenus', 'income', 'dots', '#945818', 10, false),
+  ('c0000000-0000-4000-8000-000000000003', null, 'Logement', 'expense', 'home', '#196E44', 20, false),
+  ('c0000000-0000-4000-8000-000000000004', null, 'Courses', 'expense', 'basket', '#018472', 21, false),
+  ('c0000000-0000-4000-8000-000000000005', null, 'Transports', 'expense', 'transit', '#7D8F3A', 22, false),
+  ('c0000000-0000-4000-8000-000000000006', null, 'Restaurants & cafés', 'expense', 'dining', '#A07417', 23, false),
+  ('c0000000-0000-4000-8000-000000000007', null, 'Santé', 'expense', 'health', '#6D9755', 24, false),
+  ('c0000000-0000-4000-8000-000000000008', null, 'Loisirs', 'expense', 'leisure', '#7B6CBF', 25, false),
+  ('c0000000-0000-4000-8000-000000000009', null, 'Abonnements', 'expense', 'repeat', '#8D4826', 26, false),
+  ('c0000000-0000-4000-8000-000000000010', null, 'Vêtements', 'expense', 'clothing', '#A85769', 27, false),
+  ('c0000000-0000-4000-8000-000000000011', null, 'Autres dépenses', 'expense', 'dots', '#945818', 28, false)
 on conflict (id) do update
   set name = excluded.name,
       type = excluded.type,
       icon = excluded.icon,
-      color = excluded.color;
+      color = excluded.color,
+      display_order = excluded.display_order,
+      is_archived = excluded.is_archived;

@@ -10,6 +10,9 @@ function toRow(input: Partial<NewCategory>): Record<string, unknown> {
   if (input.type !== undefined) row['type'] = input.type;
   if (input.icon !== undefined) row['icon'] = input.icon;
   if (input.color !== undefined) row['color'] = input.color;
+  if (input.parentId !== undefined) row['parent_id'] = input.parentId;
+  if (input.displayOrder !== undefined) row['display_order'] = input.displayOrder;
+  if (input.isArchived !== undefined) row['is_archived'] = input.isArchived;
   return row;
 }
 
@@ -19,7 +22,12 @@ export class SupabaseCategoryRepository implements CategoryRepository {
 
   /** RLS renvoie les catégories globales (user_id null) + celles de l'utilisateur. */
   async list(): Promise<Category[]> {
-    const { data, error } = await this.supabase.require().from('categories').select('*').order('name');
+    const { data, error } = await this.supabase
+      .require()
+      .from('categories')
+      .select('*')
+      .order('display_order', { ascending: true })
+      .order('name', { ascending: true });
     if (error) throw error;
     return (data as CategoryRow[]).map(toCategory);
   }

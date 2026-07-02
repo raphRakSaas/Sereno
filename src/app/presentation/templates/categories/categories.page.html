@@ -13,7 +13,10 @@
 
   @if (formOpen()) {
     <form class="card form" (ngSubmit)="save()">
-      <h2>{{ editedId() ? 'Modifier la catégorie' : 'Nouvelle catégorie' }}</h2>
+      <h2>{{ formTitle() }}</h2>
+      @if (isSubcategoryForm() && parentCategory(); as parent) {
+        <p class="parent-hint">Sous-catégorie de <strong>{{ parent.name }}</strong></p>
+      }
       @if (hint()) {
         <p class="notice">{{ hint() }}</p>
       }
@@ -30,26 +33,28 @@
           (ngModelChange)="name.set($event)"
         />
       </div>
-      <div class="seg" role="radiogroup" aria-label="Type">
-        <button
-          type="button"
-          role="radio"
-          [attr.aria-checked]="type() === 'expense'"
-          [class.on]="type() === 'expense'"
-          (click)="type.set('expense')"
-        >
-          Dépense
-        </button>
-        <button
-          type="button"
-          role="radio"
-          [attr.aria-checked]="type() === 'income'"
-          [class.on]="type() === 'income'"
-          (click)="type.set('income')"
-        >
-          Revenu
-        </button>
-      </div>
+      @if (!isSubcategoryForm()) {
+        <div class="seg" role="radiogroup" aria-label="Type">
+          <button
+            type="button"
+            role="radio"
+            [attr.aria-checked]="type() === 'expense'"
+            [class.on]="type() === 'expense'"
+            (click)="type.set('expense')"
+          >
+            Dépense
+          </button>
+          <button
+            type="button"
+            role="radio"
+            [attr.aria-checked]="type() === 'income'"
+            [class.on]="type() === 'income'"
+            (click)="type.set('income')"
+          >
+            Revenu
+          </button>
+        </div>
+      }
       <div class="field">
         <label>Couleur</label>
         <div class="swatches">
@@ -87,6 +92,11 @@
         <button type="submit" class="btn btn-primary">{{ editedId() ? 'Enregistrer' : 'Créer' }}</button>
         <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>
       </div>
+      @if (editedId() && editedCategory()?.parentId) {
+        <button type="button" class="promote" (click)="promote()">
+          Promouvoir en catégorie principale
+        </button>
+      }
       @if (editedId()) {
         <button type="button" class="delete" (click)="remove(editedId()!)">
           {{
@@ -100,40 +110,100 @@
   }
 
   <section>
-    <p class="eyebrow">Tes catégories</p>
-    @if (categories.customCategories().length > 0) {
-      <div class="card list">
-        @for (category of categories.customCategories(); track category.id) {
-          <button type="button" class="row" (click)="openEdit(category)">
-            <span class="badge" [style.color]="category.color">
-              <app-icon [name]="category.icon" [size]="19" />
-            </span>
-            <span class="name">{{ category.name }}</span>
-            <span class="kind">{{ category.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
-            <app-icon name="pencil" [size]="16" />
-          </button>
-        }
-      </div>
-    } @else {
-      <div class="card">
-        <div class="empty">
-          <p>Aucune catégorie personnelle pour l’instant. Crée la tienne pour ranger tes dépenses à ta façon.</p>
-        </div>
-      </div>
-    }
-  </section>
-
-  <section>
-    <p class="eyebrow">Catégories Sereno</p>
+    <p class="eyebrow">Toutes les catégories</p>
     <div class="card list">
-      @for (category of categories.items(); track category.id) {
-        @if (category.isDefault) {
-          <div class="row readonly">
-            <span class="badge" [style.color]="category.color">
-              <app-icon [name]="category.icon" [size]="19" />
+      @for (node of categories.tree(); track node.category.id) {
+        @let parent = node.category;
+        <div class="row" [class.readonly]="parent.isDefault" [class.archived]="isArchived(parent)">
+          <span class="badge" [style.color]="parent.color">
+            <app-icon [name]="parent.icon" [size]="19" />
+          </span>
+          <span class="name">{{ parent.name }}</span>
+          <span class="kind">{{ parent.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
+          <div class="row-actions">
+            @if (!parent.isDefault) {
+              <button
+                type="button"
+                class="sub-btn"
+                [disabled]="!canMoveDisplayOrder(parent, -1)"
+                (click)="moveDisplayOrder(parent, -1)"
+                aria-label="Monter {{ parent.name }}"
+              >
+                ↑
+              </button>
+              <button
+                type="button"
+                class="sub-btn"
+                [disabled]="!canMoveDisplayOrder(parent, 1)"
+                (click)="moveDisplayOrder(parent, 1)"
+                aria-label="Descendre {{ parent.name }}"
+              >
+                ↓
+              </button>
+              <button
+                type="button"
+                class="sub-btn"
+                (click)="toggleArchive(parent)"
+                [attr.aria-label]="isArchived(parent) ? 'Réactiver ' + parent.name : 'Archiver ' + parent.name"
+              >
+                {{ isArchived(parent) ? 'Activer' : 'Archiver' }}
+              </button>
+            }
+            <button
+              type="button"
+              class="sub-btn"
+              (click)="openCreate(parent.id)"
+              aria-label="Ajouter une sous-catégorie sous {{ parent.name }}"
+            >
+              <app-icon name="plus" [size]="15" />
+            </button>
+            @if (!parent.isDefault) {
+              <button type="button" class="edit-btn" (click)="openEdit(parent)" aria-label="Modifier {{ parent.name }}">
+                <app-icon name="pencil" [size]="16" />
+              </button>
+            }
+          </div>
+        </div>
+        @for (child of node.children; track child.id) {
+          <div class="row sub" [class.readonly]="child.isDefault" [class.archived]="isArchived(child)">
+            <span class="badge" [style.color]="child.color">
+              <app-icon [name]="child.icon" [size]="17" />
             </span>
-            <span class="name">{{ category.name }}</span>
-            <span class="kind">{{ category.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
+            <span class="name">{{ child.name }}</span>
+            <span class="kind">{{ child.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
+            @if (!child.isDefault) {
+              <div class="row-actions">
+                <button
+                  type="button"
+                  class="sub-btn"
+                  [disabled]="!canMoveDisplayOrder(child, -1)"
+                  (click)="moveDisplayOrder(child, -1)"
+                  aria-label="Monter {{ child.name }}"
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  class="sub-btn"
+                  [disabled]="!canMoveDisplayOrder(child, 1)"
+                  (click)="moveDisplayOrder(child, 1)"
+                  aria-label="Descendre {{ child.name }}"
+                >
+                  ↓
+                </button>
+                <button
+                  type="button"
+                  class="sub-btn"
+                  (click)="toggleArchive(child)"
+                  [attr.aria-label]="isArchived(child) ? 'Réactiver ' + child.name : 'Archiver ' + child.name"
+                >
+                  {{ isArchived(child) ? 'Activer' : 'Archiver' }}
+                </button>
+                <button type="button" class="edit-btn" (click)="openEdit(child)" aria-label="Modifier {{ child.name }}">
+                  <app-icon name="pencil" [size]="16" />
+                </button>
+              </div>
+            }
           </div>
         }
       }

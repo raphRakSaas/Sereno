@@ -1,0 +1,140 @@
+<div class="page">
+  <div class="head">
+    <h1 class="page-title">Échéances</h1>
+    <button type="button" class="btn btn-ghost" (click)="openCreate()">
+      <app-icon name="plus" [size]="18" />
+      Ajouter
+    </button>
+  </div>
+
+  <p class="explain">
+    Plans de paiement en plusieurs fois — stockés localement sur cet appareil. Chaque échéance peut
+    devenir une transaction en un clic.
+  </p>
+
+  @if (formOpen()) {
+    <form class="card form" (ngSubmit)="save()">
+      <h2>{{ editedId() ? 'Modifier le plan' : 'Nouveau plan' }}</h2>
+      @if (hint()) {
+        <p class="notice">{{ hint() }}</p>
+      }
+      <div class="field">
+        <label for="label">Libellé</label>
+        <input
+          id="label"
+          name="label"
+          type="text"
+          class="input"
+          placeholder="Canapé"
+          [ngModel]="label()"
+          (ngModelChange)="label.set($event)"
+        />
+      </div>
+      <div class="field">
+        <label for="total">Montant total</label>
+        <input
+          id="total"
+          name="total"
+          type="text"
+          inputmode="decimal"
+          class="input amount"
+          [ngModel]="totalAmountText()"
+          (ngModelChange)="totalAmountText.set($event)"
+        />
+      </div>
+      <div class="field">
+        <label for="count">Nombre d'échéances</label>
+        <input
+          id="count"
+          name="count"
+          type="number"
+          min="2"
+          class="input"
+          [ngModel]="installmentCountText()"
+          (ngModelChange)="installmentCountText.set($event)"
+        />
+      </div>
+      <div class="field">
+        <label for="frequency">Fréquence</label>
+        <select id="frequency" name="frequency" class="input" [ngModel]="frequency()" (ngModelChange)="frequency.set($event)">
+          <option value="monthly">{{ frequencyLabels.monthly }}</option>
+          <option value="weekly">{{ frequencyLabels.weekly }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="start">Première échéance</label>
+        <input id="start" name="start" type="date" class="input" [ngModel]="startDate()" (ngModelChange)="startDate.set($event)" />
+      </div>
+      @if (accounts.items().length > 0) {
+        <div class="field">
+          <label for="account">Compte</label>
+          <select id="account" name="account" class="input" [ngModel]="accountId()" (ngModelChange)="accountId.set($event)">
+            @for (account of accounts.items(); track account.id) {
+              <option [value]="account.id">{{ account.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="field">
+        <label for="category">Catégorie <span class="fine">— facultatif</span></label>
+        <select id="category" name="category" class="input" [ngModel]="categoryId()" (ngModelChange)="categoryId.set($event || null)">
+          <option [ngValue]="null">Aucune</option>
+          @for (category of categories.expenseCategories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">{{ editedId() ? 'Enregistrer' : 'Créer' }}</button>
+        <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>
+      </div>
+      @if (editedId()) {
+        <button type="button" class="delete" (click)="remove(editedId()!)">
+          {{ confirmingDelete() === editedId() ? 'Confirmer la suppression ?' : 'Supprimer ce plan' }}
+        </button>
+      }
+    </form>
+  }
+
+  @if (plans().length > 0) {
+    <div class="plan-list">
+      @for (plan of plans(); track plan.id) {
+        <article class="card plan">
+          <button type="button" class="plan-head" (click)="openEdit(plan)">
+            <span class="name">{{ plan.label }}</span>
+            <span class="meta">
+              {{ plan.installmentCount }} × {{ frequencyLabels[plan.frequency] }} ·
+              <app-amount [value]="plan.totalAmount" size="sm" />
+            </span>
+          </button>
+          <ul class="occurrences">
+            @for (occurrence of occurrencesByPlan().get(plan.id) ?? []; track occurrence.id) {
+              <li>
+                <span class="due">{{ occurrence.dueDate }}</span>
+                <app-amount [value]="occurrence.amount" size="sm" />
+                @if (occurrence.transactionId) {
+                  <span class="done">Notée</span>
+                } @else {
+                  <a
+                    class="link"
+                    [routerLink]="transactionLink(occurrence, plan)"
+                    [queryParams]="transactionQuery(occurrence, plan)"
+                  >
+                    Créer la transaction
+                  </a>
+                }
+              </li>
+            }
+          </ul>
+        </article>
+      }
+    </div>
+  } @else if (!formOpen()) {
+    <div class="card">
+      <div class="empty">
+        <h3>Aucun plan d'échéances</h3>
+        <p>Ajoute un achat en plusieurs fois pour suivre chaque paiement, calmement.</p>
+      </div>
+    </div>
+  }
+</div>

@@ -83,6 +83,43 @@
   text-align: center;
 }
 
+.group .eyebrow {
+  margin: var(--space-4) 0 8px 4px;
+}
+
+.row.archived {
+  opacity: 0.55;
+}
+
+.reminder {
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 12px var(--space-4);
+  font-size: 14.5px;
+}
+
+.toggle-row input {
+  width: 18px;
+  height: 18px;
+}
+
+.fine {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.order-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
 @media (min-width: 768px) {
   .page {
     max-width: 860px;

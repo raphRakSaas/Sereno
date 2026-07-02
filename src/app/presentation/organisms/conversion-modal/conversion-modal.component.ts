@@ -43,6 +43,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       bottom: 0;
       width: min(100%, 480px);
       background: var(--surface);
+      border: 1px solid var(--line);
       border-radius: 16px 16px 0 0;
       padding: var(--space-6) var(--space-5) calc(var(--space-5) + var(--safe-bottom));
       z-index: 61;
@@ -51,6 +52,17 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       gap: var(--space-3);
       animation: rise 0.25s ease-out;
     }
+    @media (min-width: 768px) {
+      .sheet {
+        top: 50%;
+        bottom: auto;
+        transform: translate(-50%, -50%);
+        width: min(calc(100% - 48px), 420px);
+        border-radius: var(--radius);
+        padding: var(--space-6) var(--space-5);
+        animation: dialog-in 0.22s ease-out;
+      }
+    }
     @keyframes rise {
       from {
         transform: translate(-50%, 24px);
@@ -58,6 +70,16 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       }
       to {
         transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+    @keyframes dialog-in {
+      from {
+        transform: translate(-50%, calc(-50% + 14px));
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, -50%);
         opacity: 1;
       }
     }

@@ -41,8 +41,25 @@
             [ngModel]="formCategoryId()"
             (ngModelChange)="formCategoryId.set($event)"
           >
+            @if (!hasGlobalBudget() || formCategoryId() === globalBudgetId) {
+              <option [value]="globalBudgetId">Budget global (toutes catégories)</option>
+            }
             @for (category of formCategories(); track category.id) {
               <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="field">
+          <label for="periodType">Période</label>
+          <select
+            id="periodType"
+            name="periodType"
+            class="input"
+            [ngModel]="formPeriodType()"
+            (ngModelChange)="formPeriodType.set($event)"
+          >
+            @for (option of periodOptions; track option[0]) {
+              <option [value]="option[0]">{{ option[1] }}</option>
             }
           </select>
         </div>
@@ -69,12 +86,12 @@
     @if (lines().length > 0) {
       <div class="budget-list">
         @for (line of lines(); track line.budget.id) {
-          <article class="card budget" [class.over]="line.ratio > 1">
+          <article class="card budget" [class.over]="line.isOver" [class.near]="line.isNear" [class.projected]="line.isProjectedOver && !line.isOver">
             <button type="button" class="budget-head" (click)="openEdit(line)">
               <span class="badge" [style.color]="line.category?.color ?? 'var(--ink-soft)'">
-                <app-icon [name]="line.category?.icon ?? 'dots'" [size]="19" />
+                <app-icon [name]="line.category?.icon ?? 'wallet'" [size]="19" />
               </span>
-              <span class="name">{{ line.category?.name ?? 'Catégorie' }}</span>
+              <span class="name">{{ line.label }}</span>
               <span class="numbers">
                 <app-amount [value]="line.spent" size="md" />
                 <span class="limit">/ <app-amount [value]="line.budget.limitAmount" size="sm" /></span>
@@ -86,7 +103,7 @@
               [attr.aria-valuenow]="(line.ratio * 100).toFixed(0)"
               aria-valuemin="0"
               aria-valuemax="100"
-              [attr.aria-label]="'Budget ' + (line.category?.name ?? '')"
+              [attr.aria-label]="'Budget ' + line.label"
             >
               <div class="fill" [style.width.%]="line.fillPercent"></div>
             </div>
@@ -102,6 +119,11 @@
         <div class="empty">
           <h3>Aucun budget ce mois-ci</h3>
           <p>Choisis une catégorie à suivre — Sereno t’indiquera où tu en es, sans jamais te presser.</p>
+          @if (canCopyPreviousMonth()) {
+            <button type="button" class="btn btn-ghost" (click)="copyPreviousMonthBudgets()">
+              Reprendre les budgets du mois précédent
+            </button>
+          }
         </div>
       </div>
     }

@@ -41,16 +41,17 @@
 
     <label class="amount-field" for="amount">
       <input
+        #amountInput
         id="amount"
         name="amount"
         type="text"
         inputmode="decimal"
         autocomplete="off"
+        enterkeyhint="done"
         placeholder="0"
         [ngModel]="amountText()"
         (ngModelChange)="amountText.set($event)"
         class="amount"
-        autofocus
       />
       <span class="euro">€</span>
     </label>
@@ -59,13 +60,54 @@
       <p class="notice">{{ hint() }}</p>
     }
 
+    @if (isCreateMode() && templates.pinned().length > 0) {
+      <div class="field">
+        <label>Modèles épinglés</label>
+        <div class="template-grid">
+          @for (template of templates.pinned(); track template.id) {
+            <button type="button" class="template-chip" (click)="applyTemplate(template)">
+              <span class="template-name">{{ template.name }}</span>
+              <app-amount
+                [value]="template.amount"
+                size="sm"
+                [sign]="template.type === 'income' ? '+' : '−'"
+              />
+            </button>
+          }
+        </div>
+      </div>
+    }
+
     <div class="field">
-      <label>Catégorie</label>
-      <app-category-picker
-        [categories]="pickableCategories()"
-        [selectedId]="categoryId()"
-        (select)="categoryId.set($event)"
-      />
+      @if (isCreateMode() && type() === 'expense' && favoriteCategoryList().length > 0) {
+        <div class="field-head">
+          <label>Catégories fréquentes</label>
+        </div>
+        <app-category-picker
+          [categories]="favoriteCategoryList()"
+          [selectedId]="categoryId()"
+          (select)="selectCategory($event)"
+        />
+        @if (otherCategories().length > 0) {
+          <button type="button" class="toggle-link" (click)="toggleAllCategories()">
+            {{ showAllCategories() ? 'Masquer les autres' : 'Toutes les catégories' }}
+          </button>
+          @if (showAllCategories()) {
+            <app-category-picker
+              [categories]="otherCategories()"
+              [selectedId]="categoryId()"
+              (select)="selectCategory($event)"
+            />
+          }
+        }
+      } @else {
+        <label>Catégorie</label>
+        <app-category-picker
+          [categories]="pickableCategories()"
+          [selectedId]="categoryId()"
+          (select)="selectCategory($event)"
+        />
+      }
     </div>
 
     @if (accounts.items().length > 1) {
@@ -80,26 +122,157 @@
     }
 
     <div class="field">
-      <label for="date">Date</label>
-      <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="date.set($event)" />
+      <label>Statut</label>
+      <div class="seg" role="radiogroup" aria-label="Statut">
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="status() === 'draft'"
+          [class.on]="status() === 'draft'"
+          (click)="status.set('draft')"
+        >
+          Brouillon
+        </button>
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="status() === 'posted'"
+          [class.on]="status() === 'posted'"
+          (click)="status.set('posted')"
+        >
+          Validée
+        </button>
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="status() === 'void'"
+          [class.on]="status() === 'void'"
+          (click)="status.set('void')"
+        >
+          Annulée
+        </button>
+      </div>
     </div>
 
-    <div class="field">
-      <label for="note">Note <span class="optional">— facultatif</span></label>
-      <input
-        id="note"
-        name="note"
-        type="text"
-        class="input"
-        placeholder="Marché du samedi…"
-        maxlength="120"
-        [ngModel]="note()"
-        (ngModelChange)="note.set($event)"
+    @if (isCreateMode()) {
+      <button type="button" class="toggle-link extras-toggle" (click)="toggleExtras()">
+        {{ showExtras() ? 'Moins d’options' : 'Date et note' }}
+      </button>
+      @if (showExtras()) {
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="date.set($event)" />
+        </div>
+        <div class="field">
+          <label for="note">Note <span class="optional">— facultatif</span></label>
+          <input
+            id="note"
+            name="note"
+            type="text"
+            class="input"
+            placeholder="Marché du samedi…"
+            maxlength="120"
+            [ngModel]="note()"
+            (ngModelChange)="note.set($event)"
+          />
+        </div>
+      }
+      <div class="field">
+        <label>Marqueur <span class="optional">— facultatif</span></label>
+        <app-marker-color-picker
+          [selectedColor]="markerColor()"
+          (colorSelected)="markerColor.set($event)"
+        />
+      </div>
+      <app-receipt-attach
+        [transactionId]="editedId()"
+        [disabled]="saving()"
+        (pendingFileChange)="onPendingReceiptFile($event)"
+        (applySuggestion)="applyReceiptSuggestion($event)"
       />
-    </div>
+    } @else {
+      <div class="field">
+        <label for="date">Date</label>
+        <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="date.set($event)" />
+      </div>
+      <div class="field">
+        <label for="note">Note <span class="optional">— facultatif</span></label>
+        <input
+          id="note"
+          name="note"
+          type="text"
+          class="input"
+          placeholder="Marché du samedi…"
+          maxlength="120"
+          [ngModel]="note()"
+          (ngModelChange)="note.set($event)"
+        />
+      </div>
+      <div class="field">
+        <label>Marqueur <span class="optional">— facultatif</span></label>
+        <app-marker-color-picker
+          [selectedColor]="markerColor()"
+          (colorSelected)="markerColor.set($event)"
+        />
+      </div>
+      <app-receipt-attach
+        [transactionId]="editedId()"
+        [disabled]="saving()"
+        (pendingFileChange)="onPendingReceiptFile($event)"
+        (applySuggestion)="applyReceiptSuggestion($event)"
+      />
+      @if (linkedRecurringRuleId()) {
+        <label class="toggle-row">
+          <span>Modifier uniquement cette occurrence</span>
+          <input
+            type="checkbox"
+            [ngModel]="detachFromRecurrence()"
+            (ngModelChange)="detachFromRecurrence.set($event)"
+            name="detachRecurrence"
+          />
+        </label>
+      }
+    }
 
-    <button type="submit" class="btn btn-primary btn-block">
-      {{ editedId() ? 'Enregistrer' : 'Ajouter' }}
-    </button>
+    @if (canSaveAsTemplate()) {
+      @if (templateFormOpen()) {
+        <div class="card template-form">
+          <label for="template-name">Nom du modèle</label>
+          <input
+            id="template-name"
+            type="text"
+            class="input"
+            maxlength="40"
+            placeholder="Café du matin"
+            [ngModel]="templateName()"
+            (ngModelChange)="templateName.set($event)"
+            name="saveTemplateName"
+          />
+          <div class="template-form-actions">
+            <button type="button" class="btn btn-primary btn-sm" (click)="saveAsTemplate()">Enregistrer</button>
+            <button type="button" class="btn btn-ghost btn-sm" (click)="templateFormOpen.set(false)">Annuler</button>
+          </div>
+        </div>
+      } @else {
+        <button type="button" class="toggle-link" (click)="openTemplateForm()">
+          Enregistrer comme modèle
+        </button>
+      }
+    }
+
+    @if (isCreateMode()) {
+      <div class="actions">
+        <button type="submit" class="btn btn-primary" [disabled]="saving()">
+          {{ saving() ? 'Un instant…' : 'Enregistrer' }}
+        </button>
+        <button type="button" class="btn btn-ghost" [disabled]="saving()" (click)="saveAndContinue()">
+          Enregistrer et ajouter
+        </button>
+      </div>
+    } @else {
+      <button type="submit" class="btn btn-primary btn-block" [disabled]="saving()">
+        {{ saving() ? 'Un instant…' : 'Enregistrer' }}
+      </button>
+    }
   </form>
 </div>

@@ -20,9 +20,17 @@ section .eyebrow {
   padding: 11px 4px;
   border: none;
   background: none;
-  cursor: pointer;
   text-align: left;
   color: var(--ink);
+}
+
+.row.sub {
+  padding-left: 28px;
+}
+
+.row.sub .badge {
+  width: 32px;
+  height: 32px;
 }
 
 .row.readonly {
@@ -52,6 +60,60 @@ section .eyebrow {
 .kind {
   font-size: 12.5px;
   color: var(--ink-faint);
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.sub-btn,
+.edit-btn {
+  display: grid;
+  place-items: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: var(--ink-soft);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.row.archived {
+  opacity: 0.55;
+}
+
+.row.sub .row-actions {
+  margin-left: auto;
+}
+
+.sub-btn:hover,
+.edit-btn:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.parent-hint {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.promote {
+  border: none;
+  background: none;
+  color: var(--sage-deep);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px;
+  text-align: left;
 }
 
 .form {

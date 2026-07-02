@@ -5,21 +5,28 @@ import { NewBudget } from '../../domain/models/budget.model';
 import { NewCategory } from '../../domain/models/category.model';
 import { NewRecurringRule } from '../../domain/models/recurring-rule.model';
 import { NewTransaction } from '../../domain/models/transaction.model';
+import { NewTransactionTemplate } from '../../domain/models/transaction-template.model';
 import { AccountRepository } from '../../domain/ports/account.repository';
 import { BudgetRepository } from '../../domain/ports/budget.repository';
 import { CategoryRepository } from '../../domain/ports/category.repository';
 import { RecurringRuleRepository } from '../../domain/ports/recurring-rule.repository';
+import { ReceiptRepository } from '../../domain/ports/receipt.repository';
+import { TransactionTemplateRepository } from '../../domain/ports/transaction-template.repository';
 import { TransactionFilter, TransactionRepository } from '../../domain/ports/transaction.repository';
 import { DexieAccountRepository } from '../dexie/dexie-account.repository';
 import { DexieBudgetRepository } from '../dexie/dexie-budget.repository';
 import { DexieCategoryRepository } from '../dexie/dexie-category.repository';
 import { DexieRecurringRuleRepository } from '../dexie/dexie-recurring-rule.repository';
+import { DexieReceiptRepository } from '../dexie/dexie-receipt.repository';
 import { DexieTransactionRepository } from '../dexie/dexie-transaction.repository';
+import { DexieTransactionTemplateRepository } from '../dexie/dexie-transaction-template.repository';
 import { SupabaseAccountRepository } from '../supabase/supabase-account.repository';
 import { SupabaseBudgetRepository } from '../supabase/supabase-budget.repository';
 import { SupabaseCategoryRepository } from '../supabase/supabase-category.repository';
 import { SupabaseRecurringRuleRepository } from '../supabase/supabase-recurring-rule.repository';
+import { SupabaseReceiptRepository } from '../supabase/supabase-receipt.repository';
 import { SupabaseTransactionRepository } from '../supabase/supabase-transaction.repository';
+import { SupabaseTransactionTemplateRepository } from '../supabase/supabase-transaction-template.repository';
 
 /* La bascule invité ↔ connecté, transparente pour le reste de l'app :
    chaque appel est routé à l'exécution vers Dexie ou Supabase selon le mode
@@ -87,6 +94,7 @@ export class SwitchingBudgetRepository implements BudgetRepository {
     return this.mode.isCloud() ? this.supabase : this.dexie;
   }
 
+  listAll = () => this.active.listAll();
   listByMonth = (month: string) => this.active.listByMonth(month);
   upsert = (input: NewBudget) => this.active.upsert(input);
   remove = (id: string) => this.active.remove(id);
@@ -105,5 +113,43 @@ export class SwitchingRecurringRuleRepository implements RecurringRuleRepository
   list = () => this.active.list();
   create = (input: NewRecurringRule) => this.active.create(input);
   update = (id: string, patch: Partial<NewRecurringRule>) => this.active.update(id, patch);
+  remove = (id: string) => this.active.remove(id);
+}
+
+@Injectable({ providedIn: 'root' })
+export class SwitchingReceiptRepository implements ReceiptRepository {
+  private readonly mode = inject(AppModeService);
+  private readonly dexie = inject(DexieReceiptRepository);
+  private readonly supabase = inject(SupabaseReceiptRepository);
+
+  private get active(): ReceiptRepository {
+    return this.mode.isCloud() ? this.supabase : this.dexie;
+  }
+
+  listByTransaction = (transactionId: string) => this.active.listByTransaction(transactionId);
+  listTransactionIds = () => this.active.listTransactionIds();
+  attach = (transactionId: string, file: File) => this.active.attach(transactionId, file);
+  replace = (receiptId: string, file: File) => this.active.replace(receiptId, file);
+  remove = (receiptId: string) => this.active.remove(receiptId);
+  removeByTransaction = (transactionId: string) => this.active.removeByTransaction(transactionId);
+  getPreviewUrl = (receiptId: string) => this.active.getPreviewUrl(receiptId);
+  releasePreviewUrl = (url: string) => this.active.releasePreviewUrl(url);
+  requestOcr = (receiptId: string) => this.active.requestOcr(receiptId);
+  confirmExtraction = (receiptId: string) => this.active.confirmExtraction(receiptId);
+}
+
+@Injectable({ providedIn: 'root' })
+export class SwitchingTransactionTemplateRepository implements TransactionTemplateRepository {
+  private readonly mode = inject(AppModeService);
+  private readonly dexie = inject(DexieTransactionTemplateRepository);
+  private readonly supabase = inject(SupabaseTransactionTemplateRepository);
+
+  private get active(): TransactionTemplateRepository {
+    return this.mode.isCloud() ? this.supabase : this.dexie;
+  }
+
+  list = () => this.active.list();
+  create = (input: NewTransactionTemplate) => this.active.create(input);
+  update = (id: string, patch: Partial<NewTransactionTemplate>) => this.active.update(id, patch);
   remove = (id: string) => this.active.remove(id);
 }

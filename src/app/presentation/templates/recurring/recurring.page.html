@@ -68,6 +68,26 @@
           (ngModelChange)="nextRunDate.set($event)"
         />
       </div>
+      @if (formPreviewText()) {
+        <p class="preview">Prochaines échéances : {{ formPreviewText() }}</p>
+      }
+      <label class="toggle-row">
+        <span>Date de fin <span class="fine">— facultatif</span></span>
+        <input type="checkbox" [ngModel]="endDateEnabled()" (ngModelChange)="endDateEnabled.set($event)" name="endEnabled" />
+      </label>
+      @if (endDateEnabled()) {
+        <div class="field">
+          <label for="endDate">Fin le</label>
+          <input
+            id="endDate"
+            name="endDate"
+            type="date"
+            class="input"
+            [ngModel]="endDate()"
+            (ngModelChange)="endDate.set($event)"
+          />
+        </div>
+      }
       @if (accounts.items().length > 1) {
         <div class="field">
           <label for="account">Compte</label>
@@ -109,7 +129,13 @@
               <span class="meta">
                 {{ frequencyLabels[rule.frequency] }} ·
                 {{ rule.active ? 'prochaine le ' + (rule.nextRunDate + 'T00:00:00' | date: 'd MMM') : 'en pause' }}
+                @if (rule.endDate) {
+                  · jusqu'au {{ rule.endDate + 'T00:00:00' | date: 'd MMM yyyy' }}
+                }
               </span>
+              @if (rule.active && previewText(rule)) {
+                <span class="preview">Ensuite : {{ previewText(rule) }}</span>
+              }
             </span>
             <app-amount [value]="rule.amount" size="md" />
           </button>

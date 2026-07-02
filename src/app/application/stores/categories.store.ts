@@ -2,6 +2,7 @@ import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { Category, NewCategory } from '../../domain/models/category.model';
 import { CATEGORY_REPOSITORY } from '../../domain/ports/tokens';
+import { buildCategoryTree, categoriesForPicker } from '../../domain/utils/category-tree.util';
 
 interface CategoriesState {
   items: Category[];
@@ -15,10 +16,11 @@ export const CategoriesStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withComputed(({ items }) => ({
-    byId: computed(() => new Map(items().map((c) => [c.id, c]))),
-    expenseCategories: computed(() => items().filter((c) => c.type === 'expense')),
-    incomeCategories: computed(() => items().filter((c) => c.type === 'income')),
-    customCategories: computed(() => items().filter((c) => !c.isDefault)),
+    byId: computed(() => new Map(items().map((category) => [category.id, category]))),
+    expenseCategories: computed(() => categoriesForPicker(items().filter((category) => category.type === 'expense'))),
+    incomeCategories: computed(() => categoriesForPicker(items().filter((category) => category.type === 'income'))),
+    customCategories: computed(() => items().filter((category) => !category.isDefault)),
+    tree: computed(() => buildCategoryTree(items())),
   })),
   withMethods((store) => {
     const repo = inject(CATEGORY_REPOSITORY);
@@ -60,7 +62,15 @@ export const CategoriesStore = signalStore(
       async remove(id: string): Promise<void> {
         try {
           await repo.remove(id);
-          patchState(store, { items: store.items().filter((c) => c.id !== id), error: null });
+          patchState(store, {
+            items: store
+              .items()
+              .filter((category) => category.id !== id)
+              .map((category) =>
+                category.parentId === id ? { ...category, parentId: null } : category,
+              ),
+            error: null,
+          });
         } catch {
           patchState(store, { error: "La suppression n'a pas abouti. Réessaie dans un instant." });
         }

@@ -1,7 +1,7 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { NewTransaction, Transaction } from '../../domain/models/transaction.model';
-import { TRANSACTION_REPOSITORY } from '../../domain/ports/tokens';
+import { TRANSACTION_REPOSITORY, RECEIPT_REPOSITORY } from '../../domain/ports/tokens';
 
 interface TransactionsState {
   items: Transaction[];
@@ -27,6 +27,7 @@ export const TransactionsStore = signalStore(
   })),
   withMethods((store) => {
     const repo = inject(TRANSACTION_REPOSITORY);
+    const receipts = inject(RECEIPT_REPOSITORY);
     return {
       async load(): Promise<void> {
         try {
@@ -64,6 +65,7 @@ export const TransactionsStore = signalStore(
 
       async remove(id: string): Promise<void> {
         try {
+          await receipts.removeByTransaction(id);
           await repo.remove(id);
           patchState(store, { items: store.items().filter((t) => t.id !== id), error: null });
         } catch {

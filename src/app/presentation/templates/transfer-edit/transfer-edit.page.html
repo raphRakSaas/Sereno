@@ -1,0 +1,113 @@
+<div class="page">
+  <div class="head">
+    <button type="button" class="icon-btn" (click)="close()" aria-label="Fermer">
+      <app-icon name="close" />
+    </button>
+    <h1 class="page-title">{{ editedId() ? 'Modifier le virement' : 'Transfert' }}</h1>
+    @if (editedId()) {
+      <button type="button" class="icon-btn danger" (click)="remove()">
+        @if (confirmingDelete()) {
+          <span class="confirm-label">Confirmer ?</span>
+        } @else {
+          <app-icon name="trash" />
+        }
+      </button>
+    } @else {
+      <span class="spacer"></span>
+    }
+  </div>
+
+  <p class="explain">Un virement déplace de l'argent entre tes comptes — ce n'est ni une dépense ni un revenu.</p>
+
+  <form (ngSubmit)="save()">
+    <label class="amount-field" for="amount">
+      <input
+        #amountInput
+        id="amount"
+        name="amount"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        placeholder="0"
+        [ngModel]="amountText()"
+        (ngModelChange)="amountText.set($event)"
+        class="amount"
+      />
+      <span class="euro">€</span>
+    </label>
+
+    @if (hint()) {
+      <p class="notice">{{ hint() }}</p>
+    }
+
+    <div class="field">
+      <label for="from-account">Depuis</label>
+      <select
+        id="from-account"
+        class="input"
+        [ngModel]="fromAccountId()"
+        (ngModelChange)="setFromAccount($event)"
+        name="fromAccount"
+      >
+        @for (account of accounts.items(); track account.id) {
+          <option [value]="account.id">{{ account.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="to-account">Vers</label>
+      <select
+        id="to-account"
+        class="input"
+        [ngModel]="toAccountId()"
+        (ngModelChange)="toAccountId.set($event)"
+        name="toAccount"
+      >
+        @for (account of destinationOptions(); track account.id) {
+          <option [value]="account.id">{{ account.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="date">Date</label>
+      <input
+        id="date"
+        name="date"
+        type="date"
+        class="input"
+        [ngModel]="date()"
+        (ngModelChange)="date.set($event)"
+      />
+    </div>
+
+    <div class="field">
+      <label for="note">Note <span class="fine">(optionnel)</span></label>
+      <input
+        id="note"
+        name="note"
+        type="text"
+        class="input"
+        placeholder="Ex. Épargne mensuelle"
+        [ngModel]="note()"
+        (ngModelChange)="note.set($event)"
+      />
+    </div>
+
+    <div class="field">
+      <label>Marqueur <span class="fine">(optionnel)</span></label>
+      <app-marker-color-picker
+        [selectedColor]="markerColor()"
+        (colorSelected)="markerColor.set($event)"
+      />
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="btn btn-primary" [disabled]="saving()">
+        {{ editedId() ? 'Enregistrer' : 'Transférer' }}
+      </button>
+      <button type="button" class="btn btn-ghost" (click)="close()">Annuler</button>
+    </div>
+  </form>
+</div>

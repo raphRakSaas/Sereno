@@ -11,20 +11,46 @@
     <p class="notice">{{ accounts.error() }}</p>
   }
 
-  <div class="card list">
-    @for (account of accounts.items(); track account.id) {
-      <button type="button" class="row" (click)="openEdit(account)">
-        <span class="badge">
-          <app-icon [name]="typeIcons[account.type]" [size]="19" />
-        </span>
-        <span class="text">
-          <span class="name">{{ account.name }}</span>
-          <span class="kind">{{ typeLabels[account.type] }}</span>
-        </span>
-        <app-amount [value]="balances().get(account.id) ?? 0" size="lg" />
-      </button>
-    }
-  </div>
+  <label class="toggle-row card">
+    <span>Afficher les comptes masqués</span>
+    <input type="checkbox" [ngModel]="showArchived()" (ngModelChange)="showArchived.set($event)" />
+  </label>
+
+  @for (group of groupedAccounts(); track group.label) {
+    <section class="group">
+      <p class="eyebrow">{{ group.label }}</p>
+      <div class="card list">
+        @for (account of group.accounts; track account.id) {
+          <button
+            type="button"
+            class="row"
+            [class.archived]="account.isArchived"
+            (click)="openEdit(account)"
+          >
+            <span class="badge">
+              <app-icon [name]="typeIcons[account.type]" [size]="19" />
+            </span>
+            <span class="text">
+              <span class="name">{{ account.name }}</span>
+              <span class="kind">
+                {{ typeLabels[account.type] }}
+                @if (account.isArchived) {
+                  · Masqué
+                }
+                @if (account.excludeFromTotal) {
+                  · Hors total
+                }
+              </span>
+              @if (account.type === 'credit_card' && account.cardPaymentDay) {
+                <span class="reminder">{{ cardPaymentReminder(account.cardPaymentDay) }}</span>
+              }
+            </span>
+            <app-amount [value]="balances().get(account.id) ?? 0" size="lg" />
+          </button>
+        }
+      </div>
+    </section>
+  }
 
   @if (formOpen()) {
     <form class="card form" (ngSubmit)="save()">
@@ -64,6 +90,67 @@
           (ngModelChange)="initialBalanceText.set($event)"
         />
       </div>
+
+      @if (type() === 'credit_card') {
+        <div class="field">
+          <label for="cardLimit">Plafond carte <span class="fine">— facultatif</span></label>
+          <input
+            id="cardLimit"
+            name="cardLimit"
+            type="text"
+            inputmode="decimal"
+            class="input amount"
+            placeholder="2000"
+            [ngModel]="cardLimitText()"
+            (ngModelChange)="cardLimitText.set($event)"
+          />
+        </div>
+        <div class="field">
+          <label for="cardPaymentDay">Jour de paiement <span class="fine">— 1 à 28</span></label>
+          <input
+            id="cardPaymentDay"
+            name="cardPaymentDay"
+            type="number"
+            min="1"
+            max="28"
+            class="input"
+            [ngModel]="cardPaymentDay()"
+            (ngModelChange)="cardPaymentDay.set($event ? +$event : null)"
+          />
+          @if (cardPaymentDay()) {
+            <p class="fine">{{ cardPaymentReminder(cardPaymentDay()) }}</p>
+          }
+        </div>
+      }
+
+      <label class="toggle-row">
+        <span>Masquer ce compte</span>
+        <input type="checkbox" [ngModel]="isArchived()" (ngModelChange)="isArchived.set($event)" name="archived" />
+      </label>
+      <label class="toggle-row">
+        <span>Exclure du solde total</span>
+        <input
+          type="checkbox"
+          [ngModel]="excludeFromTotal()"
+          (ngModelChange)="excludeFromTotal.set($event)"
+          name="excludeFromTotal"
+        />
+      </label>
+
+      @if (editedId()) {
+        <div class="field">
+          <label>Ordre d'affichage</label>
+          <div class="order-actions">
+            <button type="button" class="btn btn-ghost btn-sm" [disabled]="!canMoveUp()" (click)="moveSortOrder(-1)">
+              Monter
+            </button>
+            <button type="button" class="btn btn-ghost btn-sm" [disabled]="!canMoveDown()" (click)="moveSortOrder(1)">
+              Descendre
+            </button>
+          </div>
+        </div>
+      }
+
       <div class="actions">
         <button type="submit" class="btn btn-primary">{{ editedId() ? 'Enregistrer' : 'Créer' }}</button>
         <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>

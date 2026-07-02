@@ -27,6 +27,14 @@ import { IconComponent } from '../../atoms/icon/icon.component';
           <app-icon name="list" [size]="20" />
           <span>Activité</span>
         </a>
+        <a routerLink="/calendrier" routerLinkActive="active">
+          <app-icon name="calendar" [size]="20" />
+          <span>Calendrier</span>
+        </a>
+        <a routerLink="/statistiques" routerLinkActive="active">
+          <app-icon name="strata" [size]="20" />
+          <span>Statistiques</span>
+        </a>
         <a routerLink="/budgets" routerLinkActive="active">
           <app-icon name="wallet" [size]="20" />
           <span>Budgets</span>

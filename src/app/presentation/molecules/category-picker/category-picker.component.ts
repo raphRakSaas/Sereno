@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { Category } from '../../../domain/models/category.model';
+import { categoryDisplayName } from '../../../domain/utils/category-tree.util';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
 @Component({
@@ -14,10 +15,11 @@ import { IconComponent } from '../../atoms/icon/icon.component';
           role="option"
           [attr.aria-selected]="category.id === selectedId()"
           [class.selected]="category.id === selectedId()"
+          [class.sub]="category.parentId"
           (click)="select.emit(category.id)"
         >
           <span class="dot" [style.background]="category.color"></span>
-          <span class="label">{{ category.name }}</span>
+          <span class="label">{{ labelFor(category) }}</span>
           @if (category.id === selectedId()) {
             <app-icon name="check" [size]="15" />
           }
@@ -44,6 +46,9 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       font-weight: 500;
       cursor: pointer;
     }
+    button.sub {
+      font-size: 13px;
+    }
     button.selected {
       border-color: var(--sage);
       background: var(--sage-pale);
@@ -60,4 +65,12 @@ export class CategoryPickerComponent {
   readonly categories = input.required<Category[]>();
   readonly selectedId = input<string | null>(null);
   readonly select = output<string>();
+
+  private readonly categoriesById = computed(
+    () => new Map(this.categories().map((category) => [category.id, category])),
+  );
+
+  protected labelFor(category: Category): string {
+    return categoryDisplayName(category, this.categoriesById());
+  }
 }

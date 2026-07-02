@@ -25,6 +25,8 @@ export class ConversionService {
   readonly reason = signal<ConversionReason>('days');
   readonly featureName = signal('');
 
+  private quotaCheckTimer: ReturnType<typeof setTimeout> | null = null;
+
   /** À appeler au démarrage et après chaque transaction créée. */
   async checkQuotaTriggers(): Promise<void> {
     if (this.mode.isCloud() || !this.gateway.available || this.open() || this.isSnoozed()) {
@@ -42,6 +44,17 @@ export class ConversionService {
         this.trigger('days');
       }
     }
+  }
+
+  /** Laisse le temps au toast de confirmation avant d'ouvrir la modale. */
+  scheduleQuotaCheck(delayMs = 3500): void {
+    if (this.quotaCheckTimer !== null) {
+      clearTimeout(this.quotaCheckTimer);
+    }
+    this.quotaCheckTimer = setTimeout(() => {
+      this.quotaCheckTimer = null;
+      void this.checkQuotaTriggers();
+    }, delayMs);
   }
 
   /** Tentative d'accès à une fonctionnalité réservée aux comptes. */

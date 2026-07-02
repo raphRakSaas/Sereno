@@ -1,0 +1,243 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.head-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.view-toggle {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.view-toggle .chip {
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.view-toggle .chip.on {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.week-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.week-btn {
+  min-width: 36px;
+  padding: 6px 10px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.week-range {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  min-width: 9rem;
+  text-align: center;
+}
+
+.calendar-layout {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.calendar {
+  padding: var(--space-4);
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.weekdays span {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar.week-view .day {
+  min-height: 72px;
+}
+
+.day,
+.pad {
+  aspect-ratio: 1;
+  min-height: 44px;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  padding: 4px;
+  color: inherit;
+  font: inherit;
+}
+
+.day.today {
+  border-color: var(--sage);
+}
+
+.day.selected {
+  outline: 2px solid var(--sage);
+  outline-offset: -2px;
+}
+
+.num {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.marks {
+  display: flex;
+  gap: 3px;
+}
+
+.mark {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+}
+
+.mark.out {
+  background: var(--sage);
+}
+
+.mark.in {
+  background: var(--mist-deep);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.section-head h2 {
+  margin: 0;
+  font-size: 18px;
+  text-transform: capitalize;
+}
+
+.totals {
+  display: flex;
+  align-items: center;
+  padding: var(--space-4);
+  gap: var(--space-4);
+}
+
+.totals .in,
+.totals .out {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.totals .k {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.rule {
+  width: 1px;
+  align-self: stretch;
+  background: var(--line);
+}
+
+.list-card {
+  padding: 4px 10px;
+}
+
+.list-card app-transaction-list-item + app-transaction-list-item {
+  display: block;
+  border-top: 1px solid var(--line);
+}
+
+.see-all {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mist-deep);
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 48px 64px;
+  }
+
+  .calendar-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .detail {
+    position: sticky;
+    top: var(--space-4);
+  }
+
+  .section-head h2 {
+    font-size: 20px;
+  }
+
+  .col-side .list-card {
+    max-height: 480px;
+    overflow-y: auto;
+  }
+}

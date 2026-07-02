@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { cloudOnlyGuard } from './presentation/guards/cloud-only.guard';
+import { startScreenGuard } from './presentation/guards/start-screen.guard';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
+    canActivate: [startScreenGuard],
     loadComponent: () => import('./presentation/templates/dashboard/dashboard.page').then((m) => m.DashboardPage),
     title: 'Sereno',
   },
@@ -30,6 +32,30 @@ export const routes: Routes = [
     path: 'budgets',
     loadComponent: () => import('./presentation/templates/budgets/budgets.page').then((m) => m.BudgetsPage),
     title: 'Budgets — Sereno',
+  },
+  {
+    path: 'statistiques',
+    loadComponent: () =>
+      import('./presentation/templates/statistics/statistics.page').then((m) => m.StatisticsPage),
+    title: 'Statistiques — Sereno',
+  },
+  {
+    path: 'calendrier',
+    loadComponent: () =>
+      import('./presentation/templates/calendar/calendar.page').then((m) => m.CalendarPage),
+    title: 'Calendrier — Sereno',
+  },
+  {
+    path: 'transferts/nouveau',
+    loadComponent: () =>
+      import('./presentation/templates/transfer-edit/transfer-edit.page').then((m) => m.TransferEditPage),
+    title: 'Transfert — Sereno',
+  },
+  {
+    path: 'transferts/:id',
+    loadComponent: () =>
+      import('./presentation/templates/transfer-edit/transfer-edit.page').then((m) => m.TransferEditPage),
+    title: 'Modifier le virement — Sereno',
   },
   {
     path: 'reglages',
@@ -60,6 +86,18 @@ export const routes: Routes = [
       import('./presentation/templates/recurring/recurring.page').then((m) => m.RecurringPage),
     canActivate: [cloudOnlyGuard('les récurrences')],
     title: 'Récurrences — Sereno',
+  },
+  {
+    path: 'modeles',
+    loadComponent: () =>
+      import('./presentation/templates/templates/templates.page').then((m) => m.TemplatesPage),
+    title: 'Modèles — Sereno',
+  },
+  {
+    path: 'echeances',
+    loadComponent: () =>
+      import('./presentation/templates/installments/installments.page').then((m) => m.InstallmentsPage),
+    title: 'Échéances — Sereno',
   },
   { path: '**', redirectTo: '' },
 ];

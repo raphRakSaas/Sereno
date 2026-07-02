@@ -1,0 +1,180 @@
+<div class="page">
+  <div class="head">
+    <h1 class="page-title">Modèles</h1>
+    <button type="button" class="btn btn-ghost" (click)="openCreate()">
+      <app-icon name="plus" [size]="18" />
+      Créer
+    </button>
+  </div>
+
+  <p class="intro">
+    Enregistre tes transactions habituelles et réutilise-les en un tap. Épingle jusqu’à 8 modèles
+    pour les voir directement dans la saisie rapide.
+  </p>
+
+  @if (templates.error()) {
+    <p class="notice">{{ templates.error() }}</p>
+  }
+
+  @if (formOpen()) {
+    <form class="card form" (ngSubmit)="save()">
+      <h2>{{ editedId() ? 'Modifier le modèle' : 'Nouveau modèle' }}</h2>
+      @if (hint()) {
+        <p class="notice">{{ hint() }}</p>
+      }
+      <div class="field">
+        <label for="template-name">Nom</label>
+        <input
+          id="template-name"
+          type="text"
+          class="input"
+          maxlength="40"
+          placeholder="Café du matin"
+          [ngModel]="name()"
+          (ngModelChange)="name.set($event)"
+          name="templateName"
+        />
+      </div>
+      <div class="seg" role="radiogroup" aria-label="Type">
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="type() === 'expense'"
+          [class.on]="type() === 'expense'"
+          (click)="type.set('expense')"
+        >
+          Dépense
+        </button>
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="type() === 'income'"
+          [class.on]="type() === 'income'"
+          (click)="type.set('income')"
+        >
+          Revenu
+        </button>
+      </div>
+      <div class="field">
+        <label for="template-amount">Montant</label>
+        <input
+          id="template-amount"
+          type="text"
+          inputmode="decimal"
+          class="input amount"
+          placeholder="3,50"
+          [ngModel]="amountText()"
+          (ngModelChange)="amountText.set($event)"
+          name="templateAmount"
+        />
+      </div>
+      <div class="field">
+        <label>Catégorie</label>
+        <app-category-picker
+          [categories]="pickableCategories()"
+          [selectedId]="categoryId()"
+          (select)="categoryId.set($event)"
+        />
+      </div>
+      @if (accounts.items().length > 1) {
+        <div class="field">
+          <label for="template-account">Compte</label>
+          <select
+            id="template-account"
+            class="input"
+            [ngModel]="accountId()"
+            (ngModelChange)="accountId.set($event || null)"
+            name="templateAccount"
+          >
+            @for (account of accounts.items(); track account.id) {
+              <option [value]="account.id">{{ account.name }}</option>
+            }
+          </select>
+        </div>
+      }
+      <div class="field">
+        <label for="template-note">Note <span class="optional">— facultatif</span></label>
+        <input
+          id="template-note"
+          type="text"
+          class="input"
+          maxlength="120"
+          [ngModel]="note()"
+          (ngModelChange)="note.set($event)"
+          name="templateNote"
+        />
+      </div>
+      <label class="pin-row">
+        <input type="checkbox" [ngModel]="isPinned()" (ngModelChange)="isPinned.set($event)" name="templatePin" />
+        <span>Épingler dans la saisie rapide</span>
+      </label>
+      <div class="actions">
+        <button type="submit" class="btn btn-primary">{{ editedId() ? 'Enregistrer' : 'Créer' }}</button>
+        <button type="button" class="btn btn-ghost" (click)="formOpen.set(false)">Annuler</button>
+      </div>
+      @if (editedId()) {
+        <button type="button" class="delete" (click)="remove(editedId()!)">
+          {{ confirmingDelete() === editedId() ? 'Confirmer la suppression ?' : 'Supprimer ce modèle' }}
+        </button>
+      }
+    </form>
+  }
+
+  @if (templates.pinned().length > 0) {
+    <section>
+      <p class="eyebrow">Épinglés — saisie rapide</p>
+      <div class="card list">
+        @for (template of templates.pinned(); track template.id) {
+          <div class="row">
+            <button type="button" class="pin on" (click)="togglePin(template)" aria-label="Retirer des favoris">
+              <app-icon name="sparkle" [size]="16" />
+            </button>
+            <a class="main" [routerLink]="['/transactions/nouvelle']" [queryParams]="{ modele: template.id }">
+              <span class="name">{{ template.name }}</span>
+              <span class="meta">{{ categoryLabel(template.categoryId) }} · {{ accountLabel(template.accountId) }}</span>
+            </a>
+            <app-amount [value]="template.amount" size="md" [sign]="template.type === 'income' ? '+' : '−'" />
+            <button type="button" class="edit-btn" (click)="openEdit(template)" aria-label="Modifier {{ template.name }}">
+              <app-icon name="pencil" [size]="16" />
+            </button>
+          </div>
+        }
+      </div>
+    </section>
+  }
+
+  <section>
+    <p class="eyebrow">Tous les modèles</p>
+    @if (templates.items().length > 0) {
+      <div class="card list">
+        @for (template of templates.items(); track template.id) {
+          <div class="row">
+            <button
+              type="button"
+              class="pin"
+              [class.on]="template.isPinned"
+              (click)="togglePin(template)"
+              [attr.aria-label]="template.isPinned ? 'Retirer des favoris' : 'Épingler'"
+            >
+              <app-icon name="sparkle" [size]="16" />
+            </button>
+            <a class="main" [routerLink]="['/transactions/nouvelle']" [queryParams]="{ modele: template.id }">
+              <span class="name">{{ template.name }}</span>
+              <span class="meta">{{ categoryLabel(template.categoryId) }} · {{ accountLabel(template.accountId) }}</span>
+            </a>
+            <app-amount [value]="template.amount" size="md" [sign]="template.type === 'income' ? '+' : '−'" />
+            <button type="button" class="edit-btn" (click)="openEdit(template)" aria-label="Modifier {{ template.name }}">
+              <app-icon name="pencil" [size]="16" />
+            </button>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="card">
+        <div class="empty">
+          <p>Aucun modèle pour l’instant. Crée le premier pour gagner du temps au quotidien.</p>
+        </div>
+      </div>
+    }
+  </section>
+</div>

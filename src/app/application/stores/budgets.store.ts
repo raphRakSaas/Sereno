@@ -1,6 +1,7 @@
 import { inject } from '@angular/core';
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
-import { Budget, monthOf, NewBudget } from '../../domain/models/budget.model';
+import { Budget, monthOf, NewBudget, periodBoundsForMonth } from '../../domain/models/budget.model';
+import { shiftMonth } from '../../domain/utils/period.utils';
 import { BUDGET_REPOSITORY } from '../../domain/ports/tokens';
 
 interface BudgetsState {
@@ -34,9 +35,19 @@ export const BudgetsStore = signalStore(
         }
       },
 
-      async upsert(input: NewBudget): Promise<Budget | null> {
+      async upsert(
+        input: Pick<NewBudget, 'categoryId' | 'month' | 'limitAmount'> & Partial<Omit<NewBudget, 'categoryId' | 'month' | 'limitAmount'>>,
+      ): Promise<Budget | null> {
         try {
-          const saved = await repo.upsert(input);
+          const periodType = input.periodType ?? 'monthly';
+          const bounds = periodBoundsForMonth(input.month, periodType);
+          const saved = await repo.upsert({
+            ...input,
+            periodType,
+            periodStart: bounds.start,
+            periodEnd: bounds.end,
+            alertThresholdPct: input.alertThresholdPct ?? 80,
+          });
           const others = store.items().filter((b) => b.id !== saved.id);
           patchState(store, { items: [...others, saved], error: null });
           return saved;
@@ -52,6 +63,35 @@ export const BudgetsStore = signalStore(
           patchState(store, { items: store.items().filter((b) => b.id !== id), error: null });
         } catch {
           patchState(store, { error: "La suppression n'a pas abouti. Réessaie dans un instant." });
+        }
+      },
+
+      /** Recopie les budgets du mois précédent vers le mois affiché. */
+      async copyFromPreviousMonth(): Promise<number | null> {
+        const targetMonth = store.month();
+        const previousMonth = shiftMonth(targetMonth, -1);
+        try {
+          const previousBudgets = await repo.listByMonth(previousMonth);
+          if (previousBudgets.length === 0) {
+            return 0;
+          }
+          for (const budget of previousBudgets) {
+            await repo.upsert({
+              categoryId: budget.categoryId,
+              month: targetMonth,
+              limitAmount: budget.limitAmount,
+              periodType: budget.periodType ?? 'monthly',
+              periodStart: budget.periodStart,
+              periodEnd: budget.periodEnd,
+              alertThresholdPct: budget.alertThresholdPct ?? 80,
+            });
+          }
+          const items = await repo.listByMonth(targetMonth);
+          patchState(store, { items, error: null });
+          return previousBudgets.length;
+        } catch {
+          patchState(store, { error: 'La copie des budgets n’a pas abouti. Réessaie dans un instant.' });
+          return null;
         }
       },
 

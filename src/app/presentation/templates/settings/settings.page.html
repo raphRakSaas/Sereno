@@ -1,0 +1,144 @@
+<div class="page">
+  <h1 class="page-title">Réglages</h1>
+
+  <section class="card block">
+    <div class="block-head">
+      <app-icon name="sliders" />
+      <h2>Affichage</h2>
+    </div>
+    <div class="field">
+      <label for="theme">Thème</label>
+      <select
+        id="theme"
+        class="input"
+        [ngModel]="preferences.theme()"
+        (ngModelChange)="preferences.setTheme($event)"
+      >
+        @for (option of themeOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+    <div class="field">
+      <label for="startScreen">Écran de démarrage</label>
+      <select
+        id="startScreen"
+        class="input"
+        [ngModel]="preferences.startScreen()"
+        (ngModelChange)="preferences.setStartScreen($event)"
+      >
+        @for (option of startScreenOptions; track option.value) {
+          <option [value]="option.value">{{ option.label }}</option>
+        }
+      </select>
+    </div>
+    <label class="toggle-row">
+      <span>Semaine commence le lundi</span>
+      <input
+        type="checkbox"
+        [ngModel]="preferences.weekStartsMonday()"
+        (ngModelChange)="preferences.setWeekStartsMonday($event)"
+      />
+    </label>
+    <label class="toggle-row">
+      <span>Boutons rapides sur l'accueil</span>
+      <input
+        type="checkbox"
+        [ngModel]="preferences.quickButtonsEnabled()"
+        (ngModelChange)="preferences.setQuickButtonsEnabled($event)"
+      />
+    </label>
+  </section>
+
+  <section class="card block">
+    <div class="block-head">
+      <app-icon [name]="auth.isSignedIn() ? 'cloud' : 'user'" />
+      <h2>Tes données</h2>
+    </div>
+    @if (auth.isSignedIn()) {
+      <p>
+        Connecté en tant que <strong>{{ auth.user()?.email }}</strong>. Tes données sont synchronisées et
+        te suivent d'un appareil à l'autre.
+      </p>
+      <button type="button" class="btn btn-ghost" (click)="signOut()" [disabled]="busy()">
+        <app-icon name="log-out" [size]="18" />
+        {{ busy() ? 'Un instant…' : 'Me déconnecter' }}
+      </button>
+      <p class="fine">Tes données restent en sécurité dans ton compte.</p>
+    } @else {
+      <p>
+        Tu utilises Sereno en mode invité : tout vit sur cet appareil, rien ne part ailleurs. Un compte
+        gratuit synchronise tes données et ouvre les comptes multiples, les budgets et les récurrences.
+      </p>
+      @if (auth.available) {
+        <a routerLink="/compte" class="btn btn-primary">Créer un compte gratuit</a>
+      } @else {
+        <p class="fine">Synchronisation non configurée sur cette installation (voir README).</p>
+      }
+    }
+    <p class="fine sync">{{ lastSyncLabel() }}</p>
+  </section>
+
+  <section class="card block">
+    <div class="block-head">
+      <app-icon name="repeat" />
+      <h2>Import / export</h2>
+    </div>
+    <div class="io-actions">
+      <button type="button" class="btn btn-ghost" (click)="exportBackup()" [disabled]="importBusy()">
+        Exporter une sauvegarde
+      </button>
+      <button type="button" class="btn btn-ghost" (click)="exportCsv()" [disabled]="importBusy()">
+        Exporter les transactions (CSV)
+      </button>
+    </div>
+    <label class="file-btn btn btn-ghost">
+      Importer une sauvegarde
+      <input type="file" accept="application/json,.json" (change)="onBackupSelected($event)" [disabled]="importBusy()" />
+    </label>
+    <label class="file-btn btn btn-ghost">
+      Importer un CSV
+      <input type="file" accept="text/csv,.csv" (change)="onCsvSelected($event)" [disabled]="importBusy()" />
+    </label>
+  </section>
+
+  <section class="card links">
+    <a routerLink="/comptes">
+      <app-icon name="wallet" [size]="19" />
+      <span>Comptes</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+    <a routerLink="/categories">
+      <app-icon name="dots" [size]="19" />
+      <span>Catégories</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+    <a routerLink="/recurrences">
+      <app-icon name="repeat" [size]="19" />
+      <span>Récurrences</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+    <a routerLink="/echeances">
+      <app-icon name="calendar" [size]="19" />
+      <span>Échéances</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+    <a routerLink="/modeles">
+      <app-icon name="sparkle" [size]="19" />
+      <span>Modèles</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+  </section>
+
+  <section class="card block">
+    <div class="block-head">
+      <app-icon name="sparkle" />
+      <h2>À propos</h2>
+    </div>
+    <p>
+      Sereno t'aide à voir où va ton argent, calmement. Pas de rouge, pas de culpabilisation : des
+      chiffres clairs et des constats posés.
+    </p>
+    <p class="fine">Version 1.0</p>
+  </section>
+</div>

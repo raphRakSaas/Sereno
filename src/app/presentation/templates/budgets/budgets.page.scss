@@ -108,6 +108,14 @@
   background: var(--amber);
 }
 
+.budget.near:not(.over) .fill {
+  background: var(--sand);
+}
+
+.budget.near:not(.over) {
+  background: var(--amber-pale);
+}
+
 .status {
   margin: 0;
   font-size: 13.5px;
@@ -115,6 +123,15 @@
 }
 
 .budget.over .status {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.budget.projected:not(.over) {
+  background: var(--amber-pale);
+}
+
+.budget.projected:not(.over) .status {
   color: var(--amber);
   font-weight: 500;
 }

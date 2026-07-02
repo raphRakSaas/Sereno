@@ -12,6 +12,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 
 import { AuthService } from './application/services/auth.service';
+import { CategoriesStore } from './application/stores/categories.store';
 import { routes } from './app.routes';
 import { DexieService } from './infrastructure/dexie/dexie.providers';
 import { provideInfrastructure } from './infrastructure/providers';
@@ -29,9 +30,11 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => {
       const dexie = inject(DexieService);
       const auth = inject(AuthService);
+      const categories = inject(CategoriesStore);
       return (async () => {
         await dexie.ensureSeeded();
         await auth.init();
+        await categories.load();
       })();
     }),
     provideServiceWorker('ngsw-worker.js', {

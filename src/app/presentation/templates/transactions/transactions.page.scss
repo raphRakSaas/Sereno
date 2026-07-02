@@ -6,6 +6,127 @@
   flex-wrap: wrap;
 }
 
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.search {
+  flex: 1;
+  min-width: 0;
+}
+
+.filter-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.filter-toggle.on {
+  background: var(--sage-pale);
+  color: var(--sage-deep);
+}
+
+.filter-toggle .badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--sage);
+  color: var(--surface);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+}
+
+.filters {
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.filters .field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filters label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.marker-filter {
+  grid-column: 1 / -1;
+}
+
+.marker-filter .label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.marker-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.marker-swatches .chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 6px 11px;
+  cursor: pointer;
+}
+
+.marker-swatches .chip.on {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.marker-swatches .swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.marker-swatches .swatch.on {
+  border-color: var(--ink);
+}
+
+.reset {
+  margin-top: var(--space-3);
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--mist-deep);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .totals {
   display: flex;
   align-items: center;
@@ -61,9 +182,33 @@ section + section {
   border-top: 1px solid var(--line);
 }
 
-/* Desktop : une liste reste une colonne de lecture, pas un tableau pleine page. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sort-field {
+  flex-shrink: 0;
+}
+
+.sort-select {
+  min-width: 9rem;
+  font-size: 13px;
+}
+
 @media (min-width: 768px) {
   .page {
     max-width: 880px;
+  }
+
+  .filter-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }

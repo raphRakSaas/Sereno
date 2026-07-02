@@ -10,6 +10,12 @@ function toRow(input: Partial<NewAccount>): Record<string, unknown> {
   if (input.type !== undefined) row['type'] = input.type;
   if (input.initialBalance !== undefined) row['initial_balance'] = input.initialBalance;
   if (input.currency !== undefined) row['currency'] = input.currency;
+  if (input.isArchived !== undefined) row['is_archived'] = input.isArchived;
+  if (input.excludeFromTotal !== undefined) row['exclude_from_total'] = input.excludeFromTotal;
+  if (input.sortOrder !== undefined) row['sort_order'] = input.sortOrder;
+  if (input.groupId !== undefined) row['group_id'] = input.groupId;
+  if (input.cardLimit !== undefined) row['card_limit'] = input.cardLimit;
+  if (input.cardPaymentDay !== undefined) row['card_payment_day'] = input.cardPaymentDay;
   return row;
 }
 
@@ -22,6 +28,7 @@ export class SupabaseAccountRepository implements AccountRepository {
       .require()
       .from('accounts')
       .select('*')
+      .order('sort_order', { ascending: true })
       .order('created_at', { ascending: true });
     if (error) throw error;
     return (data as AccountRow[]).map(toAccount);

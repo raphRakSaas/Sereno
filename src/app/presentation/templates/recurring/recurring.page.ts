@@ -6,6 +6,10 @@ import { AccountsStore } from '../../../application/stores/accounts.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
 import { RecurringStore } from '../../../application/stores/recurring.store';
 import { Frequency, FREQUENCY_LABELS, RecurringRule } from '../../../domain/models/recurring-rule.model';
+import {
+  formatOccurrencePreview,
+  upcomingOccurrences,
+} from '../../../domain/utils/recurring-schedule.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { CategoryPickerComponent } from '../../molecules/category-picker/category-picker.component';
@@ -38,6 +42,9 @@ export class RecurringPage {
   protected readonly amountText = signal('');
   protected readonly frequency = signal<Frequency>('monthly');
   protected readonly nextRunDate = signal(todayIso());
+  protected readonly endDate = signal<string | null>(null);
+  protected readonly endDateEnabled = signal(false);
+  protected readonly ruleActive = signal(true);
   protected readonly hint = signal('');
   protected readonly confirmingDelete = signal<string | null>(null);
 
@@ -49,6 +56,20 @@ export class RecurringPage {
 
   protected readonly categoryById = computed(() => this.categories.byId());
 
+  protected readonly formPreviewDates = computed(() =>
+    upcomingOccurrences(this.nextRunDate(), this.frequency(), 3, this.ruleActive()),
+  );
+
+  protected readonly formPreviewText = computed(() => formatOccurrencePreview(this.formPreviewDates()));
+
+  protected previewDates(rule: RecurringRule): string[] {
+    return upcomingOccurrences(rule.nextRunDate, rule.frequency, 3, rule.active);
+  }
+
+  protected previewText(rule: RecurringRule): string {
+    return formatOccurrencePreview(this.previewDates(rule));
+  }
+
   protected openCreate(): void {
     this.editedId.set(null);
     this.categoryId.set(null);
@@ -56,6 +77,9 @@ export class RecurringPage {
     this.amountText.set('');
     this.frequency.set('monthly');
     this.nextRunDate.set(todayIso());
+    this.endDate.set(null);
+    this.endDateEnabled.set(false);
+    this.ruleActive.set(true);
     this.hint.set('');
     this.formOpen.set(true);
   }
@@ -67,6 +91,9 @@ export class RecurringPage {
     this.amountText.set(rule.amount.toString().replace('.', ','));
     this.frequency.set(rule.frequency);
     this.nextRunDate.set(rule.nextRunDate);
+    this.endDate.set(rule.endDate);
+    this.endDateEnabled.set(rule.endDate !== null);
+    this.ruleActive.set(rule.active);
     this.hint.set('');
     this.formOpen.set(true);
   }
@@ -93,7 +120,8 @@ export class RecurringPage {
       amount: Math.round(amount * 100) / 100,
       frequency: this.frequency(),
       nextRunDate: this.nextRunDate(),
-      active: true,
+      endDate: this.endDateEnabled() ? this.endDate() : null,
+      active: this.editedId() ? this.ruleActive() : true,
     };
     const id = this.editedId();
     const success = id ? await this.recurring.update(id, payload) : await this.recurring.add(payload);
@@ -104,7 +132,10 @@ export class RecurringPage {
   }
 
   protected async toggleActive(rule: RecurringRule): Promise<void> {
-    await this.recurring.update(rule.id, { active: !rule.active });
+    const success = await this.recurring.update(rule.id, { active: !rule.active });
+    if (success) {
+      this.toast.show(rule.active ? 'Récurrence en pause.' : 'Récurrence reprise.');
+    }
   }
 
   protected async remove(id: string): Promise<void> {

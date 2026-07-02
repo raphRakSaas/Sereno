@@ -6,6 +6,7 @@ import { AccountsStore } from '../stores/accounts.store';
 import { BudgetsStore } from '../stores/budgets.store';
 import { CategoriesStore } from '../stores/categories.store';
 import { RecurringStore } from '../stores/recurring.store';
+import { TransactionTemplatesStore } from '../stores/transaction-templates.store';
 import { TransactionsStore } from '../stores/transactions.store';
 import { AppModeService } from './app-mode.service';
 
@@ -34,6 +35,7 @@ export class MigrationService {
   private readonly transactions = inject(TransactionsStore);
   private readonly budgets = inject(BudgetsStore);
   private readonly recurring = inject(RecurringStore);
+  private readonly templates = inject(TransactionTemplatesStore);
 
   readonly phase = signal<MigrationPhase>('idle');
   readonly error = signal<string | null>(null);
@@ -109,22 +111,30 @@ export class MigrationService {
     const userId = await this.supabase.requireUserId();
     const db = this.dexie.db;
 
-    const [localAccounts, localCategories, localTransactions, localBudgets, localRules] =
+    const [localAccounts, localCategories, localTransactions, localBudgets, localRules, localTemplates] =
       await Promise.all([
         db.accounts.toArray(),
         db.categories.toArray(),
         db.transactions.toArray(),
         db.budgets.toArray(),
         db.recurringRules.toArray(),
+        db.transactionTemplates.toArray(),
       ]);
 
     // Nouveaux UUID générés côté client : on connaît chaque ligne insérée,
     // ce qui permet un rollback exact en cas d'échec.
     const accountIds = new Map(localAccounts.map((a) => [a.id, crypto.randomUUID()]));
-    const customCategories = localCategories.filter((c) => !c.isDefault);
+    const customCategories = localCategories
+      .filter((category) => !category.isDefault)
+      .sort((left, right) => {
+        if (left.parentId && !right.parentId) return 1;
+        if (!left.parentId && right.parentId) return -1;
+        return 0;
+      });
     const categoryIds = new Map(customCategories.map((c) => [c.id, crypto.randomUUID()]));
     const mapCategory = (id: string) => categoryIds.get(id) ?? id; // défaut = même UUID
     const ruleIds = new Map(localRules.map((r) => [r.id, crypto.randomUUID()]));
+    const templateIds = new Map(localTemplates.map((template) => [template.id, crypto.randomUUID()]));
 
     const inserted: { table: string; ids: string[] }[] = [];
     const insertAll = async (table: string, rows: Record<string, unknown>[]) => {
@@ -149,13 +159,14 @@ export class MigrationService {
       );
       await insertAll(
         'categories',
-        customCategories.map((c) => ({
-          id: categoryIds.get(c.id),
+        customCategories.map((category) => ({
+          id: categoryIds.get(category.id),
           user_id: userId,
-          name: c.name,
-          type: c.type,
-          icon: c.icon,
-          color: c.color,
+          name: category.name,
+          type: category.type,
+          icon: category.icon,
+          color: category.color,
+          parent_id: category.parentId ? mapCategory(category.parentId) : null,
         })),
       );
       await insertAll(
@@ -173,17 +184,23 @@ export class MigrationService {
       );
       await insertAll(
         'transactions',
-        localTransactions.map((t) => ({
+        localTransactions.map((transaction) => ({
           id: crypto.randomUUID(),
           user_id: userId,
-          account_id: accountIds.get(t.accountId),
-          category_id: mapCategory(t.categoryId),
-          amount: t.amount,
-          type: t.type,
-          date: t.date,
-          note: t.note,
-          recurring_rule_id: t.recurringRuleId ? (ruleIds.get(t.recurringRuleId) ?? null) : null,
-          created_at: t.createdAt,
+          account_id: accountIds.get(transaction.accountId),
+          category_id: transaction.categoryId ? mapCategory(transaction.categoryId) : null,
+          transfer_to_account_id: transaction.transferToAccountId
+            ? accountIds.get(transaction.transferToAccountId)
+            : null,
+          amount: transaction.amount,
+          type: transaction.type,
+          date: transaction.date,
+          note: transaction.note,
+          marker_color: transaction.markerColor,
+          recurring_rule_id: transaction.recurringRuleId
+            ? (ruleIds.get(transaction.recurringRuleId) ?? null)
+            : null,
+          created_at: transaction.createdAt,
         })),
       );
       await insertAll(
@@ -191,9 +208,25 @@ export class MigrationService {
         localBudgets.map((b) => ({
           id: crypto.randomUUID(),
           user_id: userId,
-          category_id: mapCategory(b.categoryId),
+          category_id: b.categoryId ? mapCategory(b.categoryId) : null,
           month: b.month,
           limit_amount: b.limitAmount,
+        })),
+      );
+      await insertAll(
+        'transaction_templates',
+        localTemplates.map((template) => ({
+          id: templateIds.get(template.id),
+          user_id: userId,
+          name: template.name,
+          type: template.type,
+          amount: template.amount,
+          category_id: template.categoryId ? mapCategory(template.categoryId) : null,
+          account_id: template.accountId ? accountIds.get(template.accountId) : null,
+          note: template.note,
+          is_pinned: template.isPinned,
+          sort_order: template.sortOrder,
+          created_at: template.createdAt,
         })),
       );
     } catch (cause) {
@@ -210,6 +243,7 @@ export class MigrationService {
       this.accounts.load(),
       this.categories.load(),
       this.transactions.load(),
+      this.templates.load(),
       this.budgets.loaded() ? this.budgets.load() : Promise.resolve(),
       this.recurring.loaded() ? this.recurring.load() : Promise.resolve(),
     ]);

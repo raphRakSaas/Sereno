@@ -59,6 +59,231 @@
   margin-top: var(--space-3);
 }
 
+.hero-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: var(--space-3);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.stat-row.highlight {
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, var(--sage) 18%, transparent);
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+.stat-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-value.in {
+  color: var(--mist-deep);
+}
+
+.stat-value.out {
+  color: var(--ink);
+}
+
+.stat-value.negative {
+  color: var(--amber);
+}
+
+.rhythm {
+  display: flex;
+  align-items: stretch;
+  margin: 0 var(--space-4);
+  padding: var(--space-4);
+  gap: var(--space-3);
+}
+
+.rhythm-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rhythm-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.rhythm-rule {
+  width: 1px;
+  background: var(--line);
+  align-self: stretch;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+  padding: 0 var(--space-4);
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--sage-deep);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.quick-action:active {
+  background: var(--sage-pale);
+}
+
+.col-side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.account-list {
+  padding: 6px 12px;
+}
+
+.account-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 11px 4px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.account-row + .account-row {
+  border-top: 1px solid var(--line);
+}
+
+.account-name {
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.budget-list {
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.budget-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.budget-row + .budget-row {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+
+.budget-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.budget-name {
+  flex: 1;
+  font-size: 14.5px;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.budget-amount {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.limit {
+  color: var(--ink-faint);
+  font-size: 13px;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--sage);
+}
+
+.budget-row.over .fill {
+  background: var(--amber);
+}
+
+.budget-row.near:not(.over) .fill {
+  background: var(--sand);
+}
+
+.budget-status {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+
+.budget-row.over .budget-status {
+  color: var(--amber);
+  font-weight: 500;
+}
+
 .flow {
   display: inline-flex;
   align-items: center;
@@ -163,6 +388,26 @@
     align-items: flex-end;
     justify-content: space-between;
     gap: var(--space-6);
+  }
+
+  .hero-stats {
+    margin-top: 0;
+    min-width: 240px;
+  }
+
+  .rhythm {
+    margin: 0;
+  }
+
+  .quick-actions {
+    padding: 0;
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  @media (hover: hover) {
+    .quick-action:hover {
+      background: var(--sage-pale);
+    }
   }
 
   .weather {

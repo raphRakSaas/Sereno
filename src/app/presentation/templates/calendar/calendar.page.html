@@ -1,0 +1,145 @@
+<div class="page">
+  <div class="head">
+    <h1 class="page-title">Calendrier</h1>
+    <div class="head-controls">
+      <div class="view-toggle" role="group" aria-label="Vue calendrier">
+        <button
+          type="button"
+          class="chip"
+          [class.on]="viewMode() === 'month'"
+          (click)="setViewMode('month')"
+        >
+          Mois
+        </button>
+        <button
+          type="button"
+          class="chip"
+          [class.on]="viewMode() === 'week'"
+          (click)="setViewMode('week')"
+        >
+          Semaine
+        </button>
+      </div>
+      @if (viewMode() === 'month') {
+        <app-month-switcher [month]="month()" (monthChange)="month.set($event)" />
+      } @else {
+        <div class="week-nav">
+          <button type="button" class="btn btn-ghost week-btn" (click)="shiftWeek(-1)" aria-label="Semaine précédente">
+            ‹
+          </button>
+          <span class="week-range">{{ weekRangeLabel() }}</span>
+          <button type="button" class="btn btn-ghost week-btn" (click)="shiftWeek(1)" aria-label="Semaine suivante">
+            ›
+          </button>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if (transactions.error()) {
+    <p class="notice">{{ transactions.error() }}</p>
+  }
+
+  <div class="calendar-layout">
+    <div class="col-main">
+      <div class="card calendar" [class.week-view]="viewMode() === 'week'">
+        <div class="weekdays">
+          @for (label of weekdayLabels(); track label) {
+            <span>{{ label }}</span>
+          }
+        </div>
+
+        <div class="grid">
+          @for (cell of gridCells(); track $index) {
+            @if (cell.date) {
+              <button
+                type="button"
+                class="day"
+                [class.today]="cell.isToday"
+                [class.selected]="cell.isSelected"
+                [style.background]="cell.intensity > 0 ? 'color-mix(in srgb, var(--sage-pale) ' + (cell.intensity * 100) + '%, transparent)' : null"
+                (click)="selectDay(cell.date!)"
+              >
+                <span class="num">{{ cell.date.slice(8, 10) }}</span>
+                @if (cell.transactionCount > 0) {
+                  <span class="marks">
+                    @if (cell.expense > 0) {
+                      <span class="mark out"></span>
+                    }
+                    @if (cell.income > 0) {
+                      <span class="mark in"></span>
+                    }
+                  </span>
+                }
+              </button>
+            } @else {
+              <span class="pad" aria-hidden="true"></span>
+            }
+          }
+        </div>
+      </div>
+    </div>
+
+    @if (selectedDate()) {
+      <aside class="col-side detail">
+        <div class="section-head">
+          <h2>{{ selectedDate() + 'T00:00:00' | date: 'EEEE d MMMM' }}</h2>
+          <a
+            routerLink="/transactions/nouvelle"
+            [queryParams]="addTransactionQuery()"
+            class="btn btn-ghost"
+          >
+            Ajouter
+          </a>
+        </div>
+
+        @if (selectedTransactions().length > 0) {
+          <div class="totals card">
+            <span class="in">
+              <span class="k">Entrées</span>
+              <app-amount [value]="selectedDayIncome()" size="md" />
+            </span>
+            <span class="rule"></span>
+            <span class="out">
+              <span class="k">Sorties</span>
+              <app-amount [value]="selectedDayExpense()" size="md" />
+            </span>
+          </div>
+
+          <div class="card list-card">
+            @for (transaction of selectedTransactions(); track transaction.id) {
+              <app-transaction-list-item
+                [transaction]="transaction"
+                [category]="categories.byId().get(transaction.categoryId ?? '')"
+                [categoriesById]="categories.byId()"
+                [accountsById]="accounts.byId()"
+              />
+            }
+          </div>
+
+          <a
+            class="see-all"
+            [routerLink]="['/transactions']"
+            [queryParams]="{ date: selectedDate(), mois: month() }"
+          >
+            Voir dans Activité
+          </a>
+        } @else {
+          <div class="card">
+            <div class="empty">
+              <h3>Jour calme</h3>
+              <p>Aucune transaction ce jour-là.</p>
+              <a
+                routerLink="/transactions/nouvelle"
+                [queryParams]="addTransactionQuery()"
+                class="btn btn-primary"
+              >
+                Noter une transaction
+              </a>
+            </div>
+          </div>
+        }
+      </aside>
+    }
+  </div>
+</div>

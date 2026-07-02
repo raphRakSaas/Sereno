@@ -4,9 +4,9 @@ import { TransactionFilter, TransactionRepository } from '../../domain/ports/tra
 import { DexieService } from './dexie.providers';
 
 function nextMonth(month: string): string {
-  const d = new Date(month + 'T00:00:00');
-  d.setMonth(d.getMonth() + 1);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  const dateValue = new Date(month + 'T00:00:00');
+  dateValue.setMonth(dateValue.getMonth() + 1);
+  return `${dateValue.getFullYear()}-${String(dateValue.getMonth() + 1).padStart(2, '0')}-01`;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -23,22 +23,40 @@ export class DexieTransactionRepository implements TransactionRepository {
     } else {
       rows = await this.db.transactions.toArray();
     }
+    rows = rows.map((row) => this.normalize(row));
     if (filter?.accountId) {
-      rows = rows.filter((t) => t.accountId === filter.accountId);
+      rows = rows.filter(
+        (transaction) =>
+          transaction.accountId === filter.accountId ||
+          transaction.transferToAccountId === filter.accountId,
+      );
     }
     if (filter?.categoryId) {
-      rows = rows.filter((t) => t.categoryId === filter.categoryId);
+      rows = rows.filter((transaction) => transaction.categoryId === filter.categoryId);
     }
-    rows.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
+    rows.sort(
+      (left, right) =>
+        right.date.localeCompare(left.date) || right.createdAt.localeCompare(left.createdAt),
+    );
     return filter?.limit ? rows.slice(0, filter.limit) : rows;
   }
 
   async getById(id: string): Promise<Transaction | null> {
-    return (await this.db.transactions.get(id)) ?? null;
+    const row = await this.db.transactions.get(id);
+    return row ? this.normalize(row) : null;
   }
 
   async create(input: NewTransaction): Promise<Transaction> {
-    const row: Transaction = { ...input, id: crypto.randomUUID(), createdAt: new Date().toISOString() };
+    const row: Transaction = {
+      ...input,
+      categoryId: input.categoryId ?? null,
+      transferToAccountId: input.transferToAccountId ?? null,
+      markerColor: input.markerColor ?? null,
+      status: input.status ?? 'posted',
+      recurringRuleId: input.recurringRuleId ?? null,
+      id: crypto.randomUUID(),
+      createdAt: new Date().toISOString(),
+    };
     await this.db.transactions.add(row);
     return row;
   }
@@ -49,7 +67,7 @@ export class DexieTransactionRepository implements TransactionRepository {
     if (!updated) {
       throw new Error(`Transaction ${id} introuvable`);
     }
-    return updated;
+    return this.normalize(updated);
   }
 
   async remove(id: string): Promise<void> {
@@ -58,5 +76,16 @@ export class DexieTransactionRepository implements TransactionRepository {
 
   async count(): Promise<number> {
     return this.db.transactions.count();
+  }
+
+  private normalize(row: Transaction): Transaction {
+    return {
+      ...row,
+      categoryId: row.categoryId ?? null,
+      transferToAccountId: row.transferToAccountId ?? null,
+      markerColor: row.markerColor ?? null,
+      status: row.status ?? 'posted',
+      recurringRuleId: row.recurringRuleId ?? null,
+    };
   }
 }
