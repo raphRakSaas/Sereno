@@ -101,6 +101,12 @@
           },
           "defaultConfiguration": "development",
           "options": {}
+        },
+        "test": {
+          "builder": "@ngx-env/builder:unit-test",
+          "options": {
+            "tsConfig": "tsconfig.spec.json"
+          }
         }
       }
     }

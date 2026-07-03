@@ -33,9 +33,11 @@
     "@angular/cli": "^21.2.18",
     "@angular/compiler-cli": "^21.2.0",
     "@ngx-env/builder": "^21.0.1",
+    "jsdom": "^29.1.1",
     "png-to-ico": "^3.0.1",
     "prettier": "^3.8.1",
     "sharp": "^0.34.5",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "vitest": "^4.1.9"
   }
 }
