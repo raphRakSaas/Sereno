@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 // l'instant — mettre à jour `site` le jour où un domaine est branché
 // (canonical + sitemap en dépendent).
 export default defineConfig({
-  site: 'https://sereno-site.pages.dev',
+  site: 'https://sereno-site-aqy.pages.dev',
   trailingSlash: 'never',
   i18n: {
     defaultLocale: 'fr',

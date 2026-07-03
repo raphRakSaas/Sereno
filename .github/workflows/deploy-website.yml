@@ -1,0 +1,77 @@
+name: Deploy website to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+    # Monorepo : ne redéployer le site que si lui (ou la marque partagée) change.
+    paths:
+      - 'apps/website/**'
+      - 'packages/brand/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-website.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: cloudflare-pages-deploy-website
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: |
+          corepack prepare --activate
+          npm ci
+
+      - name: Build website
+        run: npm run build -w @sereno/website
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sereno-website-dist
+          path: apps/website/dist
+          retention-days: 7
+
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sereno-website-dist
+          path: dist
+
+      - name: Deploy to Cloudflare Pages
+        id: deploy
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: sereno-site
+          directory: dist
+          branch: main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Production URL
+        run: echo "https://sereno-site-aqy.pages.dev"

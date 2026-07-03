@@ -55,6 +55,22 @@ p {
   color: var(--sage-deep);
 }
 
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-size: 14px;
+}
+
+.about-links a {
+  color: var(--sage);
+  text-decoration: none;
+}
+
+.about-links a:hover {
+  text-decoration: underline;
+}
+
 .sync {
   margin-top: 4px;
 }
