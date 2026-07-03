@@ -1,0 +1,235 @@
+/* Sereno — site public. Même discipline que l'app (docs/DESIGN.md) :
+   aplats nets, filets 1px, zéro dégradé, zéro ombre portée. Les tokens
+   viennent de @sereno/brand (importé dans le layout avant ce fichier). */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 560;
+  font-variation-settings: 'opsz' 40;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--sage);
+}
+
+:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---- Vocabulaire partagé ---- */
+
+.wrap {
+  width: 100%;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .wrap {
+    padding: 0 32px;
+  }
+}
+
+.eyebrow {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 13px 20px;
+  font-family: var(--font-text);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.btn-primary {
+  background: var(--sage);
+  color: var(--surface);
+}
+
+.btn-primary:hover {
+  background: var(--sage-deep);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--sage);
+  border-color: var(--line);
+}
+
+.btn-ghost:hover {
+  background: var(--sage-pale);
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+/* Montants : chiffres tabulaires, toujours (règle produit). */
+.amount {
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Sections de page ---- */
+
+.section {
+  padding: 72px 0;
+}
+
+.section + .section {
+  border-top: 1px solid var(--line);
+}
+
+.section-head {
+  max-width: 56ch;
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-head h2 {
+  font-size: clamp(26px, 4vw, 34px);
+}
+
+.section-head p {
+  color: var(--ink-soft);
+}
+
+/* ---- Prose (blog, légal, FAQ) ---- */
+
+.prose {
+  max-width: 68ch;
+}
+
+.prose h1 {
+  font-size: clamp(30px, 5vw, 40px);
+  margin-bottom: 16px;
+}
+
+.prose h2 {
+  font-size: 24px;
+  margin: 40px 0 12px;
+}
+
+.prose h3 {
+  font-size: 19px;
+  margin: 28px 0 8px;
+  font-family: var(--font-text);
+  font-weight: 600;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+  margin: 0 0 16px;
+  color: var(--ink);
+}
+
+.prose li {
+  margin-bottom: 6px;
+}
+
+.prose blockquote {
+  margin: 24px 0;
+  padding: 4px 0 4px 20px;
+  border-left: 2px solid var(--clay);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.prose hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 40px 0;
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  margin: 0 0 16px;
+}
+
+.prose th,
+.prose td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.prose code {
+  font-size: 0.9em;
+  background: var(--sage-pale);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Note posée (jamais une alerte rouge) : information calme sur fond ambre pâle. */
+.notice {
+  padding: 14px 18px;
+  border-radius: var(--radius);
+  background: var(--amber-pale);
+  border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+  font-size: 15px;
+}

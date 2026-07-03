@@ -1,0 +1,101 @@
+---
+import { href, t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tr = t(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap grid">
+    <div class="brand-col">
+      <span class="brand">Sereno</span>
+      <p>{tr('site.tagline')}</p>
+      <p class="note">{tr('footer.note')}</p>
+    </div>
+    <nav aria-label={lang === 'fr' ? 'Liens de bas de page' : 'Footer links'}>
+      <a href={href(lang, 'features')}>{tr('nav.features')}</a>
+      <a href={href(lang, 'method')}>{tr('nav.method')}</a>
+      <a href={href(lang, 'pricing')}>{tr('nav.pricing')}</a>
+      <a href={href(lang, 'blog')}>{tr('nav.blog')}</a>
+      <a href={href(lang, 'faq')}>{tr('nav.faq')}</a>
+      <a href={href(lang, 'contact')}>{tr('nav.contact')}</a>
+    </nav>
+    <nav aria-label={lang === 'fr' ? 'Informations légales' : 'Legal information'}>
+      <a href={href(lang, 'legal')}>{tr('footer.legal')}</a>
+      <a href={href(lang, 'privacy')}>{tr('footer.privacy')}</a>
+      <a href={href(lang, 'terms')}>{tr('footer.terms')}</a>
+    </nav>
+  </div>
+  <div class="wrap meta">
+    <span>© {year} Sereno</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line);
+    padding: 48px 0 32px;
+    margin-top: 96px;
+    background: var(--surface);
+  }
+
+  .grid {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 560;
+    font-variation-settings: 'opsz' 40;
+  }
+
+  .brand-col p {
+    margin-top: 8px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    max-width: 34ch;
+  }
+
+  .brand-col .note {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 14.5px;
+  }
+
+  nav a:hover {
+    color: var(--ink);
+  }
+
+  .meta {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+
+  @media (min-width: 700px) {
+    .grid {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>

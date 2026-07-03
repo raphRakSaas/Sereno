@@ -1,0 +1,113 @@
+---
+import { APP_URL, href, t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  /** Cible du sélecteur de langue (page équivalente dans l'autre langue). */
+  switchHref: string;
+}
+
+const { lang, switchHref } = Astro.props;
+const tr = t(lang);
+const nav = [
+  { to: href(lang, 'features'), label: tr('nav.features') },
+  { to: href(lang, 'method'), label: tr('nav.method') },
+  { to: href(lang, 'pricing'), label: tr('nav.pricing') },
+  { to: href(lang, 'blog'), label: tr('nav.blog') },
+  { to: href(lang, 'faq'), label: tr('nav.faq') },
+];
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={href(lang, 'home')}>
+      <img src="/logo.svg" alt="" width="26" height="26" />
+      <span>Sereno</span>
+    </a>
+    <nav aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+      {nav.map((item) => <a href={item.to}>{item.label}</a>)}
+    </nav>
+    <div class="actions">
+      <a class="lang" href={switchHref} rel="alternate">{lang === 'fr' ? 'EN' : 'FR'}</a>
+      <a class="btn btn-primary app-cta" href={APP_URL} aria-label={tr('cta.openApp.aria')}>
+        {tr('cta.openApp')}
+      </a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 64px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 560;
+    font-variation-settings: 'opsz' 40;
+  }
+
+  nav {
+    display: none;
+    gap: 22px;
+    flex: 1;
+  }
+
+  nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  nav a:hover {
+    color: var(--ink);
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-left: auto;
+  }
+
+  .lang {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 11px;
+  }
+
+  .lang:hover {
+    background: var(--sage-pale);
+  }
+
+  .app-cta {
+    padding: 9px 16px;
+    font-size: 14.5px;
+  }
+
+  @media (min-width: 860px) {
+    nav {
+      display: flex;
+    }
+  }
+</style>

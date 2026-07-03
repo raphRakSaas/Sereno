@@ -1,0 +1,81 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const posts = (await getCollection('blog', ({ data }) => data.lang === 'fr')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const formatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base
+  lang="fr"
+  routeKey="blog"
+  title="Blog — Sereno"
+  description="Guides pratiques pour un budget calme : méthodes douces, saisie manuelle, et zéro culpabilisation."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Blog</span>
+        <h1>Des guides calmes pour ton argent.</h1>
+        <p>Pas de « 10 astuces pour devenir riche ». Des méthodes douces, applicables, écrites par un humain.</p>
+      </div>
+      <ul class="posts">
+        {posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id.replace(/^fr\//, '')}`}>
+              <time datetime={post.data.pubDate.toISOString()}>{formatter.format(post.data.pubDate)}</time>
+              <h2>{post.data.title}</h2>
+              <p>{post.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .posts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 46rem;
+  }
+
+  .posts li {
+    border-top: 1px solid var(--line);
+  }
+
+  .posts a {
+    display: block;
+    padding: 26px 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .posts time {
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  .posts h2 {
+    font-size: 23px;
+    margin: 6px 0 8px;
+  }
+
+  .posts a:hover h2 {
+    color: var(--sage);
+  }
+
+  .posts p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+</style>

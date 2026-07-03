@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+
+const email = 'raphael@plumservices.co';
+const updated = '3 juillet 2026';
+---
+
+<Base
+  lang="fr"
+  routeKey="legal"
+  title="Mentions légales — Sereno"
+  description="Mentions légales du site et de l'application Sereno : éditeur, hébergeurs, contact."
+>
+  <article class="section">
+    <div class="wrap prose">
+      <h1>Mentions légales</h1>
+      <p>Dernière mise à jour : {updated}</p>
+
+      <h2>Éditeur</h2>
+      <p>
+        Le site sereno et l'application Sereno sont édités à titre non
+        professionnel par <strong>Raphaël</strong> (personne physique).
+        Conformément à l'article 6, III-2 de la loi n° 2004-575 du 21 juin 2004
+        (LCEN), l'éditeur non professionnel peut préserver son anonymat sous
+        réserve d'avoir communiqué ses éléments d'identification personnelle à
+        l'hébergeur.
+      </p>
+      <p>
+        Contact : <a href={`mailto:${email}`}>{email}</a>
+      </p>
+      <p>Directeur de la publication : Raphaël.</p>
+
+      <h2>Hébergement</h2>
+      <p>
+        Le site et l'application (fichiers statiques) sont hébergés par
+        <strong>Cloudflare, Inc.</strong>, 101 Townsend St, San Francisco,
+        CA 94107, États-Unis — <a href="https://www.cloudflare.com" rel="noopener">cloudflare.com</a>.
+      </p>
+      <p>
+        Les données des comptes utilisateurs (fonction de synchronisation
+        optionnelle) sont hébergées par <strong>Supabase, Inc.</strong>, 970
+        Toa Payoh North #07-04, Singapour 318992 —
+        <a href="https://supabase.com" rel="noopener">supabase.com</a>. La base
+        de données du projet est localisée dans l'Union européenne
+        (région AWS eu-west-1, Irlande).
+      </p>
+
+      <h2>Propriété intellectuelle</h2>
+      <p>
+        Le nom « Sereno », l'identité visuelle, les textes et les éléments
+        graphiques de ce site sont la propriété de leur auteur. Toute
+        reproduction non autorisée est interdite.
+      </p>
+
+      <h2>Signaler un contenu</h2>
+      <p>
+        Pour toute question ou signalement concernant le site ou l'application :
+        <a href={`mailto:${email}`}>{email}</a>.
+      </p>
+    </div>
+  </article>
+</Base>

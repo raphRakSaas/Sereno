@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+import { href } from '../../i18n/ui';
+
+const faqs = [
+  {
+    q: 'Does Sereno connect to my bank?',
+    a: 'No — by choice, not omission: you log your spending yourself. That five-second gesture is the heart of the method; it’s what changes your relationship with money. A welcome consequence: no banking credentials to hand over.',
+  },
+  {
+    q: 'Do I need an account to use Sereno?',
+    a: 'No. The app works fully without one: your data stays local, on your device, and nothing is sent to any server. The (free) account only exists to sync several devices and unlock multiple accounts, custom categories and server-side recurring rules.',
+  },
+  {
+    q: 'Where is my data stored?',
+    a: 'Without an account: in your browser’s local storage (IndexedDB), on your device only. With an account: in a Postgres database hosted by Supabase in the European Union, partitioned per user (row-level security). Details are in the privacy policy.',
+  },
+  {
+    q: 'What happens if I create an account after weeks of local use?',
+    a: 'Your local data is migrated to your account automatically, with nothing lost — and if the migration fails midway (network…), everything is rolled back cleanly and your local data remains intact.',
+  },
+  {
+    q: 'Can I get my data out?',
+    a: 'Yes, at any time: CSV export for transactions, and a full JSON backup from the settings. Your data is yours — including the day you leave.',
+  },
+  {
+    q: 'Does it work on my phone?',
+    a: 'Yes — Sereno is a PWA: open the app in your browser, then “Add to Home Screen”. It installs like a native app and works offline.',
+  },
+  {
+    q: 'Why is it free?',
+    a: 'Local mode costs nothing to run (a static site, your data lives with you) and a cloud account costs a few cents per user. If a paid Sereno+ tier ever appears, it will be announced clearly — never ads, never selling data.',
+  },
+  {
+    q: 'Multiple currencies? Shared accounts?',
+    a: 'Not yet. The foundations exist (every account has a currency) but the screens don’t. Sharing a budget between two people is on the list, with no promised date.',
+  },
+];
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+
+<Base
+  lang="en"
+  routeKey="faq"
+  title="FAQ — Sereno"
+  description="Bank connections, data storage, the optional account, why it's free: straight answers to the questions people ask about Sereno."
+>
+  <script type="application/ld+json" set:html={jsonLd} slot="head" />
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">FAQ</span>
+        <h1>Straight questions, straight answers.</h1>
+      </div>
+      <dl class="faq">
+        {faqs.map((f) => (
+          <div class="item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="ask">
+        Another question? <a href={href('en', 'contact')}>Write to us</a> — a human answers.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .faq {
+    margin: 0;
+    max-width: 46rem;
+  }
+
+  .item {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    font-weight: 600;
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  .ask {
+    margin-top: 32px;
+    color: var(--ink-soft);
+  }
+</style>

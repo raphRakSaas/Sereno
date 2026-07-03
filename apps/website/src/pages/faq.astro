@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../i18n/ui';
+
+const faqs = [
+  {
+    q: 'Sereno se connecte-t-il à ma banque ?',
+    a: 'Non, et c’est un choix, pas un manque : tu notes tes dépenses toi-même. Ce geste de cinq secondes est le cœur de la méthode — c’est lui qui change le rapport à l’argent. Conséquence appréciable : aucun identifiant bancaire à confier.',
+  },
+  {
+    q: 'Ai-je besoin d’un compte pour utiliser Sereno ?',
+    a: 'Non. L’app fonctionne entièrement sans compte : tes données restent en local, sur ton appareil, et rien n’est envoyé sur un serveur. Le compte (gratuit) ne sert qu’à synchroniser plusieurs appareils et débloquer les comptes multiples, catégories personnalisées et récurrences côté serveur.',
+  },
+  {
+    q: 'Où sont stockées mes données ?',
+    a: 'Sans compte : dans le stockage local de ton navigateur (IndexedDB), uniquement sur ton appareil. Avec un compte : dans une base Postgres hébergée par Supabase, cloisonnée par utilisateur (row-level security). Les détails sont dans la politique de confidentialité.',
+  },
+  {
+    q: 'Que se passe-t-il si je crée un compte après des semaines en local ?',
+    a: 'Tes données locales sont migrées automatiquement vers ton compte, sans perte — et si la migration échoue en cours de route (réseau…), tout est annulé proprement et tes données locales restent intactes.',
+  },
+  {
+    q: 'Puis-je récupérer mes données ?',
+    a: 'Oui, à tout moment : export CSV pour les transactions, et sauvegarde complète au format JSON depuis les réglages. Tes données t’appartiennent, y compris pour partir.',
+  },
+  {
+    q: 'Ça marche sur téléphone ?',
+    a: 'Oui — Sereno est une PWA : ouvre l’app dans le navigateur puis « Ajouter à l’écran d’accueil ». Elle s’installe comme une app native et fonctionne hors-ligne.',
+  },
+  {
+    q: 'Pourquoi c’est gratuit ?',
+    a: 'Le mode local ne coûte rien à faire tourner (site statique, données chez toi) et le compte cloud coûte quelques centimes par utilisateur. Si une offre payante Sereno+ voit le jour, elle sera annoncée clairement — jamais de publicité, jamais de revente de données.',
+  },
+  {
+    q: 'Plusieurs devises ? Partage de compte ?',
+    a: 'Pas encore. La structure est prête (chaque compte a une devise) mais les écrans n’existent pas. Le partage de budget entre deux personnes est sur la liste, sans date promise.',
+  },
+];
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+});
+---
+
+<Base
+  lang="fr"
+  routeKey="faq"
+  title="FAQ — Sereno"
+  description="Connexion bancaire, stockage des données, compte optionnel, gratuité : les réponses directes aux questions qu'on se pose sur Sereno."
+>
+  <script type="application/ld+json" set:html={jsonLd} slot="head" />
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">FAQ</span>
+        <h1>Questions directes, réponses directes.</h1>
+      </div>
+      <dl class="faq">
+        {faqs.map((f) => (
+          <div class="item">
+            <dt>{f.q}</dt>
+            <dd>{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="ask">
+        Une autre question ? <a href={href('fr', 'contact')}>Écris-nous</a> — un humain répond.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .faq {
+    margin: 0;
+    max-width: 46rem;
+  }
+
+  .item {
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    font-weight: 600;
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  .ask {
+    margin-top: 32px;
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../i18n/ui';
+
+const tr = t('fr');
+---
+
+<Base
+  lang="fr"
+  routeKey="home"
+  title="Page introuvable — Sereno"
+  description="Cette page n'existe pas (ou plus). Rien de grave."
+>
+  <section class="section">
+    <div class="wrap notfound">
+      <span class="eyebrow">404</span>
+      <h1>{tr('notfound.title')}</h1>
+      <p>{tr('notfound.body')}</p>
+      <p class="en" lang="en">This page doesn’t exist. <a href="/en">English home →</a></p>
+      <a class="btn btn-primary" href="/">{tr('notfound.back')}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    max-width: 34rem;
+  }
+
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  p {
+    color: var(--ink-soft);
+  }
+
+  .en {
+    font-size: 14px;
+    color: var(--ink-faint);
+  }
+
+  .btn {
+    margin-top: 10px;
+  }
+</style>

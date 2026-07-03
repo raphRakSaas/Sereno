@@ -1,0 +1,94 @@
+---
+import Base from '../../layouts/Base.astro';
+import { APP_URL, t } from '../../i18n/ui';
+
+const tr = t('en');
+---
+
+<Base
+  lang="en"
+  routeKey="method"
+  title="The method — why Sereno is manual, on purpose"
+  description="Sereno refuses bank syncing by design: logging your spending by hand is the gesture that turns financial anxiety into clarity. The manifesto."
+>
+  <article class="section">
+    <div class="wrap prose">
+      <span class="eyebrow">The manifesto</span>
+      <h1>Manual, on purpose.</h1>
+
+      <p>
+        Every budgeting app makes the same promise: “connect your bank, we'll
+        handle the rest.” Sereno makes the opposite bet — and it's a considered
+        choice, not a missing feature.
+      </p>
+
+      <h2>Anxiety doesn't come from a lack of money</h2>
+      <p>
+        It comes from not knowing. The overdraft you discover too late, the
+        “where did my salary go?” on the 20th, the banking app you no longer
+        dare to open. The information existed all along — somewhere, in an
+        automatic feed nobody looks at.
+      </p>
+      <p>
+        Total automation has a blind spot: what you don't do yourself, you
+        don't feel. A direct debit silently imported at 3 a.m. teaches you
+        nothing. The same expense logged by you, in five seconds, leaves a
+        trace — in the app and in your head.
+      </p>
+
+      <h2>Five seconds that change your relationship with money</h2>
+      <p>
+        Logging an expense by hand is quick. But during those five seconds,
+        you know what you just spent, you choose its category, you watch it
+        join the month. That small repeated gesture does what no algorithm can
+        do for you: it puts you back in charge.
+      </p>
+      <blockquote>
+        Manual entry isn't the price you pay to use Sereno. It's the treatment.
+      </blockquote>
+
+      <h2>What Sereno does to make it stick</h2>
+      <ul>
+        <li>
+          <strong>The gesture is reduced to its essence.</strong> Amount,
+          category, saved. Templates for what comes back often, automatic
+          recurring rules for what is truly mechanical (rent, subscriptions —
+          there, automation makes sense).
+        </li>
+        <li>
+          <strong>The reward is immediate.</strong> Every entry feeds the
+          strata — the map of your month. You literally watch your money take
+          shape.
+        </li>
+        <li>
+          <strong>No punishment.</strong> An exceeded budget shows in amber,
+          with a calm statement. Missing three days of entries erases nothing
+          and breaks no “streak”. You pick it back up, that's all.
+        </li>
+      </ul>
+
+      <h2>What this implies — honestly</h2>
+      <p>
+        Sereno won't suit everyone. If you want an aggregator that categorizes
+        three bank accounts without you lifting a finger, excellent apps exist
+        for that. Sereno is for people who have already tried them — and
+        noticed that watching imported rows scroll by never changed how they
+        spend.
+      </p>
+      <p>
+        And because your data never passes through any bank: no banking
+        credentials to hand over, no aggregator reading your entire history,
+        nothing to breach. What you log stays on your device — or in your
+        account if you choose to sync.
+      </p>
+
+      <hr />
+
+      <p>
+        <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>
+          Try it — no account, right now
+        </a>
+      </p>
+    </div>
+  </article>
+</Base>

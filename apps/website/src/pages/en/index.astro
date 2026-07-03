@@ -1,0 +1,282 @@
+---
+import Base from '../../layouts/Base.astro';
+import StrataFigure from '../../components/StrataFigure.astro';
+import { APP_URL, href, t } from '../../i18n/ui';
+
+const tr = t('en');
+---
+
+<Base
+  lang="en"
+  routeKey="home"
+  title="Sereno — see your money clearly, without the anxiety"
+  description={tr('site.description')}
+>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Calm personal budgeting</span>
+        <h1>See your money clearly, <em>without the anxiety</em>.</h1>
+        <span class="hero-bar" aria-hidden="true"></span>
+        <p>
+          You log your spending by hand, in two taps. Sereno shows you where
+          your money goes — calmly, with no red alerts and no guilt. It works
+          right away: no account, straight on your device.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>
+            {tr('cta.openApp')}
+          </a>
+          <a class="btn btn-ghost" href={href('en', 'method')}>Discover the method</a>
+        </div>
+        <p class="hero-note">Free. No sign-up. No bank connection.</p>
+      </div>
+      <div class="hero-figure">
+        <StrataFigure lang="en" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section principles" aria-label="Sereno's three principles">
+    <div class="wrap principles-grid">
+      <div>
+        <h2>Local first</h2>
+        <p>
+          Your data lives on your device. An account only matters if you want
+          to sync several devices — and it's free.
+        </p>
+      </div>
+      <div>
+        <h2>Manual, on purpose</h2>
+        <p>
+          No bank connection. Logging an expense yourself takes five seconds —
+          and that very gesture is what puts you back in charge.
+        </p>
+      </div>
+      <div>
+        <h2>Never an alarm</h2>
+        <p>
+          Going over budget isn't a fault. Sereno states it calmly, in amber,
+          never in red — and helps you adjust next month.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Features</span>
+        <h2>Everything you need to see clearly. Nothing to rush you.</h2>
+      </div>
+      <ul class="feature-list">
+        <li>
+          <h3>Two-tap entry</h3>
+          <p>Amount, category, done. Reusable templates for the expenses that keep coming back.</p>
+        </li>
+        <li>
+          <h3>The strata</h3>
+          <p>Your month's spending as layers of sediment: the biggest expense forms the bedrock. One glance is enough.</p>
+        </li>
+        <li>
+          <h3>Gentle budgets</h3>
+          <p>Per category or global, weekly to yearly, with an honest end-of-month projection.</p>
+        </li>
+        <li>
+          <h3>Calm statistics</h3>
+          <p>Net worth, month-over-month comparisons, spending days — facts, not judgments.</p>
+        </li>
+        <li>
+          <h3>Recurring &amp; installments</h3>
+          <p>Rent, subscriptions, payment plans: generated automatically, never forgotten.</p>
+        </li>
+        <li>
+          <h3>Offline, installable</h3>
+          <p>A full PWA: on your phone like a native app, with or without a network.</p>
+        </li>
+      </ul>
+      <a class="more" href={href('en', 'features')}>All features →</a>
+    </div>
+  </section>
+
+  <section class="section manifesto">
+    <div class="wrap">
+      <span class="eyebrow">The method</span>
+      <blockquote>
+        “Financial anxiety doesn't come from a lack of money — it comes from
+        not knowing. Five seconds of mindful entry beat an automatic bank feed
+        you no longer dare to open.”
+      </blockquote>
+      <a class="more" href={href('en', 'method')}>Read the manifesto →</a>
+    </div>
+  </section>
+
+  <section class="section closing">
+    <div class="wrap closing-inner">
+      <h2>Start now. Literally now.</h2>
+      <p>No account to create, no email to confirm. The app opens, you log your first expense, you're in.</p>
+      <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding: 88px 0 72px;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 56px;
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 34rem;
+  }
+
+  h1 {
+    font-size: clamp(34px, 5.4vw, 52px);
+  }
+
+  h1 em {
+    font-style: italic;
+    font-variation-settings:
+      'opsz' 40,
+      'SOFT' 60;
+  }
+
+  .hero-bar {
+    width: 64px;
+    height: 3px;
+    background: var(--clay);
+    border-radius: 2px;
+  }
+
+  .hero-copy > p {
+    color: var(--ink-soft);
+    font-size: 18px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-note {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+  }
+
+  .hero-figure {
+    justify-self: start;
+  }
+
+  @media (min-width: 860px) {
+    .hero-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+    .hero-figure {
+      justify-self: end;
+    }
+  }
+
+  .principles-grid {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr;
+  }
+
+  .principles h2 {
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+
+  .principles p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  @media (min-width: 700px) {
+    .principles-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+    }
+  }
+
+  .feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .feature-list li {
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .feature-list h3 {
+    font-size: 18px;
+    font-family: var(--font-text);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .feature-list p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    max-width: 52ch;
+  }
+
+  @media (min-width: 700px) {
+    .feature-list {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 64px;
+    }
+  }
+
+  .more {
+    display: inline-block;
+    margin-top: 28px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .more:hover {
+    text-decoration: underline;
+  }
+
+  .manifesto blockquote {
+    margin: 20px 0 24px;
+    max-width: 30em;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 480;
+    font-variation-settings: 'opsz' 28;
+    line-height: 1.35;
+  }
+
+  .closing-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 40rem;
+  }
+
+  .closing h2 {
+    font-size: clamp(26px, 4vw, 34px);
+  }
+
+  .closing p {
+    color: var(--ink-soft);
+  }
+</style>

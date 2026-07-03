@@ -1,0 +1,182 @@
+---
+import Base from '../layouts/Base.astro';
+import { APP_URL, t } from '../i18n/ui';
+
+const tr = t('fr');
+
+const groups = [
+  {
+    title: 'Noter, sans friction',
+    items: [
+      {
+        name: 'Saisie en deux gestes',
+        body: 'Montant, catégorie, enregistré. La date du jour et ton compte habituel sont déjà remplis. Une note ou une couleur de marqueur si tu veux, rien d’obligatoire.',
+      },
+      {
+        name: 'Modèles de transaction',
+        body: 'Le café du matin, le plein d’essence : épingle tes dépenses récurrentes et rejoue-les en un geste.',
+      },
+      {
+        name: 'Reçus et justificatifs',
+        body: 'Attache une photo de ticket à une transaction pour la retrouver plus tard.',
+      },
+      {
+        name: 'Virements entre comptes',
+        body: 'Un virement n’est ni un revenu ni une dépense — Sereno le traite correctement, des deux côtés.',
+      },
+    ],
+  },
+  {
+    title: 'Voir, d’un regard',
+    items: [
+      {
+        name: 'Les strates',
+        body: 'La signature de Sereno : ta répartition du mois dessinée comme des couches de sédiment. La plus grosse dépense forme le socle, l’épaisseur de chaque couche est sa part du total.',
+      },
+      {
+        name: 'Statistiques posées',
+        body: 'Donuts par catégorie, courbe de patrimoine, solde cumulé, calendrier de chaleur de tes jours de dépense. Des faits, jamais de jugement.',
+      },
+      {
+        name: 'Comparaisons de mois',
+        body: '« +120 € vs mois précédent » — dit simplement, pour ajuster sans drame.',
+      },
+      {
+        name: 'Calendrier',
+        body: 'Tes transactions posées sur le mois, pour relier les dépenses aux jours réels de ta vie.',
+      },
+    ],
+  },
+  {
+    title: 'Cadrer, sans se punir',
+    items: [
+      {
+        name: 'Budgets par catégorie ou globaux',
+        body: 'Hebdomadaire, mensuel, trimestriel, annuel ou une période sur mesure. Avec une projection honnête de fin de période, calculée sur ton rythme réel.',
+      },
+      {
+        name: 'Le dépassement est ambre, jamais rouge',
+        body: '« Dépassé de 50 € — ça arrive. » Le dépassement est un fait énoncé posément, pas une faute à expier.',
+      },
+      {
+        name: 'Récurrences automatiques',
+        body: 'Loyer, abonnements, salaire : les règles récurrentes génèrent les transactions toutes seules, et rattrapent même les échéances manquées.',
+      },
+      {
+        name: 'Échéanciers',
+        body: 'Un achat en trois fois ? Sereno suit chaque échéance et te montre ce qui reste à payer.',
+      },
+    ],
+  },
+  {
+    title: 'Partout, à ton rythme',
+    items: [
+      {
+        name: 'Fonctionne sans compte',
+        body: 'Le mode invité est complet : transactions, budgets, statistiques, calendrier — tout, en local sur ton appareil, sans configuration.',
+      },
+      {
+        name: 'Compte gratuit optionnel',
+        body: 'Quand tu veux synchroniser plusieurs appareils : comptes multiples, catégories personnalisées, récurrences côté serveur. Tes données locales migrent automatiquement, sans perte.',
+      },
+      {
+        name: 'Installable et hors-ligne',
+        body: 'Une vraie PWA : ajoute-la à ton écran d’accueil, consulte et note même sans réseau.',
+      },
+      {
+        name: 'Export de tes données',
+        body: 'Sauvegarde complète et export CSV en un geste. Tes données t’appartiennent, y compris pour partir.',
+      },
+    ],
+  },
+];
+---
+
+<Base
+  lang="fr"
+  routeKey="features"
+  title="Fonctionnalités — Sereno"
+  description="Saisie en deux gestes, strates de dépenses, budgets calmes, récurrences, mode hors-ligne : tout ce que fait Sereno, sans jamais te presser."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Fonctionnalités</span>
+        <h1>Tout ce qu'il faut pour y voir clair.</h1>
+        <p>
+          Sereno fait exprès d'en faire moins que les autres : pas de connexion
+          bancaire, pas de notifications pressantes, pas de score. Ce qui reste
+          est soigné.
+        </p>
+      </div>
+
+      {groups.map((group) => (
+        <div class="group">
+          <h2>{group.title}</h2>
+          <dl>
+            {group.items.map((item) => (
+              <div class="row">
+                <dt>{item.name}</dt>
+                <dd>{item.body}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .group {
+    margin-top: 48px;
+  }
+
+  .group h2 {
+    font-size: 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 64px;
+  }
+
+  .row {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    max-width: 60ch;
+  }
+
+  @media (min-width: 760px) {
+    dl {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .cta-row {
+    margin-top: 56px;
+  }
+</style>

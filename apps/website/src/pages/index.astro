@@ -1,0 +1,283 @@
+---
+import Base from '../layouts/Base.astro';
+import StrataFigure from '../components/StrataFigure.astro';
+import { APP_URL, href, t } from '../i18n/ui';
+
+const tr = t('fr');
+---
+
+<Base
+  lang="fr"
+  routeKey="home"
+  title="Sereno — vois clair dans ton argent, sans anxiété"
+  description={tr('site.description')}
+>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">Budget personnel, calme</span>
+        <h1>Vois clair dans ton argent, <em>sans anxiété</em>.</h1>
+        <span class="hero-bar" aria-hidden="true"></span>
+        <p>
+          Tu notes tes dépenses à la main, en deux gestes. Sereno te montre où va
+          ton argent — posément, sans alerte rouge, sans culpabilisation. Ça
+          fonctionne tout de suite, sans compte, directement sur ton appareil.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>
+            {tr('cta.openApp')}
+          </a>
+          <a class="btn btn-ghost" href={href('fr', 'method')}>Découvrir la méthode</a>
+        </div>
+        <p class="hero-note">Gratuit. Sans inscription. Sans connexion bancaire.</p>
+      </div>
+      <div class="hero-figure">
+        <StrataFigure lang="fr" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section principles" aria-label="Les trois principes de Sereno">
+    <div class="wrap principles-grid">
+      <div>
+        <h2>Local d'abord</h2>
+        <p>
+          Tes données restent sur ton appareil. Un compte n'est utile que si tu
+          veux synchroniser plusieurs appareils — et il est gratuit.
+        </p>
+      </div>
+      <div>
+        <h2>Manuel, exprès</h2>
+        <p>
+          Pas de connexion bancaire. Noter une dépense toi-même prend cinq
+          secondes, et c'est précisément ce geste qui te remet aux commandes.
+        </p>
+      </div>
+      <div>
+        <h2>Jamais d'alarme</h2>
+        <p>
+          Un budget dépassé n'est pas une faute. Sereno l'énonce calmement, en
+          ambre, jamais en rouge — et t'aide à ajuster le mois suivant.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Fonctionnalités</span>
+        <h2>Tout ce qu'il faut pour y voir clair. Rien pour te presser.</h2>
+      </div>
+      <ul class="feature-list">
+        <li>
+          <h3>Saisie en deux gestes</h3>
+          <p>Montant, catégorie, c'est noté. Des modèles réutilisables pour les dépenses qui reviennent.</p>
+        </li>
+        <li>
+          <h3>Les strates</h3>
+          <p>Ta répartition du mois en couches de sédiment : la plus grosse dépense forme le socle. Un regard suffit.</p>
+        </li>
+        <li>
+          <h3>Budgets posés</h3>
+          <p>Par catégorie ou global, hebdo à annuel, avec une projection de fin de mois honnête.</p>
+        </li>
+        <li>
+          <h3>Statistiques calmes</h3>
+          <p>Patrimoine, comparaisons de mois, jours de dépense — des faits, pas des jugements.</p>
+        </li>
+        <li>
+          <h3>Récurrences &amp; échéances</h3>
+          <p>Loyer, abonnements, paiements en plusieurs fois : générés automatiquement, jamais oubliés.</p>
+        </li>
+        <li>
+          <h3>Hors-ligne, installable</h3>
+          <p>Une PWA complète : sur ton téléphone comme une app native, avec ou sans réseau.</p>
+        </li>
+      </ul>
+      <a class="more" href={href('fr', 'features')}>Toutes les fonctionnalités →</a>
+    </div>
+  </section>
+
+  <section class="section manifesto">
+    <div class="wrap">
+      <span class="eyebrow">La méthode</span>
+      <blockquote>
+        « L'anxiété financière ne vient pas du manque d'argent — elle vient de ne
+        pas savoir. Cinq secondes de saisie consciente valent mieux qu'un flux
+        bancaire automatique que tu n'oses plus ouvrir. »
+      </blockquote>
+      <a class="more" href={href('fr', 'method')}>Lire le manifeste →</a>
+    </div>
+  </section>
+
+  <section class="section closing">
+    <div class="wrap closing-inner">
+      <h2>Commence maintenant. Littéralement maintenant.</h2>
+      <p>Pas de compte à créer, pas d'email à confirmer. L'app s'ouvre, tu notes ta première dépense, c'est parti.</p>
+      <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding: 88px 0 72px;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: 56px;
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 34rem;
+  }
+
+  h1 {
+    font-size: clamp(34px, 5.4vw, 52px);
+  }
+
+  h1 em {
+    font-style: italic;
+    font-variation-settings:
+      'opsz' 40,
+      'SOFT' 60;
+  }
+
+  /* L'unique emploi fort de l'accent signature sur cet écran (gouvernance --clay). */
+  .hero-bar {
+    width: 64px;
+    height: 3px;
+    background: var(--clay);
+    border-radius: 2px;
+  }
+
+  .hero-copy > p {
+    color: var(--ink-soft);
+    font-size: 18px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .hero-note {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+  }
+
+  .hero-figure {
+    justify-self: start;
+  }
+
+  @media (min-width: 860px) {
+    .hero-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+    .hero-figure {
+      justify-self: end;
+    }
+  }
+
+  .principles-grid {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr;
+  }
+
+  .principles h2 {
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
+
+  .principles p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  @media (min-width: 700px) {
+    .principles-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+    }
+  }
+
+  .feature-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .feature-list li {
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .feature-list h3 {
+    font-size: 18px;
+    font-family: var(--font-text);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .feature-list p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    max-width: 52ch;
+  }
+
+  @media (min-width: 700px) {
+    .feature-list {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 64px;
+    }
+  }
+
+  .more {
+    display: inline-block;
+    margin-top: 28px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .more:hover {
+    text-decoration: underline;
+  }
+
+  .manifesto blockquote {
+    margin: 20px 0 24px;
+    max-width: 30em;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3.2vw, 30px);
+    font-weight: 480;
+    font-variation-settings: 'opsz' 28;
+    line-height: 1.35;
+  }
+
+  .closing-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 40rem;
+  }
+
+  .closing h2 {
+    font-size: clamp(26px, 4vw, 34px);
+  }
+
+  .closing p {
+    color: var(--ink-soft);
+  }
+</style>

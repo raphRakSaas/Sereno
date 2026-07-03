@@ -1,0 +1,62 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { href } from '../../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => data.lang === 'en');
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/^en\//, '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const slug = post.id.replace(/^en\//, '');
+const alternates = {
+  en: `/en/blog/${slug}`,
+  ...(post.data.translationOf ? { fr: `/blog/${post.data.translationOf}` } : {}),
+};
+
+const formatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base
+  lang="en"
+  title={`${post.data.title} — Sereno`}
+  description={post.data.description}
+  alternates={alternates}
+>
+  <article class="section">
+    <div class="wrap prose">
+      <p class="back"><a href={href('en', 'blog')}>← Blog</a></p>
+      <h1>{post.data.title}</h1>
+      <p class="meta">
+        <time datetime={post.data.pubDate.toISOString()}>
+          Published on {formatter.format(post.data.pubDate)}
+        </time>
+      </p>
+      <Content />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .back {
+    margin-bottom: 24px;
+  }
+
+  .back a {
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 600;
+  }
+
+  .meta {
+    color: var(--ink-faint);
+    font-size: 14px;
+    margin: 8px 0 32px;
+  }
+</style>

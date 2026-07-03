@@ -1,0 +1,157 @@
+---
+/* La signature visuelle de Sereno : la répartition des dépenses comme des
+   strates de sédiment. Même scène que dans l'app — la plus grosse dépense
+   forme le socle, les couches « se déposent » à l'arrivée (300 ms ease-out,
+   40 ms d'écart, du socle vers la surface), aucun mouvement si
+   prefers-reduced-motion. Couleurs = palette de catégories validée
+   (docs/DESIGN.md), jamais des teintes inventées. */
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const layers =
+  lang === 'fr'
+    ? [
+        { name: 'Logement', amount: '743,00 €', color: '#196E44', h: 128 },
+        { name: 'Courses', amount: '331,60 €', color: '#018472', h: 57 },
+        { name: 'Transports', amount: '118,00 €', color: '#7D8F3A', h: 20 },
+        { name: 'Restaurants & cafés', amount: '96,40 €', color: '#A07417', h: 17 },
+        { name: 'Loisirs', amount: '54,00 €', color: '#7B6CBF', h: 10 },
+      ]
+    : [
+        { name: 'Housing', amount: '€743.00', color: '#196E44', h: 128 },
+        { name: 'Groceries', amount: '€331.60', color: '#018472', h: 57 },
+        { name: 'Transport', amount: '€118.00', color: '#7D8F3A', h: 20 },
+        { name: 'Eating out', amount: '€96.40', color: '#A07417', h: 17 },
+        { name: 'Leisure', amount: '€54.00', color: '#7B6CBF', h: 10 },
+      ];
+
+const GAP = 2;
+const W = 96;
+const totalH = layers.reduce((sum, l) => sum + l.h, 0) + GAP * (layers.length - 1);
+
+/* Empilement depuis le bas : le socle (plus gros montant) en premier. */
+let y = totalH;
+const rects = layers.map((layer, i) => {
+  y -= layer.h;
+  const rect = { ...layer, y, index: i };
+  y -= GAP;
+  return rect;
+});
+
+const caption =
+  lang === 'fr' ? 'Où va ton argent ce mois-ci' : 'Where your money went this month';
+---
+
+<figure class="strata" aria-label={caption}>
+  <svg width={W} height={totalH} viewBox={`0 0 ${W} ${totalH}`} role="img" aria-hidden="true">
+    {rects.map((r) => (
+      <rect
+        class="layer"
+        x="0"
+        y={r.y}
+        width={W}
+        height={r.h}
+        rx="3"
+        fill={r.color}
+        style={`animation-delay: ${r.index * 40}ms`}
+      />
+    ))}
+  </svg>
+  <figcaption>
+    <span class="caption-label">{caption}</span>
+    <ul>
+      {rects.map((r) => (
+        <li>
+          <span class="swatch" style={`background:${r.color}`}></span>
+          <span class="name">{r.name}</span>
+          <span class="amount">{r.amount}</span>
+        </li>
+      ))}
+    </ul>
+  </figcaption>
+</figure>
+
+<style>
+  .strata {
+    margin: 0;
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  svg {
+    flex: none;
+    overflow: visible;
+  }
+
+  .layer {
+    animation: settle 0.3s ease-out backwards;
+  }
+
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .caption-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .swatch {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+  }
+
+  .name {
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .amount {
+    margin-left: auto;
+    color: var(--ink-soft);
+    font-size: 13.5px;
+  }
+</style>

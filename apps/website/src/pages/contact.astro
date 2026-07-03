@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../i18n/ui';
+
+const email = 'raphael@plumservices.co';
+---
+
+<Base
+  lang="fr"
+  routeKey="contact"
+  title="Contact — Sereno"
+  description="Une question, un bug, une idée ? Écris directement au créateur de Sereno — un humain répond."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Contact</span>
+        <h1>Un humain répond.</h1>
+        <p>
+          Sereno est un projet indépendant. Pas de chatbot de support, pas de
+          ticket n° 48 291 : tu écris, et c'est la personne qui fabrique l'app
+          qui te lit.
+        </p>
+      </div>
+
+      <div class="channels">
+        <div class="channel card">
+          <h2>Par email</h2>
+          <p>Questions, bugs, idées, ou juste raconter comment tu utilises Sereno :</p>
+          <a class="mail" href={`mailto:${email}`}>{email}</a>
+          <p class="hint">Réponse généralement sous quelques jours.</p>
+        </div>
+        <div class="channel card">
+          <h2>Avant d'écrire</h2>
+          <p>
+            La <a href={href('fr', 'faq')}>FAQ</a> répond aux questions les plus
+            courantes (données, compte, gratuité). Pour les demandes liées à tes
+            données personnelles (accès, suppression), les détails sont dans la
+            <a href={href('fr', 'privacy')}>politique de confidentialité</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .channels {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1fr;
+    max-width: 52rem;
+  }
+
+  @media (min-width: 720px) {
+    .channels {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .channel {
+    padding: 28px;
+  }
+
+  .channel h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .channel p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin-bottom: 8px;
+  }
+
+  .mail {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 6px 0;
+  }
+
+  .hint {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+  }
+</style>

@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+
+const email = 'raphael@plumservices.co';
+const updated = 'July 3, 2026';
+---
+
+<Base
+  lang="en"
+  routeKey="legal"
+  title="Legal notice — Sereno"
+  description="Legal notice for the Sereno website and application: publisher, hosting providers, contact."
+>
+  <article class="section">
+    <div class="wrap prose">
+      <h1>Legal notice</h1>
+      <p>Last updated: {updated}</p>
+      <p class="notice" lang="fr">
+        Version informative — la <a href="/mentions-legales">version française</a> fait foi.
+        <span lang="en">(Informative translation — the French version prevails.)</span>
+      </p>
+
+      <h2>Publisher</h2>
+      <p>
+        The sereno website and the Sereno application are published on a
+        non-professional basis by <strong>Raphaël</strong> (a private
+        individual). Under Article 6, III-2 of French law no. 2004-575 of
+        21 June 2004 (LCEN), a non-professional publisher may remain anonymous
+        provided their identity has been communicated to the hosting provider.
+      </p>
+      <p>
+        Contact: <a href={`mailto:${email}`}>{email}</a>
+      </p>
+      <p>Publication director: Raphaël.</p>
+
+      <h2>Hosting</h2>
+      <p>
+        The website and application (static files) are hosted by
+        <strong>Cloudflare, Inc.</strong>, 101 Townsend St, San Francisco,
+        CA 94107, USA — <a href="https://www.cloudflare.com" rel="noopener">cloudflare.com</a>.
+      </p>
+      <p>
+        User account data (the optional sync feature) is hosted by
+        <strong>Supabase, Inc.</strong>, 970 Toa Payoh North #07-04, Singapore
+        318992 — <a href="https://supabase.com" rel="noopener">supabase.com</a>.
+        The project database is located in the European Union (AWS region
+        eu-west-1, Ireland).
+      </p>
+
+      <h2>Intellectual property</h2>
+      <p>
+        The name “Sereno”, the visual identity, the texts and the graphic
+        elements of this site are the property of their author. Unauthorized
+        reproduction is prohibited.
+      </p>
+
+      <h2>Reporting content</h2>
+      <p>
+        For any question or report about the site or the application:
+        <a href={`mailto:${email}`}>{email}</a>.
+      </p>
+    </div>
+  </article>
+</Base>

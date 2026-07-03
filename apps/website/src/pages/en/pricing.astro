@@ -1,0 +1,135 @@
+---
+import Base from '../../layouts/Base.astro';
+import { APP_URL, t } from '../../i18n/ui';
+
+const tr = t('en');
+---
+
+<Base
+  lang="en"
+  routeKey="pricing"
+  title="Pricing — Sereno is free"
+  description="Sereno is free: local mode costs nothing to run, and the free cloud account is sustainable without ads or selling data. Here's how."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Pricing</span>
+        <h1>Free. And here's why that's not suspicious.</h1>
+        <p>
+          A free app deserves an honest explanation — especially an app about
+          money.
+        </p>
+      </div>
+
+      <div class="plans">
+        <div class="plan card">
+          <h2>On your device</h2>
+          <p class="price"><span class="amount">€0</span></p>
+          <p class="plan-note">No account, no setup</p>
+          <ul>
+            <li>Transactions, budgets, statistics, calendar</li>
+            <li>Strata, recurring rules, installments, templates</li>
+            <li>100% local: your data never leaves your device</li>
+            <li>Installable, works offline</li>
+            <li>CSV export and full backup</li>
+          </ul>
+          <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+        </div>
+
+        <div class="plan card">
+          <h2>With an account</h2>
+          <p class="price"><span class="amount">€0</span></p>
+          <p class="plan-note">Optional, when you need it</p>
+          <ul>
+            <li>Everything in local mode, plus:</li>
+            <li>Sync across devices</li>
+            <li>Multiple accounts (checking, savings, cash…)</li>
+            <li>Custom categories</li>
+            <li>Server-side recurring rules, even with the app closed</li>
+          </ul>
+          <a class="btn btn-ghost" href={APP_URL}>Create an account from the app</a>
+        </div>
+      </div>
+
+      <div class="prose why">
+        <h2>How is this sustainable?</h2>
+        <p>
+          Local mode costs literally nothing to run: the app is a static site,
+          your data lives with you. The cloud account costs a few cents per
+          user — sustainable for an independent project as long as Sereno stays
+          lean, with no marketing team to feed.
+        </p>
+        <p>
+          One day a <strong>Sereno+</strong> tier may exist for advanced use,
+          and it will be announced here, clearly. Two commitments won't change:
+          <strong>never ads</strong>, <strong>never selling data</strong> —
+          Sereno's business model cannot be the very thing it's trying to spare
+          you from.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .plans {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1fr;
+    margin-bottom: 64px;
+  }
+
+  @media (min-width: 720px) {
+    .plans {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .plan {
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .plan h2 {
+    font-size: 21px;
+  }
+
+  .price {
+    font-family: var(--font-display);
+    font-size: 44px;
+    font-weight: 600;
+    font-variation-settings: 'opsz' 40;
+    line-height: 1;
+  }
+
+  .plan-note {
+    color: var(--ink-faint);
+    font-size: 14px;
+  }
+
+  .plan ul {
+    margin: 12px 0 20px;
+    padding-left: 18px;
+    color: var(--ink-soft);
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .plan .btn {
+    margin-top: auto;
+  }
+
+  .why h2 {
+    font-size: 24px;
+  }
+</style>

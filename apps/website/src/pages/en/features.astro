@@ -1,0 +1,181 @@
+---
+import Base from '../../layouts/Base.astro';
+import { APP_URL, t } from '../../i18n/ui';
+
+const tr = t('en');
+
+const groups = [
+  {
+    title: 'Log, without friction',
+    items: [
+      {
+        name: 'Two-tap entry',
+        body: 'Amount, category, saved. Today’s date and your usual account are pre-filled. A note or a color marker if you want — nothing is mandatory.',
+      },
+      {
+        name: 'Transaction templates',
+        body: 'The morning coffee, the tank of fuel: pin your recurring expenses and replay them in one tap.',
+      },
+      {
+        name: 'Receipts',
+        body: 'Attach a photo of a receipt to a transaction to find it again later.',
+      },
+      {
+        name: 'Transfers between accounts',
+        body: 'A transfer is neither income nor an expense — Sereno handles it correctly, on both sides.',
+      },
+    ],
+  },
+  {
+    title: 'See, at a glance',
+    items: [
+      {
+        name: 'The strata',
+        body: 'Sereno’s signature: your month’s spending drawn as layers of sediment. The biggest expense forms the bedrock; each layer’s thickness is its share of the total.',
+      },
+      {
+        name: 'Calm statistics',
+        body: 'Category donuts, net-worth curve, cumulative balance, a heat calendar of your spending days. Facts, never judgment.',
+      },
+      {
+        name: 'Month comparisons',
+        body: '“+€120 vs last month” — stated simply, so you can adjust without drama.',
+      },
+      {
+        name: 'Calendar',
+        body: 'Your transactions laid out over the month, connecting spending to the real days of your life.',
+      },
+    ],
+  },
+  {
+    title: 'Frame, without punishing yourself',
+    items: [
+      {
+        name: 'Budgets per category or global',
+        body: 'Weekly, monthly, quarterly, yearly, or a custom period. With an honest end-of-period projection, computed from your actual pace.',
+      },
+      {
+        name: 'Overruns are amber, never red',
+        body: '“€50 over — it happens.” An overrun is a fact stated calmly, not a fault to atone for.',
+      },
+      {
+        name: 'Automatic recurring rules',
+        body: 'Rent, subscriptions, salary: recurring rules generate the transactions on their own — and even catch up on missed occurrences.',
+      },
+      {
+        name: 'Installment plans',
+        body: 'Paying in three installments? Sereno tracks each one and shows what’s left to pay.',
+      },
+    ],
+  },
+  {
+    title: 'Everywhere, at your pace',
+    items: [
+      {
+        name: 'Works without an account',
+        body: 'Guest mode is complete: transactions, budgets, statistics, calendar — everything, locally on your device, zero setup.',
+      },
+      {
+        name: 'Optional free account',
+        body: 'When you want to sync several devices: multiple accounts, custom categories, server-side recurring rules. Your local data migrates automatically, nothing lost.',
+      },
+      {
+        name: 'Installable and offline',
+        body: 'A real PWA: add it to your home screen, browse and log even without a network.',
+      },
+      {
+        name: 'Export your data',
+        body: 'Full backup and CSV export in one tap. Your data is yours — including the day you leave.',
+      },
+    ],
+  },
+];
+---
+
+<Base
+  lang="en"
+  routeKey="features"
+  title="Features — Sereno"
+  description="Two-tap entry, spending strata, calm budgets, recurring rules, offline mode: everything Sereno does, without ever rushing you."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Features</span>
+        <h1>Everything you need to see clearly.</h1>
+        <p>
+          Sereno deliberately does less than the others: no bank connection, no
+          pushy notifications, no score. What remains is carefully made.
+        </p>
+      </div>
+
+      {groups.map((group) => (
+        <div class="group">
+          <h2>{group.title}</h2>
+          <dl>
+            {group.items.map((item) => (
+              <div class="row">
+                <dt>{item.name}</dt>
+                <dd>{item.body}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      ))}
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .group {
+    margin-top: 48px;
+  }
+
+  .group h2 {
+    font-size: 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dl {
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 64px;
+  }
+
+  .row {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  dt {
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    max-width: 60ch;
+  }
+
+  @media (min-width: 760px) {
+    dl {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .cta-row {
+    margin-top: 56px;
+  }
+</style>

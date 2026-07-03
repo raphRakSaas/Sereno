@@ -1,0 +1,82 @@
+/* Sereno — tokens de marque partagés.
+   Copie de référence des custom properties de apps/app/src/styles.scss :
+   l'app reste la source canonique ; si elle change, répercuter ici.
+   Règles d'usage (docs/DESIGN.md) : aplats nets, filets 1px, zéro dégradé,
+   zéro ombre portée ; le dépassement/l'alerte est ambre, jamais rouge ;
+   --clay = un seul emploi fort par écran. */
+
+:root {
+  /* Encres */
+  --ink: #1e2a24;
+  --ink-soft: #566159;
+  --ink-faint: #77837a;
+
+  /* Surfaces — sauge clair : off-white légèrement teinté vert */
+  --paper: #eef1ea;
+  --surface: #fbfcf9;
+  --sage-pale: #e0e9e1;
+
+  /* Accents — sauge comme couleur primaire de marque */
+  --sage: #47614f;
+  --sage-deep: #33473b;
+  --mist: #7fa0ae;
+  --mist-deep: #547485;
+  --sand: #c6b792;
+  --amber: #a97c2f;
+  --amber-pale: #f0e7d4;
+
+  /* Accent chaud signature */
+  --clay: #b4603a;
+  --clay-soft: #f3e4db;
+
+  /* Structure */
+  --line: #d8ded1;
+  --radius: 10px;
+
+  /* Typo — charger les fonts côté consommateur :
+     @fontsource-variable/fraunces + @fontsource/ibm-plex-sans 400/500/600 */
+  --font-display: 'Fraunces Variable', georgia, serif;
+  --font-text: 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+/* Mode sombre — mêmes valeurs que l'app : fond noir neutre, accents sauge
+   éclaircis pour garder la chaleur de la marque la nuit. */
+:root[data-theme='dark'] {
+  --ink: #ecefea;
+  --ink-soft: #a2aba3;
+  --ink-faint: #79827b;
+  --paper: #0e100f;
+  --surface: #191c1a;
+  --sage-pale: #1d231f;
+  --sage: #8fb39c;
+  --sage-deep: #bad0c1;
+  --mist: #7fa2b2;
+  --mist-deep: #a2c1d0;
+  --sand: #b7a57f;
+  --amber: #cda255;
+  --amber-pale: #241e14;
+  --clay: #cd8258;
+  --clay-soft: #2a2019;
+  --line: #2a2e2a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --ink: #ecefea;
+    --ink-soft: #a2aba3;
+    --ink-faint: #79827b;
+    --paper: #0e100f;
+    --surface: #191c1a;
+    --sage-pale: #1d231f;
+    --sage: #8fb39c;
+    --sage-deep: #bad0c1;
+    --mist: #7fa2b2;
+    --mist-deep: #a2c1d0;
+    --sand: #b7a57f;
+    --amber: #cda255;
+    --amber-pale: #241e14;
+    --clay: #cd8258;
+    --clay-soft: #2a2019;
+    --line: #2a2e2a;
+  }
+}

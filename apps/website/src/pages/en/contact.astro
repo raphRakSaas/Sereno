@@ -1,0 +1,90 @@
+---
+import Base from '../../layouts/Base.astro';
+import { href } from '../../i18n/ui';
+
+const email = 'raphael@plumservices.co';
+---
+
+<Base
+  lang="en"
+  routeKey="contact"
+  title="Contact — Sereno"
+  description="A question, a bug, an idea? Write directly to Sereno's creator — a human answers."
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Contact</span>
+        <h1>A human answers.</h1>
+        <p>
+          Sereno is an independent project. No support chatbot, no ticket
+          #48,291: you write, and the person who builds the app reads it.
+        </p>
+      </div>
+
+      <div class="channels">
+        <div class="channel card">
+          <h2>By email</h2>
+          <p>Questions, bugs, ideas, or just telling us how you use Sereno:</p>
+          <a class="mail" href={`mailto:${email}`}>{email}</a>
+          <p class="hint">Usually answered within a few days.</p>
+        </div>
+        <div class="channel card">
+          <h2>Before writing</h2>
+          <p>
+            The <a href={href('en', 'faq')}>FAQ</a> covers the most common
+            questions (data, accounts, why it's free). For requests about your
+            personal data (access, deletion), see the
+            <a href={href('en', 'privacy')}>privacy policy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .channels {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1fr;
+    max-width: 52rem;
+  }
+
+  @media (min-width: 720px) {
+    .channels {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .channel {
+    padding: 28px;
+  }
+
+  .channel h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .channel p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    margin-bottom: 8px;
+  }
+
+  .mail {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 6px 0;
+  }
+
+  .hint {
+    font-size: 13.5px;
+    color: var(--ink-faint);
+  }
+</style>
