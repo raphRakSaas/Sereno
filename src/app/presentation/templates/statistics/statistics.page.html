@@ -41,8 +41,12 @@
             <h2>Évolution du patrimoine</h2>
             <span class="caption">{{ month() + 'T00:00:00' | date: 'MMMM yyyy' }}</span>
           </div>
-          <div class="card">
-            <app-trend-bars [bars]="netWorthSeries()" [month]="month()" kind="worth" />
+          <div class="card chart-card">
+            <app-line-chart
+              [points]="netWorthSeries()"
+              hue="mist-deep"
+              endLabel="Patrimoine en fin de mois :"
+            />
           </div>
         </section>
       }
@@ -74,10 +78,7 @@
           </div>
           @if (expenseSlices().length > 0) {
             <div class="card chart-card">
-              <app-strata-chart
-                [slices]="expenseSlices()"
-                [caption]="(month() + 'T00:00:00' | date: 'MMMM yyyy') ?? ''"
-              />
+              <app-donut-chart [slices]="expenseSlices()" centerLabel="Dépensé" />
             </div>
           }
         </section>
@@ -88,40 +89,32 @@
               <h2>Revenus par catégorie</h2>
             </div>
             <div class="card chart-card">
-              <app-strata-chart
-                [slices]="incomeSlices()"
-                [caption]="(month() + 'T00:00:00' | date: 'MMMM yyyy') ?? ''"
-              />
+              <app-donut-chart [slices]="incomeSlices()" centerLabel="Reçu" />
             </div>
           </section>
         }
 
         <section class="block">
           <div class="section-head">
-            <h2>Rythme des dépenses</h2>
+            <h2>Tes jours de dépense</h2>
+            <span class="caption">{{ month() + 'T00:00:00' | date: 'MMMM' }}</span>
           </div>
-          <div class="card">
-            <app-trend-bars [bars]="dailyExpenses()" [month]="month()" kind="expense" />
+          <div class="card chart-card">
+            <app-month-heatmap [days]="dailyExpenses()" [month]="month()" />
           </div>
         </section>
-
-        @if (hasIncomeActivity()) {
-          <section class="block">
-            <div class="section-head">
-              <h2>Rythme des revenus</h2>
-            </div>
-            <div class="card">
-              <app-trend-bars [bars]="dailyIncome()" [month]="month()" kind="income" />
-            </div>
-          </section>
-        }
 
         <section class="block">
           <div class="section-head">
             <h2>Solde cumulé du mois</h2>
           </div>
-          <div class="card">
-            <app-trend-bars [bars]="cumulativeNet()" [month]="month()" kind="net" />
+          <div class="card chart-card">
+            <app-line-chart
+              [points]="cumulativeNet()"
+              hue="sage"
+              [zeroBaseline]="true"
+              endLabel="Solde en fin de mois :"
+            />
           </div>
         </section>
       } @else if (hasAccounts()) {

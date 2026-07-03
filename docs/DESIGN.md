@@ -76,6 +76,19 @@ famille de teinte, sous-ensemble de la palette ci-dessus) rendues en **anneaux
 creux** — la forme les distingue des pastilles pleines de catégories, pour
 éviter toute confusion sémantique.
 
+## Dataviz (page Statistiques)
+
+- **La couleur suit l'entité** : les parts des donuts reprennent la couleur de
+  la catégorie, jamais une teinte générée. Au-delà de 7 catégories, la traîne
+  est repliée dans « Autres » (gris neutre).
+- **Séquentiel = une teinte** : le calendrier de chaleur des dépenses utilise
+  la sauge du clair au foncé (4 pas), jamais d'arc-en-ciel.
+- **Courbes** : ligne 2 px + aplat de la même teinte à 10 %, point de fin
+  cerclé de surface, infobulle au survol — jamais un chiffre sur chaque point.
+- **Mode sombre** : les couleurs de données sont éclaircies uniformément via
+  `--data-mix` (85 % couleur + 15 % blanc) pour rester ≥ 3:1 sur `--surface`
+  — le validateur de palette échouait sur `#196E44` et `#8D4826` en sombre.
+
 ## Motion
 
 Une seule scène orchestrée : les strates « se déposent » à l'arrivée du dashboard

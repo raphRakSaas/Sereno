@@ -49,7 +49,7 @@ const MIN_H = 9;
             [attr.width]="LAYER_W"
             [attr.height]="layer.height"
             rx="3"
-            [attr.fill]="layer.color"
+            [style.fill]="'color-mix(in srgb, ' + layer.color + ' var(--data-mix, 100%), white)'"
             [style.animation-delay.ms]="layer.index * 40"
             (click)="toggle(layer.id)"
             (keydown.enter)="toggle(layer.id)"
@@ -71,7 +71,10 @@ const MIN_H = 9;
               [class.dimmed]="selected() !== null && selected() !== layer.id"
               (click)="toggle(layer.id)"
             >
-              <span class="swatch" [style.background]="layer.color"></span>
+              <span
+                class="swatch"
+                [style.background]="'color-mix(in srgb, ' + layer.color + ' var(--data-mix, 100%), white)'"
+              ></span>
               <span class="name">{{ layer.name }}</span>
               <span class="share amount">{{ layer.share * 100 | number: '1.0-0' }} %</span>
               <app-amount [value]="layer.amount" [currency]="currency()" size="sm" />

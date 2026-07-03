@@ -53,6 +53,11 @@
   /* Zones sûres PWA */
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
+
+  /* Couleurs de données (strates, donuts…) : en sombre elles sont éclaircies
+     uniformément (85 % couleur + 15 % blanc) pour garder ≥ 3:1 sur --surface
+     — validé par calcul, cf. docs/DESIGN.md. */
+  --data-mix: 100%;
 }
 
 * {
@@ -366,6 +371,7 @@ a {
   --clay: #cd8258;
   --clay-soft: #2e2019;
   --line: #2b302b;
+  --data-mix: 85%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -386,6 +392,7 @@ a {
     --clay: #cd8258;
     --clay-soft: #2e2019;
     --line: #2b302b;
+    --data-mix: 85%;
   }
 }
 

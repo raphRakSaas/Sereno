@@ -22,10 +22,11 @@ import {
   totalNetWorth,
 } from '../../../domain/utils/net-worth.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
+import { DonutChartComponent } from '../../molecules/donut-chart/donut-chart.component';
+import { LineChartComponent } from '../../molecules/line-chart/line-chart.component';
+import { MonthHeatmapComponent } from '../../molecules/month-heatmap/month-heatmap.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
 import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
-import { TrendBarsComponent } from '../../molecules/trend-bars/trend-bars.component';
-import { StrataChartComponent } from '../../organisms/strata-chart/strata-chart.component';
 
 function formatDeltaText(delta: number): string {
   const formatted = new Intl.NumberFormat('fr-FR', {
@@ -48,12 +49,13 @@ function formatDeltaText(delta: number): string {
   imports: [
     AmountComponent,
     DatePipe,
+    DonutChartComponent,
     FormsModule,
+    LineChartComponent,
+    MonthHeatmapComponent,
     MonthSwitcherComponent,
     RouterLink,
-    StrataChartComponent,
     StrataGhostComponent,
-    TrendBarsComponent,
   ],
   templateUrl: './statistics.page.html',
   styleUrl: './statistics.page.scss',
@@ -114,19 +116,21 @@ export class StatisticsPage {
     rankedAccounts(this.scopedTransactions(), this.accounts.byId(), 5),
   );
 
+  /** « 3 juillet » plutôt qu'une date ISO dans les infobulles et les axes. */
+  private readonly dayFormatter = new Intl.DateTimeFormat('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+  });
+
+  private dayLabel(date: string): string {
+    return this.dayFormatter.format(new Date(date + 'T00:00:00'));
+  }
+
   protected readonly dailyExpenses = computed(() =>
     dailyTotalsByType(this.scopedTransactions(), 'expense', this.monthDays()).map((entry) => ({
       date: entry.date,
       amount: entry.amount,
-      label: entry.date,
-    })),
-  );
-
-  protected readonly dailyIncome = computed(() =>
-    dailyTotalsByType(this.scopedTransactions(), 'income', this.monthDays()).map((entry) => ({
-      date: entry.date,
-      amount: entry.amount,
-      label: entry.date,
+      label: this.dayLabel(entry.date),
     })),
   );
 
@@ -134,7 +138,7 @@ export class StatisticsPage {
     cumulativeNetByDay(this.scopedTransactions(), this.monthDays()).map((entry) => ({
       date: entry.date,
       amount: entry.amount,
-      label: entry.date,
+      label: this.dayLabel(entry.date),
     })),
   );
 
@@ -147,7 +151,7 @@ export class StatisticsPage {
     ).map((entry) => ({
       date: entry.date,
       amount: entry.amount,
-      label: entry.date,
+      label: this.dayLabel(entry.date),
     })),
   );
 
@@ -173,9 +177,6 @@ export class StatisticsPage {
 
   protected readonly netWorthDeltaText = computed(() => formatDeltaText(this.monthNetWorthDelta()));
 
-  protected readonly hasIncomeActivity = computed(() =>
-    this.dailyIncome().some((bar) => bar.amount > 0),
-  );
 
   protected readonly hasAccounts = computed(() => this.accounts.items().length > 0);
   protected readonly hasMonthActivity = computed(() => this.scopedTransactions().length > 0);
