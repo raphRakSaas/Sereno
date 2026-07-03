@@ -19,9 +19,9 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       <a routerLink="/transactions/nouvelle" class="add" aria-label="Ajouter une transaction">
         <app-icon name="plus" [size]="26" />
       </a>
-      <a routerLink="/budgets" routerLinkActive="active">
-        <app-icon name="wallet" />
-        <span>Budgets</span>
+      <a routerLink="/calendrier" routerLinkActive="active">
+        <app-icon name="calendar" />
+        <span>Calendrier</span>
       </a>
       <a routerLink="/reglages" routerLinkActive="active">
         <app-icon name="sliders" />
@@ -30,6 +30,12 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     </nav>
   `,
   styles: `
+    :host {
+      display: block;
+      position: sticky;
+      bottom: 0;
+      z-index: 30;
+    }
     nav {
       display: grid;
       grid-template-columns: 1fr 1fr auto 1fr 1fr;

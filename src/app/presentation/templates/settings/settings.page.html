@@ -103,6 +103,21 @@
   </section>
 
   <section class="card links">
+    <a routerLink="/calendrier">
+      <app-icon name="calendar" [size]="19" />
+      <span>Calendrier</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+    <a routerLink="/statistiques">
+      <app-icon name="strata" [size]="19" />
+      <span>Statistiques</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
+    <a routerLink="/budgets">
+      <app-icon name="wallet" [size]="19" />
+      <span>Budgets</span>
+      <app-icon name="chevron-right" [size]="16" />
+    </a>
     <a routerLink="/comptes">
       <app-icon name="wallet" [size]="19" />
       <span>Comptes</span>
@@ -128,6 +143,29 @@
       <span>Modèles</span>
       <app-icon name="chevron-right" [size]="16" />
     </a>
+  </section>
+
+  <section class="card block">
+    <div class="block-head">
+      <app-icon name="cloud" />
+      <h2>Application</h2>
+    </div>
+    @if (pwa.isStandalone()) {
+      <p>Sereno est installé sur cet appareil. Les mises à jour s'affichent ici quand elles sont prêtes.</p>
+    } @else if (pwa.canNativeInstall()) {
+      <p>Installe Sereno pour y accéder depuis ton écran d'accueil, même hors ligne.</p>
+      <button type="button" class="btn btn-primary" (click)="pwa.promptInstall()">Installer l'application</button>
+    } @else if (pwa.isIosDevice()) {
+      <p>
+        Sur iPhone ou iPad : touche <strong>Partager</strong> dans Safari, puis
+        <strong>Sur l'écran d'accueil</strong>.
+      </p>
+    } @else {
+      <p>
+        Pour installer Sereno, ouvre le menu de ton navigateur (Chrome, Edge, Firefox…) et choisis
+        « Installer l'application » ou « Ajouter à l'écran d'accueil ».
+      </p>
+    }
   </section>
 
   <section class="card block">

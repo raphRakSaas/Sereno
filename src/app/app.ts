@@ -1,19 +1,28 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, isDevMode } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { SwUpdate } from '@angular/service-worker';
 import { ConversionService } from './application/services/conversion.service';
 import { KeyboardShortcutsService } from './application/services/keyboard-shortcuts.service';
+import { PwaService } from './application/services/pwa.service';
 import { ToastService } from './application/services/toast.service';
 import { AccountsStore } from './application/stores/accounts.store';
 import { CategoriesStore } from './application/stores/categories.store';
 import { TransactionTemplatesStore } from './application/stores/transaction-templates.store';
 import { TransactionsStore } from './application/stores/transactions.store';
+import { PwaBannerComponent } from './presentation/molecules/pwa-banner/pwa-banner.component';
 import { BottomNavComponent } from './presentation/organisms/bottom-nav/bottom-nav.component';
 import { ConversionModalComponent } from './presentation/organisms/conversion-modal/conversion-modal.component';
 import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BottomNavComponent, ConversionModalComponent, SideNavComponent],
+  imports: [
+    RouterOutlet,
+    BottomNavComponent,
+    ConversionModalComponent,
+    PwaBannerComponent,
+    SideNavComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -21,6 +30,8 @@ export class App {
   protected readonly toasts = inject(ToastService);
   private readonly conversion = inject(ConversionService);
   private readonly shortcuts = inject(KeyboardShortcutsService);
+  private readonly pwa = inject(PwaService);
+  private readonly swUpdate = inject(SwUpdate, { optional: true });
 
   private readonly accounts = inject(AccountsStore);
   private readonly categories = inject(CategoriesStore);
@@ -39,5 +50,10 @@ export class App {
     void this.conversion.checkQuotaTriggers();
 
     this.shortcuts.init();
+
+    this.pwa.init();
+    if (!isDevMode() && this.swUpdate?.isEnabled) {
+      this.pwa.initUpdates(this.swUpdate);
+    }
   }
 }

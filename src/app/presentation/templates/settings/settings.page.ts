@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../application/services/auth.service';
 import { ImportExportService } from '../../../application/services/import-export.service';
+import { PwaService } from '../../../application/services/pwa.service';
 import { ToastService } from '../../../application/services/toast.service';
 import {
   StartScreen,
@@ -25,6 +26,7 @@ export class SettingsPage {
   protected readonly auth = inject(AuthService);
   protected readonly preferences = inject(UserPreferencesService);
   protected readonly importExport = inject(ImportExportService);
+  protected readonly pwa = inject(PwaService);
   protected readonly accounts = inject(AccountsStore);
   protected readonly categories = inject(CategoriesStore);
   protected readonly transactions = inject(TransactionsStore);
