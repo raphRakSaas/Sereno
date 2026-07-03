@@ -8,6 +8,7 @@
   width: 100%;
   margin: 0;
   background: var(--paper);
+  transition: background-color 0.45s ease;
 }
 
 .side-nav {
@@ -50,6 +51,19 @@ main {
   position: sticky;
   bottom: 0;
   z-index: 10;
+}
+
+.theme-toggle-fab {
+  position: fixed;
+  top: calc(var(--safe-top) + 12px);
+  left: 12px;
+  z-index: 40;
+}
+
+@media (min-width: 768px) {
+  .theme-toggle-fab {
+    display: none;
+  }
 }
 
 .toasts {

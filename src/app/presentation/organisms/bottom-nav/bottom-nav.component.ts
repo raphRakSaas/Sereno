@@ -12,9 +12,9 @@ import { IconComponent } from '../../atoms/icon/icon.component';
         <app-icon name="strata" />
         <span>Accueil</span>
       </a>
-      <a routerLink="/transactions" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <app-icon name="list" />
-        <span>Activité</span>
+      <a routerLink="/statistiques" routerLinkActive="active">
+        <app-icon name="chart" />
+        <span>Statistiques</span>
       </a>
       <a routerLink="/transactions/nouvelle" class="add" aria-label="Ajouter une transaction">
         <app-icon name="plus" [size]="26" />

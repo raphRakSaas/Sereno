@@ -4,6 +4,9 @@
     <router-outlet />
   </main>
   <app-bottom-nav class="bottom-nav" />
+  @if (showThemeToggle()) {
+    <app-theme-toggle class="theme-toggle-fab" />
+  }
 </div>
 
 <app-pwa-banner />

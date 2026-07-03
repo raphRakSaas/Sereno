@@ -56,6 +56,19 @@
         />
         <span class="euro">€</span>
       </label>
+
+      @if (isCreateMode() && amountSuggestions().length > 0) {
+        <div class="amount-suggestions">
+          <span class="amount-suggestions-label">Montants récents</span>
+          <div class="amount-chips">
+            @for (suggestedAmount of amountSuggestions(); track suggestedAmount) {
+              <button type="button" class="amount-chip" (click)="applyAmountSuggestion(suggestedAmount)">
+                <app-amount [value]="suggestedAmount" size="sm" />
+              </button>
+            }
+          </div>
+        </div>
+      }
     </div>
 
     @if (hint()) {
@@ -81,9 +94,9 @@
     }
 
     <div class="field">
-      @if (isCreateMode() && type() === 'expense' && favoriteCategoryList().length > 0) {
+      @if (isCreateMode() && favoriteCategoryList().length > 0) {
         <div class="field-head">
-          <label>Catégories fréquentes</label>
+          <label>{{ type() === 'expense' ? 'Catégories fréquentes' : 'Revenus fréquents' }}</label>
         </div>
         <app-category-picker
           [categories]="favoriteCategoryList()"
@@ -159,6 +172,22 @@
     }
 
     @if (isCreateMode()) {
+      <app-receipt-attach
+        [transactionId]="editedId()"
+        [disabled]="saving()"
+        (pendingFileChange)="onPendingReceiptFile($event)"
+        (applySuggestion)="applyReceiptSuggestion($event)"
+      />
+
+      <div class="field">
+        <label>Étiquette de couleur <span class="optional">— suggérée automatiquement</span></label>
+        <app-marker-color-picker
+          [selectedColor]="markerColor()"
+          (colorSelected)="onMarkerColorSelected($event)"
+        />
+        <p class="field-hint">Change la couleur si tu veux — une teinte différente est proposée à chaque catégorie.</p>
+      </div>
+
       <button type="button" class="toggle-link extras-toggle" (click)="toggleExtras()">
         {{ showExtras() ? 'Moins d’options' : 'Plus d’options' }}
       </button>
@@ -212,20 +241,6 @@
             </button>
           </div>
         </div>
-        <div class="field">
-          <label>Étiquette de couleur <span class="optional">— facultatif</span></label>
-          <app-marker-color-picker
-            [selectedColor]="markerColor()"
-            (colorSelected)="markerColor.set($event)"
-          />
-          <p class="field-hint">Pour repérer d’un coup d’œil — par exemple « à rembourser ».</p>
-        </div>
-        <app-receipt-attach
-          [transactionId]="editedId()"
-          [disabled]="saving()"
-          (pendingFileChange)="onPendingReceiptFile($event)"
-          (applySuggestion)="applyReceiptSuggestion($event)"
-        />
       }
     } @else {
       <div class="field">
@@ -249,7 +264,7 @@
         <label>Étiquette de couleur <span class="optional">— facultatif</span></label>
         <app-marker-color-picker
           [selectedColor]="markerColor()"
-          (colorSelected)="markerColor.set($event)"
+          (colorSelected)="onMarkerColorSelected($event)"
         />
         <p class="field-hint">Pour repérer d’un coup d’œil — par exemple « à rembourser ».</p>
       </div>

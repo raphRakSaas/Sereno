@@ -1,7 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none" role="img" aria-label="Sereno">
-  <rect x="96" y="318" width="320" height="80" rx="4" fill="#7A9486"/>
-  <rect x="96" y="248" width="320" height="64" rx="4" fill="#8FA89A"/>
-  <rect x="96" y="190" width="320" height="52" rx="4" fill="#A8BEC9"/>
-  <rect x="96" y="144" width="320" height="40" rx="4" fill="#C9BDA0"/>
-  <rect x="96" y="110" width="320" height="28" rx="4" fill="#D4845E"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Sereno">
+  <rect width="64" height="64" rx="18" fill="#1d231f"/>
+  <circle cx="32" cy="26" r="10.5" fill="#9dbfa9"/>
+  <path d="M15 41h34" stroke="#9dbfa9" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M21 48.5h22" stroke="#5e7a69" stroke-width="3.4" stroke-linecap="round"/>
 </svg>

@@ -28,6 +28,7 @@ import {
   lastUsedCategoryId,
   suggestCategoryIdFromNote,
 } from '../../../domain/utils/category-usage.util';
+import { suggestMarkerColor } from '../../../domain/utils/marker-color.util';
 import { toIsoDate } from '../../../domain/utils/period.utils';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
@@ -97,6 +98,8 @@ export class TransactionEditPage {
 
   /** L'utilisateur a choisi une catégorie manuellement — on n'écrase plus via la note. */
   private readonly categoryTouched = signal(false);
+  /** L'utilisateur a choisi une couleur d'étiquette manuellement. */
+  private readonly markerColorTouched = signal(false);
 
   protected readonly pickableCategories = computed(() =>
     this.type() === 'expense' ? this.categories.expenseCategories() : this.categories.incomeCategories(),
@@ -109,6 +112,34 @@ export class TransactionEditPage {
   protected readonly otherCategories = computed(() =>
     categoriesWithoutFavorites(this.pickableCategories(), this.favoriteCategoryList()),
   );
+
+  protected readonly amountSuggestions = computed(() => {
+    const amounts = new Set<number>();
+    for (const transaction of this.transactions.items()) {
+      if (transaction.type !== this.type()) {
+        continue;
+      }
+      amounts.add(transaction.amount);
+      if (amounts.size >= 5) {
+        break;
+      }
+    }
+    return [...amounts];
+  });
+
+  protected readonly recentMarkerColors = computed(() => {
+    const colors: string[] = [];
+    for (const transaction of this.transactions.items()) {
+      if (!transaction.markerColor || colors.includes(transaction.markerColor)) {
+        continue;
+      }
+      colors.push(transaction.markerColor);
+      if (colors.length >= 3) {
+        break;
+      }
+    }
+    return colors;
+  });
 
   private populated = false;
 
@@ -176,6 +207,19 @@ export class TransactionEditPage {
       if (suggestedFromNote) {
         this.categoryId.set(suggestedFromNote);
       }
+    });
+
+    effect(() => {
+      if (this.editedId() || this.markerColorTouched()) {
+        return;
+      }
+      const selectedCategoryId = this.categoryId();
+      if (!selectedCategoryId) {
+        return;
+      }
+      this.markerColor.set(
+        suggestMarkerColor(selectedCategoryId, this.recentMarkerColors()),
+      );
     });
 
     const queryType = this.route.snapshot.queryParamMap.get('type');
@@ -294,6 +338,16 @@ export class TransactionEditPage {
     this.categoryTouched.set(true);
     this.categoryId.set(categoryId);
     this.hint.set('');
+  }
+
+  protected applyAmountSuggestion(amount: number): void {
+    this.amountText.set(amount.toString().replace('.', ','));
+    this.hint.set('');
+  }
+
+  protected onMarkerColorSelected(color: string | null): void {
+    this.markerColorTouched.set(true);
+    this.markerColor.set(color);
   }
 
   protected toggleAllCategories(): void {
@@ -443,6 +497,7 @@ export class TransactionEditPage {
     this.amountText.set('');
     this.note.set('');
     this.markerColor.set(null);
+    this.markerColorTouched.set(false);
     this.hint.set('');
     this.pendingReceiptFile.set(null);
     this.categoryTouched.set(false);

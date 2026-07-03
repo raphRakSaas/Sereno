@@ -115,6 +115,47 @@ form {
   color: var(--ink-soft);
 }
 
+.amount-suggestions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-top: var(--space-1);
+}
+
+.amount-suggestions-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.amount-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+
+.amount-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease;
+}
+
+@media (hover: hover) {
+  .amount-chip:hover {
+    border-color: var(--sage);
+    background: var(--sage-pale);
+  }
+}
+
 /* .seg vient du vocabulaire partagé (styles.scss).
    Le sélecteur de type, compact et centré au-dessus du montant. */
 .seg--type {

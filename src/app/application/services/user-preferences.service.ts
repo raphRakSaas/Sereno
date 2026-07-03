@@ -27,8 +27,10 @@ const DEFAULTS: StoredPreferences = {
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesService {
   private readonly stored = signal(this.load());
+  private readonly systemDark = signal(this.readSystemDark());
 
   readonly theme = signal(this.stored().theme);
+  readonly isDark = signal(this.computeIsDark(this.stored().theme));
   readonly startScreen = signal(this.stored().startScreen);
   readonly weekStartsMonday = signal(this.stored().weekStartsMonday);
   readonly transactionSort = signal(this.stored().transactionSort);
@@ -37,12 +39,24 @@ export class UserPreferencesService {
 
   constructor() {
     this.applyTheme(this.theme());
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+      this.systemDark.set(event.matches);
+      if (this.theme() === 'system') {
+        this.isDark.set(event.matches);
+      }
+    });
   }
 
   setTheme(theme: ThemeMode): void {
     this.theme.set(theme);
+    this.isDark.set(this.computeIsDark(theme));
     this.persist({ theme });
     this.applyTheme(theme);
+  }
+
+  /** Bascule rapide clair ↔ sombre (ignore le mode système). */
+  toggleTheme(): void {
+    this.setTheme(this.isDark() ? 'light' : 'dark');
   }
 
   setStartScreen(startScreen: StartScreen): void {
@@ -107,5 +121,19 @@ export class UserPreferencesService {
       return;
     }
     root.setAttribute('data-theme', theme);
+  }
+
+  private computeIsDark(theme: ThemeMode): boolean {
+    if (theme === 'dark') {
+      return true;
+    }
+    if (theme === 'light') {
+      return false;
+    }
+    return this.systemDark();
+  }
+
+  private readSystemDark(): boolean {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 }
