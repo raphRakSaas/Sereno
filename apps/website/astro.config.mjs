@@ -8,6 +8,12 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://sereno-site-aqy.pages.dev',
   trailingSlash: 'never',
+  build: {
+    // Fichiers plats (methode.html) plutôt que dossiers (methode/index.html) :
+    // Cloudflare Pages sert alors /methode sans redirection 308 vers /methode/,
+    // ce qui garde les URLs servies identiques aux canonicals sans slash.
+    format: 'file',
+  },
   i18n: {
     defaultLocale: 'fr',
     locales: ['fr', 'en'],
