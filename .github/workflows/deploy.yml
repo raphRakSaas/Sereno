@@ -66,10 +66,17 @@ jobs:
           path: dist/sereno/browser
 
       - name: Deploy to Cloudflare Pages
+        id: deploy
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: sereno
+          projectName: sereno-2qj
           directory: dist/sereno/browser
+          branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      # Chaque déploiement a aussi une URL unique (hash) — c'est normal.
+      # L'URL publique stable est toujours celle de production ci-dessous.
+      - name: Production URL
+        run: echo "https://sereno-2qj.pages.dev"

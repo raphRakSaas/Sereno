@@ -106,10 +106,15 @@ du repo GitHub :
 | `NG_APP_SUPABASE_URL` | Même valeur que dans `.env` |
 | `NG_APP_SUPABASE_PUBLISHABLE_KEY` | Même valeur que dans `.env` |
 
-Le projet Cloudflare Pages (`projectName: sereno` dans le workflow) doit exister
+Le projet Cloudflare Pages (`projectName: sereno-2qj` dans le workflow) doit exister
 avant le premier déploiement — créable en une fois depuis le dashboard
 (*Workers & Pages → Create → Pages → Direct Upload*, un upload vide suffit) ou
-via `npx wrangler pages project create sereno --production-branch=main`.
+via `npx wrangler pages project create sereno-2qj --production-branch=main`.
+
+**URL stable de production** : `https://sereno-2qj.pages.dev` — c'est celle à
+marquer en favori. Le dashboard Cloudflare affiche aussi une URL avec hash par
+déploiement (`https://f9ff4d01.sereno-2qj.pages.dev`, etc.) : c'est l'historique
+des versions, pas l'adresse publique à partager.
 
 Le fichier `public/_redirects` gère le fallback SPA une fois déployé.
 
