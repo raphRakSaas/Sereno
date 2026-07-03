@@ -2,6 +2,18 @@
 
 **Vois clair dans ton argent, sans anxiété.**
 
+Monorepo npm workspaces :
+
+```
+apps/app/        # la PWA Angular de gestion de budget
+apps/website/    # le site public (Astro, FR/EN) — vitrine, blog, pages légales
+packages/brand/  # tokens de marque + logos partagés
+supabase/        # schéma Postgres, RLS, Edge Functions, cron
+docs/            # DESIGN.md — direction visuelle commune app + site
+```
+
+## L'app (`apps/app`)
+
 Sereno est une PWA de gestion de budget personnel : tu notes tes dépenses en deux
 gestes, tu vois où va ton argent (les « strates »), tu poses des budgets — et
 l'app te parle calmement, jamais en rouge, jamais en te culpabilisant.
@@ -12,8 +24,6 @@ l'app te parle calmement, jamais en rouge, jamais en te culpabilisant.
   personnalisées, récurrences automatiques, budgets mensuels.
 - **PWA** : installable, consultation hors-ligne.
 
-## Stack
-
 | Couche | Choix |
 |---|---|
 | Framework | Angular 21 (standalone components, zoneless) |
@@ -22,15 +32,14 @@ l'app te parle calmement, jamais en rouge, jamais en te culpabilisant.
 | Backend (connecté) | Supabase — Postgres + RLS, Auth, Edge Functions, pg_cron |
 | PWA | @angular/service-worker (ngsw) |
 | Config | @ngx-env/builder (`.env`, variables `NG_APP_*`) |
-| Hébergement cible | Cloudflare Pages |
-
-## Architecture
+| Tests | Vitest (builder natif Angular, jsdom) |
+| Hébergement | Cloudflare Pages (`sereno-2qj.pages.dev`) |
 
 Séparation stricte en quatre couches — les composants et les stores ne
 connaissent **jamais** Dexie ni Supabase, uniquement les interfaces du domain :
 
 ```
-src/app/
+apps/app/src/app/
 ├── presentation/     # composants (atomic design : atoms/molecules/organisms/templates)
 ├── application/      # NgRx Signal Stores + services métier (auth, migration, conversion)
 ├── domain/           # modèles + ports (TransactionRepository, AccountRepository, …)
@@ -43,23 +52,25 @@ repositories « switching » routent chaque appel vers Dexie ou Supabase selon l
 mode courant ; à l'inscription, les données locales sont migrées vers Supabase
 (nouveaux UUID, rollback en cas d'échec réseau) puis le mode bascule.
 
-## Démarrage rapide (mode invité, zéro config)
+## Démarrage rapide
 
 ```bash
-npm install
-npm start          # http://localhost:4200
+npm install          # installe tous les workspaces
+npm start            # l'app sur http://localhost:4200 (mode invité, zéro config)
+npm test             # tests de l'app (Vitest)
+npm run start:website   # le site sur http://localhost:4321
 ```
 
 L'app tourne entièrement en local : compte par défaut et catégories créés au
 premier lancement. Aucune variable d'environnement requise.
 
-## Configuration Supabase (Phase 2+)
+## Configuration Supabase (compte cloud)
 
 1. Crée un projet sur [supabase.com](https://supabase.com).
 2. Exécute `supabase/schema.sql` dans l'éditeur SQL (tables, RLS, trigger de
    profil, catégories globales seedées avec des UUID fixes — identiques à ceux
    du mode invité, ce qui rend la migration triviale).
-3. Copie `.env.example` vers `.env` et renseigne :
+3. Copie `apps/app/.env.example` vers `apps/app/.env` et renseigne :
 
    ```
    NG_APP_SUPABASE_URL=https://<PROJECT_REF>.supabase.co
@@ -87,54 +98,48 @@ appels à un compte.
 
 ## Build & déploiement (Cloudflare Pages)
 
-```bash
-npx ng build       # sortie : dist/sereno/browser
-```
+Deux workflows GitHub Actions, filtrés par chemins — un push qui ne touche que
+le site ne redéploie pas l'app, et inversement :
 
-Le déploiement est automatisé par `.github/workflows/deploy.yml` : chaque push
-sur `main` déclenche deux jobs GitHub Actions — `build` (install, `ng build`
-avec les variables `NG_APP_*`, upload de l'artefact) puis `deploy` (téléchargement
-de l'artefact, publication sur Cloudflare Pages via `cloudflare/pages-action`).
+- `.github/workflows/deploy-app.yml` → projet Pages `sereno`
+  (`https://sereno-2qj.pages.dev`), artefact `apps/app/dist/sereno/browser`.
+- `.github/workflows/deploy-website.yml` → projet Pages du site,
+  artefact `apps/website/dist`.
 
 Secrets à renseigner une fois dans *Settings → Secrets and variables → Actions*
-du repo GitHub :
+du repo GitHub (**Repository secrets**, pas un Environment) :
 
 | Secret | Où le trouver |
 |---|---|
-| `CLOUDFLARE_API_TOKEN` | [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) — template *Edit Cloudflare Workers* ou permission `Cloudflare Pages: Edit` |
+| `CLOUDFLARE_API_TOKEN` | [dash.cloudflare.com/profile/api-tokens](https://dash.cloudflare.com/profile/api-tokens) — permission `Cloudflare Pages: Edit` |
 | `CLOUDFLARE_ACCOUNT_ID` | Dashboard Cloudflare → colonne de droite de n'importe quelle page du compte |
-| `NG_APP_SUPABASE_URL` | Même valeur que dans `.env` |
-| `NG_APP_SUPABASE_PUBLISHABLE_KEY` | Même valeur que dans `.env` |
+| `NG_APP_SUPABASE_URL` | Même valeur que dans `apps/app/.env` |
+| `NG_APP_SUPABASE_PUBLISHABLE_KEY` | Même valeur que dans `apps/app/.env` |
 
-Le projet Cloudflare Pages (`projectName: sereno` dans le workflow) doit exister
-avant le premier déploiement — créable en une fois depuis le dashboard
-(*Workers & Pages → Create → Pages → Direct Upload*, un upload vide suffit) ou
-via `npx wrangler pages project create sereno --production-branch=main`.
-
-Le **nom du projet** (`sereno`) et l'**URL publique** peuvent différer : si
-`sereno.pages.dev` est déjà pris globalement, Cloudflare assigne un suffixe
+Le **nom du projet** Pages et l'**URL publique** peuvent différer : si
+`<nom>.pages.dev` est déjà pris globalement, Cloudflare assigne un suffixe
 (ex. `sereno-2qj.pages.dev`). L'URL stable est celle affichée sous *Domains*
 dans le dashboard — pas les liens avec hash dans *All deployments*.
 
-Le fichier `public/_redirects` gère le fallback SPA une fois déployé.
+Le fichier `apps/app/public/_redirects` gère le fallback SPA une fois déployé.
 
-Le service worker n'est actif qu'en production (`ng build`). Pour vérifier le
-comportement PWA en local :
+Le service worker n'est actif qu'en production. Pour vérifier le comportement
+PWA en local :
 
 ```bash
-npx ng build && npx http-server dist/sereno/browser -p 8080
+npm run build && npx http-server apps/app/dist/sereno/browser -p 8080
 # puis Lighthouse (onglet Application/PWA) sur http://localhost:8080
 ```
 
 Installabilité et lecture hors-ligne sont couvertes : app shell en cache-first,
-données Supabase en network-first (`ngsw-config.json`).
+données Supabase en network-first (`apps/app/ngsw-config.json`).
 
 ## Design
 
 La direction visuelle (« sérénité financière » : aplats calmes, montants traités
 comme des titres éditoriaux, visualisation signature en strates de sédiment,
 palette validée contraste + daltonisme) est documentée dans
-[`docs/DESIGN.md`](docs/DESIGN.md).
+[`docs/DESIGN.md`](docs/DESIGN.md) — elle s'applique à l'app **et** au site.
 
 ## Hors périmètre v1 (structure prête, écrans absents)
 

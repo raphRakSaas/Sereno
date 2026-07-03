@@ -1,8 +1,14 @@
-name: Deploy to Cloudflare Pages
+name: Deploy app to Cloudflare Pages
 
 on:
   push:
     branches: [main]
+    # Monorepo : ne redéployer l'app que si elle (ou la racine npm) change.
+    paths:
+      - 'apps/app/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-app.yml'
   # Permet de relancer un déploiement manuellement depuis l'onglet Actions,
   # sans devoir pousser un commit vide.
   workflow_dispatch:
@@ -10,7 +16,7 @@ on:
 # Deux déploiements en même temps sur la même queue pourraient s'écraser :
 # on met le run précédent en attente plutôt que de l'annuler.
 concurrency:
-  group: cloudflare-pages-deploy
+  group: cloudflare-pages-deploy-app
   cancel-in-progress: false
 
 jobs:
@@ -37,9 +43,9 @@ jobs:
           npm ci
 
       # @ngx-env/builder lit process.env au build : pas besoin de fichier .env,
-      # les secrets exportés ici suffisent (voir src/environments/environment.ts).
+      # les secrets exportés ici suffisent (voir apps/app/src/environments/environment.ts).
       - name: Build (production)
-        run: npx ng build
+        run: npm run build -w @sereno/app
         env:
           NG_APP_SUPABASE_URL: ${{ secrets.NG_APP_SUPABASE_URL }}
           NG_APP_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NG_APP_SUPABASE_PUBLISHABLE_KEY }}
@@ -48,7 +54,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sereno-dist
-          path: dist/sereno/browser
+          path: apps/app/dist/sereno/browser
           retention-days: 7
 
   deploy:
@@ -63,7 +69,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sereno-dist
-          path: dist/sereno/browser
+          path: dist/browser
 
       - name: Deploy to Cloudflare Pages
         id: deploy
@@ -72,7 +78,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: sereno
-          directory: dist/sereno/browser
+          directory: dist/browser
           branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 

@@ -15,21 +15,39 @@ Works fully offline/local with zero configuration (guest mode via IndexedDB);
 an optional free account adds Supabase sync, multi-account, custom categories,
 recurring transactions, and budgets.
 
+## Monorepo layout (npm workspaces)
+
+```
+apps/app/        # the Angular PWA (everything below about layers/stores lives here)
+apps/website/    # public website — Astro 5, static, bilingual FR (root) / EN (/en/)
+packages/brand/  # shared brand tokens (tokens.css) + logos; consumed by the website.
+                 # The app does NOT consume it yet — apps/app/src/styles.scss stays canonical.
+supabase/        # backend schema/functions (unchanged by the monorepo move)
+docs/DESIGN.md   # visual direction — applies to BOTH the app and the website
+```
+
+Deploys are two path-filtered GitHub workflows: `deploy-app.yml` (Pages project
+`sereno` → sereno-2qj.pages.dev) and `deploy-website.yml`. A website-only push
+must not redeploy the app, and vice versa.
+
 ## Commands
 
 ```bash
-npm start            # dev server at http://localhost:4200 (guest mode needs no config)
-npm run build        # production build → dist/sereno/browser
-npm run watch        # dev-mode build, watching
-npm test             # ng test (Karma/Jasmine) — note: no spec files exist yet
+npm start                # app dev server at http://localhost:4200 (guest mode needs no config)
+npm run build            # app production build → apps/app/dist/sereno/browser
+npm test                 # app tests — Vitest via Angular's native unit-test builder (jsdom)
+npm run start:website    # website dev server (Astro) at http://localhost:4321
+npm run build:website    # website build → apps/website/dist
 ```
 
+Root scripts delegate to workspaces (`-w @sereno/app` / `-w @sereno/website`).
 There is no lint script configured. `prettier` is a devDependency but no
 script wraps it.
 
-Build/serve use the `@ngx-env/builder` custom builders (not the stock
+App build/serve use the `@ngx-env/builder` custom builders (not the stock
 `@angular-devkit/build-angular`) so that `.env` variables become available via
-`import.meta.env.NG_APP_*` — see Environment config below.
+`import.meta.env.NG_APP_*` — see Environment config below. The app's `.env`
+lives at `apps/app/.env`.
 
 ### Supabase (when working on backend features)
 
@@ -122,7 +140,7 @@ the same "explain plainly, don't alarm" rule as the rest of the product.
 
 ### Environment config
 
-`src/environments/environment.ts` reads `import.meta.env.NG_APP_SUPABASE_URL`
+`apps/app/src/environments/environment.ts` reads `import.meta.env.NG_APP_SUPABASE_URL`
 and `NG_APP_SUPABASE_PUBLISHABLE_KEY`, wrapped in try/catch — with no `.env`
 file, `import.meta.env` access throws and the app falls back to guest-only
 mode cleanly. Keep this access pattern textual (`import.meta.env.NG_APP_*`,
@@ -149,7 +167,7 @@ constraints worth preserving when touching UI:
 
 ### PWA
 
-`ngsw-config.json`: app shell is cache-first, Supabase REST/Edge Function
+`apps/app/ngsw-config.json`: app shell is cache-first, Supabase REST/Edge Function
 calls are network-first with a 6s timeout (`dataGroups`). Service worker is
 only enabled in production builds (`provideServiceWorker(..., { enabled:
 !isDevMode() })` in `app.config.ts`) — testing offline behavior requires a

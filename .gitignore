@@ -1,17 +1,20 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# Monorepo npm workspaces : les patterns ne sont pas ancrés à la racine pour
+# couvrir apps/* et packages/*.
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# Sorties de build
+dist/
+out-tsc/
+tmp/
+bazel-out/
 
 # Node
-/node_modules
-npm-debug.log
-yarn-error.log
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+yarn.lock
 
-# IDEs and editors
+# IDEs et éditeurs
 .idea/
 .project
 .classpath
@@ -29,46 +32,27 @@ yarn-error.log
 !.vscode/mcp.json
 .history/*
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
-
-# System files
-.DS_Store
-Thumbs.db
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
+# Angular
 .angular/
+.ng/
+.angular-cli.json
 
-# Node modules and dependency files
-/node_modules/
-/yarn.lock
+# Astro
+.astro/
 
-# Environment files
-/.env
-
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
-
-# TypeScript cache
+# Divers
+.sass-cache/
+connect.lock
+coverage/
+libpeerconnection.log
+testem.log
+typings/
+__screenshots__/
 *.tsbuildinfo
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Fichiers système
+.DS_Store
+Thumbs.db
 
 # Variables d'environnement locales
 .env
