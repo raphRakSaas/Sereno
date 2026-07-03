@@ -31,7 +31,10 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          corepack prepare --activate
+          npm --version
+          npm ci
 
       # @ngx-env/builder lit process.env au build : pas besoin de fichier .env,
       # les secrets exportés ici suffisent (voir src/environments/environment.ts).
