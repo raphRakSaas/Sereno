@@ -1,3 +1,40 @@
+/* Mobile : le regard descend solde → rythme → signature (strates) →
+   raccourcis → le reste. La grille desktop est dissoute (display: contents)
+   pour permettre cet ordre sans dupliquer le DOM. */
+.dash {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-6);
+}
+
+.dash-grid {
+  display: contents;
+}
+
+.full {
+  order: 1;
+  margin: 0 var(--space-4);
+}
+
+.rhythm {
+  order: 2;
+}
+
+.col-strata {
+  order: 3;
+  padding: 0 var(--space-4);
+}
+
+.quick-actions {
+  order: 4;
+}
+
+.col-side {
+  order: 5;
+  padding: 0 var(--space-4);
+}
+
 /* Le hero est un aplat sauge pâle, net, sans dégradé ni ombre : le solde y est
    traité comme un gros titre éditorial. Plein bord sur mobile, panneau large
    arrondi sur desktop. */
@@ -17,6 +54,9 @@
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 600;
@@ -42,7 +82,17 @@
 .hero-balance {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: 6px;
+}
+
+/* L'unique accent chaud de l'écran : une barre fine sous le solde,
+   l'œil sait où se poser. */
+.hero-accent {
+  width: 44px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--clay);
 }
 
 .weather {
@@ -110,10 +160,13 @@
   gap: var(--space-3);
 }
 
+/* justify-content: space-between — si un libellé passe sur deux lignes,
+   les trois montants restent alignés sur la même ligne de base. */
 .rhythm-item {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 4px;
   min-width: 0;
 }
@@ -143,14 +196,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: var(--space-3) var(--space-2);
+  gap: 5px;
+  padding: 10px var(--space-2);
   border-radius: var(--radius);
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--sage-deep);
   text-decoration: none;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -180,6 +233,10 @@
 
 .account-row + .account-row {
   border-top: 1px solid var(--line);
+}
+
+.account-row:active {
+  background: var(--sage-pale);
 }
 
 .account-name {
@@ -334,6 +391,10 @@
   padding: var(--space-4);
 }
 
+.skeleton-strata {
+  height: 224px;
+}
+
 .list-card {
   padding: 4px 10px;
 }
@@ -341,13 +402,6 @@
 .list-card app-transaction-list-item + app-transaction-list-item {
   display: block;
   border-top: 1px solid var(--line);
-}
-
-.dash-grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-5);
-  padding: 0 var(--space-4) var(--space-6);
 }
 
 /* ---- Desktop (≥ 768px) : shell dashboard, hero + grille 2 colonnes ---- */
@@ -395,6 +449,24 @@
     min-width: 240px;
   }
 
+  /* L'ordre mobile ne s'applique plus : retour à l'ordre du DOM. */
+  .full,
+  .rhythm,
+  .col-strata,
+  .quick-actions,
+  .col-side {
+    order: 0;
+  }
+
+  .col-strata,
+  .col-side {
+    padding: 0;
+  }
+
+  .full {
+    margin: 0;
+  }
+
   .rhythm {
     margin: 0;
   }
@@ -402,6 +474,11 @@
   .quick-actions {
     padding: 0;
     grid-template-columns: repeat(6, 1fr);
+  }
+
+  .quick-action {
+    padding: var(--space-3) var(--space-2);
+    font-size: 12.5px;
   }
 
   @media (hover: hover) {

@@ -127,29 +127,7 @@ section .eyebrow {
   font-size: 19px;
 }
 
-.seg {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--surface);
-}
-
-.seg button {
-  padding: 10px 0;
-  border: none;
-  background: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  cursor: pointer;
-}
-
-.seg button.on {
-  background: var(--sage);
-  color: var(--surface);
-}
+/* .seg vient du vocabulaire partagé (styles.scss). */
 
 .swatches {
   display: flex;

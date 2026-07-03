@@ -206,7 +206,8 @@ export class TransactionEditPage {
 
     afterNextRender(() => {
       if (!this.editedId()) {
-        this.focusAmountField();
+        // preventScroll : sinon l'ouverture du clavier pousse l'en-tête hors écran.
+        this.focusAmountField(true);
       }
     });
   }
@@ -326,7 +327,11 @@ export class TransactionEditPage {
   }
 
   protected close(): void {
-    if (window.history.length > 1) {
+    // navigationId > 1 : on est arrivé ici depuis l'app → retour naturel.
+    // Sinon (arrivée directe : raccourci PWA, lien), back() sortirait de
+    // Sereno → on va au dashboard.
+    const state = this.location.getState() as { navigationId?: number } | null;
+    if ((state?.navigationId ?? 1) > 1) {
       this.location.back();
     } else {
       void this.router.navigateByUrl('/');
@@ -346,6 +351,8 @@ export class TransactionEditPage {
     this.saving.set(true);
     const transactionId = this.editedId();
     const pendingReceipt = this.pendingReceiptFile();
+    // La toute première transaction est un moment : on le souligne (calmement).
+    const isFirstTransaction = !transactionId && this.transactions.items().length === 0;
     const result = transactionId
       ? await this.transactions.update(transactionId, payload)
       : await this.transactions.add(payload);
@@ -362,7 +369,13 @@ export class TransactionEditPage {
       this.pendingReceiptFile.set(null);
     }
 
-    this.toast.show(transactionId ? 'Modifié. Tout est à jour.' : 'C’est noté.');
+    this.toast.show(
+      transactionId
+        ? 'Modifié. Tout est à jour.'
+        : isFirstTransaction
+          ? 'C’est noté — regarde ta première couche se déposer.'
+          : 'C’est noté.',
+    );
 
     if (transactionId || closeAfterSave) {
       this.close();
@@ -434,10 +447,11 @@ export class TransactionEditPage {
     this.pendingReceiptFile.set(null);
     this.categoryTouched.set(false);
     this.date.set(toIsoDate(new Date()));
-    this.focusAmountField();
+    window.scrollTo(0, 0);
+    this.focusAmountField(true);
   }
 
-  private focusAmountField(): void {
-    queueMicrotask(() => this.amountInput()?.nativeElement.focus());
+  private focusAmountField(preventScroll = false): void {
+    queueMicrotask(() => this.amountInput()?.nativeElement.focus({ preventScroll }));
   }
 }

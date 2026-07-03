@@ -23,6 +23,7 @@ import {
 } from '../../../domain/utils/net-worth.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
+import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
 import { TrendBarsComponent } from '../../molecules/trend-bars/trend-bars.component';
 import { StrataChartComponent } from '../../organisms/strata-chart/strata-chart.component';
 
@@ -51,6 +52,7 @@ function formatDeltaText(delta: number): string {
     MonthSwitcherComponent,
     RouterLink,
     StrataChartComponent,
+    StrataGhostComponent,
     TrendBarsComponent,
   ],
   templateUrl: './statistics.page.html',

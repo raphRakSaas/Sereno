@@ -5,13 +5,14 @@ import { AuthService } from '../../../application/services/auth.service';
 import { MigrationService } from '../../../application/services/migration.service';
 import { ToastService } from '../../../application/services/toast.service';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { LogoComponent } from '../../atoms/logo/logo.component';
 
 type AuthMode = 'signin' | 'signup';
 
 @Component({
   selector: 'app-auth-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, IconComponent],
+  imports: [FormsModule, IconComponent, LogoComponent],
   templateUrl: './auth.page.html',
   styleUrl: './auth.page.scss',
 })

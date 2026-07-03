@@ -1,15 +1,23 @@
+/* En-tête épinglé : fermer / titre / supprimer restent visibles quand le
+   clavier ou le scroll pousse le formulaire vers le haut. */
 .head {
+  position: sticky;
+  top: 0;
+  z-index: 6;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+  background: var(--paper);
+  margin: calc(-1 * (var(--space-5) + var(--safe-top))) calc(-1 * var(--space-4)) 0;
+  padding: calc(var(--space-2) + var(--safe-top)) var(--space-4) var(--space-2);
 }
 
 .icon-btn {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 999px;
   background: var(--surface);
@@ -20,7 +28,7 @@
 .icon-btn.danger {
   color: var(--amber);
   width: auto;
-  min-width: 40px;
+  min-width: 44px;
   padding: 0 10px;
 }
 
@@ -31,7 +39,7 @@
 }
 
 .spacer {
-  width: 40px;
+  width: 44px;
 }
 
 form {
@@ -40,27 +48,57 @@ form {
   gap: var(--space-5);
 }
 
-/* Le montant d'abord : c'est le geste principal, il a droit au gros titre. */
+/* Type + montant forment une seule unité : « je saisis une dépense de X € ».
+   Le fond, très légèrement teinté selon le type, donne le sens d'un coup
+   d'œil : dépense = grège chaud, revenu = brume froide. */
+.entry-hero {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-5);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--clay-soft) 55%, var(--paper));
+  transition: background 0.2s ease;
+}
+
+.entry-hero.is-income {
+  background: color-mix(in srgb, var(--mist) 16%, var(--paper));
+}
+
 .amount-field {
   display: flex;
   align-items: baseline;
   justify-content: center;
   gap: 8px;
-  padding: var(--space-4) 0;
-  border-bottom: 1px solid var(--line);
+  padding: var(--space-2) 0 0;
 }
 
+/* Même traitement que le solde hero : Fraunces, l'entier domine. */
 .amount {
   width: 60%;
   max-width: 240px;
   border: none;
   background: none;
   text-align: right;
+  font-family: var(--font-display);
   font-size: 52px;
-  font-weight: 600;
+  font-weight: 560;
+  font-variation-settings: 'opsz' 40;
   color: var(--ink);
   font-feature-settings: 'tnum';
   padding: 0;
+}
+
+/* Quand le navigateur sait dimensionner l'input sur son contenu, montant et €
+   forment un bloc compact centré (sinon : fallback 60 % aligné à droite). */
+@supports (field-sizing: content) {
+  .amount {
+    field-sizing: content;
+    width: auto;
+    min-width: 1ch;
+    max-width: 100%;
+    text-align: center;
+  }
 }
 
 .amount:focus {
@@ -77,32 +115,27 @@ form {
   color: var(--ink-soft);
 }
 
-.seg {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--surface);
+/* .seg vient du vocabulaire partagé (styles.scss).
+   Le sélecteur de type, compact et centré au-dessus du montant. */
+.seg--type {
+  width: max-content;
+  margin: 0 auto;
+  border-radius: 999px;
 }
 
-.seg button {
-  padding: 11px 0;
-  border: none;
-  background: none;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  cursor: pointer;
-}
-
-.seg button.on {
-  background: var(--sage);
-  color: var(--surface);
+.seg--type button {
+  padding: 8px 22px;
+  border-radius: 999px;
 }
 
 .optional {
   font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.field-hint {
+  margin: 2px 0 0;
+  font-size: 12.5px;
   color: var(--ink-faint);
 }
 
@@ -214,5 +247,10 @@ form {
 @media (min-width: 768px) {
   .page {
     max-width: 620px;
+  }
+
+  .head {
+    margin: -40px -48px 0;
+    padding: var(--space-3) 48px var(--space-2);
   }
 }

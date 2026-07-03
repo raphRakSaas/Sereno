@@ -14,11 +14,12 @@ import { CategoriesStore } from '../../../application/stores/categories.store';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { LogoComponent } from '../../atoms/logo/logo.component';
 
 @Component({
   selector: 'app-settings-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, IconComponent, RouterLink],
+  imports: [FormsModule, IconComponent, LogoComponent, RouterLink],
   templateUrl: './settings.page.html',
   styleUrl: './settings.page.scss',
 })

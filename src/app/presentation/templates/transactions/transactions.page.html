@@ -179,7 +179,7 @@
       </div>
 
       <div class="field marker-filter">
-        <span class="label">Marqueur</span>
+        <span class="label">Étiquette de couleur</span>
         <div class="marker-swatches">
           <button
             type="button"
@@ -201,9 +201,9 @@
             <button
               type="button"
               class="swatch"
-              [style.background]="color"
+              [style.--swatch]="color"
               [class.on]="markerColorFilter() === color"
-              [attr.aria-label]="'Marqueur ' + color"
+              [attr.aria-label]="'Étiquette ' + color"
               (click)="setMarkerColorFilter(color)"
             ></button>
           }
@@ -220,7 +220,15 @@
     <p class="notice">{{ transactions.error() }}</p>
   }
 
-  @if (hasFilteredResults()) {
+  @if (!transactions.loaded()) {
+    <div class="card list-card" aria-hidden="true">
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+      <div class="skeleton skeleton-row"></div>
+    </div>
+  } @else if (hasFilteredResults()) {
     <div class="totals card">
       <span class="in">
         <span class="k">Entrées@if (isFiltered()) { (filtré) }</span>
@@ -261,6 +269,7 @@
   } @else {
     <div class="card">
       <div class="empty">
+        <app-strata-ghost />
         <h3>Un mois silencieux</h3>
         <p>Aucune transaction en {{ month() + 'T00:00:00' | date: 'MMMM' }}. C’est calme, et c’est très bien.</p>
         <a routerLink="/transactions/nouvelle" class="btn btn-primary">Ajouter une transaction</a>

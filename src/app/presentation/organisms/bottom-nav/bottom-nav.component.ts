@@ -56,8 +56,21 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       font-weight: 500;
       border-radius: var(--radius);
     }
+    a:not(.add) app-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 26px;
+      border-radius: 999px;
+    }
+    /* L'onglet actif porte la pastille chaude : le repère permanent de
+       l'accent signature (--clay), discret mais immanquable. */
     a.active {
-      color: var(--sage);
+      color: var(--ink);
+    }
+    a.active app-icon {
+      background: var(--clay-soft);
+      color: var(--clay);
     }
     .add {
       width: 52px;

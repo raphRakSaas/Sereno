@@ -5,13 +5,28 @@
 .icon-btn {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 999px;
   background: var(--surface);
   color: var(--ink-soft);
   cursor: pointer;
+}
+
+.brand-lockup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.brand-lockup .wordmark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 24px;
+  color: var(--sage-deep);
 }
 
 .intro h1 {

@@ -38,6 +38,10 @@
     </div>
   } @else {
     <header class="intro">
+      <div class="brand-lockup">
+        <app-logo [size]="44" />
+        <span class="wordmark">Sereno</span>
+      </div>
       <h1>{{ mode() === 'signup' ? 'Crée ton compte' : 'Te revoilà' }}</h1>
       <p>
         {{

@@ -14,8 +14,8 @@
 .icon-btn {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border: none;
   border-radius: 999px;
   background: var(--surface);
@@ -26,7 +26,7 @@
 .icon-btn.danger {
   color: var(--amber);
   width: auto;
-  min-width: 40px;
+  min-width: 44px;
   padding: 0 10px;
 }
 
@@ -37,7 +37,7 @@
 }
 
 .spacer {
-  width: 40px;
+  width: 44px;
 }
 
 form {
@@ -54,13 +54,15 @@ form {
   padding: var(--space-4) 0;
 }
 
+/* Même traitement que le solde hero : Fraunces, l'entier domine. */
 .amount-field .amount {
   width: min(220px, 70vw);
   border: none;
   background: none;
-  font-family: var(--font-text);
+  font-family: var(--font-display);
   font-size: clamp(42px, 10vw, 56px);
-  font-weight: 600;
+  font-weight: 560;
+  font-variation-settings: 'opsz' 40;
   font-feature-settings: 'tnum';
   text-align: right;
   color: var(--ink);

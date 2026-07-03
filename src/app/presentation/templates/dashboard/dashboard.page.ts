@@ -12,6 +12,8 @@ import { Transaction } from '../../../domain/models/transaction.model';
 import { isOnOrAfter, toIsoDate, weekStartIso } from '../../../domain/utils/period.utils';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { LogoComponent } from '../../atoms/logo/logo.component';
+import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
 import { StrataChartComponent, StrataSlice } from '../../organisms/strata-chart/strata-chart.component';
 
@@ -34,8 +36,10 @@ interface BudgetPreviewLine {
     AmountComponent,
     DatePipe,
     IconComponent,
+    LogoComponent,
     RouterLink,
     StrataChartComponent,
+    StrataGhostComponent,
     TransactionListItemComponent,
   ],
   templateUrl: './dashboard.page.html',

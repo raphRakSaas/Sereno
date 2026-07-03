@@ -22,29 +22,43 @@ import { MARKER_COLORS } from '../../../domain/data/marker-colors';
           type="button"
           role="option"
           class="swatch"
-          [style.background]="color"
+          [style.--swatch]="color"
           [class.on]="selectedColor() === color"
           [attr.aria-selected]="selectedColor() === color"
-          [attr.aria-label]="'Marqueur ' + color"
+          [attr.aria-label]="'Étiquette ' + color"
           (click)="pick(color)"
         ></button>
       }
     </div>
   `,
   styles: `
+    /* Anneaux creux, pas des pastilles pleines : l'étiquette est un repère,
+       elle ne doit pas imiter les couleurs de catégories. Une seule ligne. */
     .swatches {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 6px;
       align-items: center;
+      padding: 4px 2px;
     }
     .swatch {
-      width: 32px;
-      height: 32px;
+      flex: none;
+      width: 36px;
+      height: 36px;
+      padding: 6px;
+      border: none;
       border-radius: 999px;
-      border: 2px solid transparent;
+      background: none;
       cursor: pointer;
-      padding: 0;
+    }
+    .swatch::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      border: 6px solid var(--swatch);
     }
     .swatch.none {
       width: auto;
@@ -57,9 +71,15 @@ import { MARKER_COLORS } from '../../../domain/data/marker-colors';
       font-weight: 500;
       padding: 7px 12px;
     }
-    .swatch.on {
+    .swatch.none::before {
+      content: none;
+    }
+    .swatch.on::before {
+      outline: 2px solid var(--ink);
+      outline-offset: 2px;
+    }
+    .swatch.none.on {
       border-color: var(--ink);
-      box-shadow: 0 0 0 2px var(--surface);
     }
   `,
 })

@@ -100,17 +100,29 @@
   color: var(--ink);
 }
 
+/* Anneaux creux — même forme que le sélecteur d'étiquette du formulaire. */
 .marker-swatches .swatch {
   width: 28px;
   height: 28px;
   border-radius: 999px;
-  border: 2px solid transparent;
-  padding: 0;
+  border: none;
+  background: none;
+  padding: 3px;
   cursor: pointer;
 }
 
-.marker-swatches .swatch.on {
-  border-color: var(--ink);
+.marker-swatches .swatch::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  border: 5px solid var(--swatch);
+}
+
+.marker-swatches .swatch.on::before {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
 }
 
 .reset {

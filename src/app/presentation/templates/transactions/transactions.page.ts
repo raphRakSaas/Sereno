@@ -45,6 +45,7 @@ import { categoriesForPicker, categoryDisplayName } from '../../../domain/utils/
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
+import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
 
 interface DayGroup {
@@ -80,6 +81,7 @@ function dayLabel(date: string): string {
     IconComponent,
     MonthSwitcherComponent,
     RouterLink,
+    StrataGhostComponent,
     TransactionListItemComponent,
   ],
   templateUrl: './transactions.page.html',

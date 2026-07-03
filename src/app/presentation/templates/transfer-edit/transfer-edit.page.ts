@@ -178,7 +178,10 @@ export class TransferEditPage {
   }
 
   protected close(): void {
-    if (window.history.length > 1) {
+    // navigationId > 1 : arrivée depuis l'app → retour naturel. Sinon,
+    // back() sortirait de Sereno (arrivée directe) → on va à l'activité.
+    const state = this.location.getState() as { navigationId?: number } | null;
+    if ((state?.navigationId ?? 1) > 1) {
       this.location.back();
     } else {
       void this.router.navigateByUrl('/transactions');

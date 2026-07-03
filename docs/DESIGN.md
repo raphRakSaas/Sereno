@@ -21,23 +21,43 @@
 |---|---|---|
 | `--ink` | `#1F2A24` | Texte principal (épicéa sombre) |
 | `--ink-soft` | `#5A665E` | Texte secondaire |
-| `--paper` | `#ECE9DF` | Fond de page (grège chaud) |
+| `--paper` | `#E4E0D0` | Fond de page (grège chaud, un cran plus profond que les cartes) |
 | `--surface` | `#FBFAF6` | Cartes, feuilles |
 | `--sage` | `#3F5548` | Action primaire, sélection |
 | `--sage-pale` | `#DCE3DA` | Plan d'accueil, fonds doux |
 | `--mist` | `#8FA9B8` | Revenus, information |
 | `--sand` | `#C2B28F` | Accent chaud discret |
 | `--amber` | `#A97C2F` | Dépassement de budget (visible, pas alarmant) |
-| `--line` | `#D8D4C6` | Filets, séparateurs |
+| `--clay` | `#B4603A` | Accent chaud signature (terracotta) — voir gouvernance |
+| `--clay-soft` | `#F3E4DB` | Halo / pastille pâle de l'accent signature |
+| `--line` | `#CFC9B8` | Filets, séparateurs |
 
 Rayon : 10px (cartes), 999px uniquement pour les puces de catégorie.
 
+**Mode sombre** : encre verte très sombre (`--paper #0C100D`, `--surface
+#171B18`), jamais un noir neutre — Sereno garde sa chaleur la nuit (`--clay
+#CD8258`). Tous les couples texte/fond sont validés ≥ 4.5:1 (AA), y compris
+`--ink-faint`.
+
+### Gouvernance de l'accent chaud (`--clay`)
+
+- **Un seul emploi fort par écran, jamais deux.** C'est ce qui fait qu'il
+  attire sans crier. Exemples en place : barre fine sous le solde hero
+  (dashboard), fond teinté du bloc montant selon le type (formulaire).
+- **Jamais en aplat plein écran, jamais pour du texte courant.**
+- Exception unique : la **pastille de l'onglet actif** (nav basse et side-nav)
+  est le repère permanent « où je suis » — discrète, elle ne compte pas comme
+  l'accent de l'écran.
+- Le dépassement de budget reste `--amber`, les revenus restent `--mist` :
+  `--clay` est un accent de marque, pas une couleur sémantique.
+
 ## Typographie
 
-- **Display** : Fraunces (variable, optical size). Titres de pages, marque, états vides.
-  Utilisée avec retenue.
-- **Texte & chiffres** : IBM Plex Sans 400/500/600. Montants toujours en
-  `font-feature-settings: "tnum"`.
+- **Display** : Fraunces (variable, optical size). Titres de pages, marque, états
+  vides — et **l'entier du solde hero** (le moment fort où la voix de la marque
+  doit respirer). Utilisée avec retenue partout ailleurs.
+- **Texte & chiffres** : IBM Plex Sans 400/500/600. Montants en colonnes et en
+  listes toujours en `font-feature-settings: "tnum"`.
 
 ## Couleurs de catégories (données)
 
@@ -50,6 +70,11 @@ directs obligatoires, contraste ≥ 3:1 sur `--surface`) :
 
 Un cran plus affirmées que les accents UI — c'est voulu : les strates sont
 l'élément signature, le reste de l'interface reste sourd autour.
+
+**Étiquettes de couleur** (marqueurs de transaction) : 6 couleurs (une par
+famille de teinte, sous-ensemble de la palette ci-dessus) rendues en **anneaux
+creux** — la forme les distingue des pastilles pleines de catégories, pour
+éviter toute confusion sémantique.
 
 ## Motion
 

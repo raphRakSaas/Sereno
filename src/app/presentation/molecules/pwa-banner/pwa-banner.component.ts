@@ -35,12 +35,14 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     }
   `,
   styles: `
+    /* Carte flottante qui respire au-dessus de la nav basse — filet, pas
+       d'ombre (docs/DESIGN.md). */
     .banner {
       position: fixed;
       left: 12px;
       right: 12px;
       z-index: 45;
-      bottom: calc(68px + var(--safe-bottom));
+      bottom: calc(80px + var(--safe-bottom));
       display: flex;
       align-items: center;
       gap: 10px;
@@ -48,7 +50,6 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       background: var(--surface);
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      box-shadow: 0 4px 24px color-mix(in srgb, var(--ink) 12%, transparent);
     }
     .banner p {
       flex: 1;

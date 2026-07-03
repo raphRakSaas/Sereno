@@ -41,6 +41,20 @@ p {
   font-size: 13px;
 }
 
+.about-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.about-brand .about-wordmark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--sage-deep);
+}
+
 .sync {
   margin-top: 4px;
 }

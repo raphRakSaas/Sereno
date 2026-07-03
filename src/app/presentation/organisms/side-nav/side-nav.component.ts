@@ -2,16 +2,20 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../application/services/auth.service';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { LogoComponent } from '../../atoms/logo/logo.component';
 
 /* Navigation desktop (≥ 768px) : rail fixe à gauche. Le mobile garde sa
    navigation basse — même vocabulaire, deux postures. */
 @Component({
   selector: 'app-side-nav',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, IconComponent],
+  imports: [RouterLink, RouterLinkActive, IconComponent, LogoComponent],
   template: `
     <nav aria-label="Navigation principale">
-      <a routerLink="/" class="brand">Sereno</a>
+      <a routerLink="/" class="brand">
+        <app-logo [size]="30" [decorative]="true" />
+        Sereno
+      </a>
 
       <a routerLink="/transactions/nouvelle" class="btn btn-primary add">
         <app-icon name="plus" [size]="18" />
@@ -68,6 +72,9 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       border-right: 1px solid var(--line);
     }
     .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       font-family: var(--font-display);
       font-style: italic;
       font-weight: 600;
@@ -103,10 +110,15 @@ import { IconComponent } from '../../atoms/icon/icon.component';
         color: var(--ink);
       }
     }
+    /* Même repère chaud que la nav mobile : l'accent signature marque
+       « où je suis », rien d'autre. */
     .links a.active {
-      background: var(--sage-pale);
-      color: var(--sage-deep);
+      background: var(--clay-soft);
+      color: var(--ink);
       font-weight: 600;
+    }
+    .links a.active app-icon {
+      color: var(--clay);
     }
     .status {
       margin-top: auto;

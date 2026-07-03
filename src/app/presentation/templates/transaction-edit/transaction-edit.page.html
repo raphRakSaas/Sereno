@@ -18,43 +18,45 @@
   </div>
 
   <form (ngSubmit)="save()">
-    <div class="seg" role="radiogroup" aria-label="Type">
-      <button
-        type="button"
-        role="radio"
-        [attr.aria-checked]="type() === 'expense'"
-        [class.on]="type() === 'expense'"
-        (click)="setType('expense')"
-      >
-        Dépense
-      </button>
-      <button
-        type="button"
-        role="radio"
-        [attr.aria-checked]="type() === 'income'"
-        [class.on]="type() === 'income'"
-        (click)="setType('income')"
-      >
-        Revenu
-      </button>
-    </div>
+    <div class="entry-hero" [class.is-income]="type() === 'income'">
+      <div class="seg seg--type" role="radiogroup" aria-label="Type">
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="type() === 'expense'"
+          [class.on]="type() === 'expense'"
+          (click)="setType('expense')"
+        >
+          Dépense
+        </button>
+        <button
+          type="button"
+          role="radio"
+          [attr.aria-checked]="type() === 'income'"
+          [class.on]="type() === 'income'"
+          (click)="setType('income')"
+        >
+          Revenu
+        </button>
+      </div>
 
-    <label class="amount-field" for="amount">
-      <input
-        #amountInput
-        id="amount"
-        name="amount"
-        type="text"
-        inputmode="decimal"
-        autocomplete="off"
-        enterkeyhint="done"
-        placeholder="0"
-        [ngModel]="amountText()"
-        (ngModelChange)="amountText.set($event)"
-        class="amount"
-      />
-      <span class="euro">€</span>
-    </label>
+      <label class="amount-field" for="amount">
+        <input
+          #amountInput
+          id="amount"
+          name="amount"
+          type="text"
+          inputmode="decimal"
+          autocomplete="off"
+          enterkeyhint="done"
+          placeholder="0"
+          [ngModel]="amountText()"
+          (ngModelChange)="amountText.set($event)"
+          class="amount"
+        />
+        <span class="euro">€</span>
+      </label>
+    </div>
 
     @if (hint()) {
       <p class="notice">{{ hint() }}</p>
@@ -121,42 +123,44 @@
       </div>
     }
 
-    <div class="field">
-      <label>Statut</label>
-      <div class="seg" role="radiogroup" aria-label="Statut">
-        <button
-          type="button"
-          role="radio"
-          [attr.aria-checked]="status() === 'draft'"
-          [class.on]="status() === 'draft'"
-          (click)="status.set('draft')"
-        >
-          Brouillon
-        </button>
-        <button
-          type="button"
-          role="radio"
-          [attr.aria-checked]="status() === 'posted'"
-          [class.on]="status() === 'posted'"
-          (click)="status.set('posted')"
-        >
-          Validée
-        </button>
-        <button
-          type="button"
-          role="radio"
-          [attr.aria-checked]="status() === 'void'"
-          [class.on]="status() === 'void'"
-          (click)="status.set('void')"
-        >
-          Annulée
-        </button>
+    @if (!isCreateMode()) {
+      <div class="field">
+        <label>Statut</label>
+        <div class="seg" role="radiogroup" aria-label="Statut">
+          <button
+            type="button"
+            role="radio"
+            [attr.aria-checked]="status() === 'draft'"
+            [class.on]="status() === 'draft'"
+            (click)="status.set('draft')"
+          >
+            Brouillon
+          </button>
+          <button
+            type="button"
+            role="radio"
+            [attr.aria-checked]="status() === 'posted'"
+            [class.on]="status() === 'posted'"
+            (click)="status.set('posted')"
+          >
+            Validée
+          </button>
+          <button
+            type="button"
+            role="radio"
+            [attr.aria-checked]="status() === 'void'"
+            [class.on]="status() === 'void'"
+            (click)="status.set('void')"
+          >
+            Annulée
+          </button>
+        </div>
       </div>
-    </div>
+    }
 
     @if (isCreateMode()) {
       <button type="button" class="toggle-link extras-toggle" (click)="toggleExtras()">
-        {{ showExtras() ? 'Moins d’options' : 'Date et note' }}
+        {{ showExtras() ? 'Moins d’options' : 'Plus d’options' }}
       </button>
       @if (showExtras()) {
         <div class="field">
@@ -176,20 +180,53 @@
             (ngModelChange)="note.set($event)"
           />
         </div>
-      }
-      <div class="field">
-        <label>Marqueur <span class="optional">— facultatif</span></label>
-        <app-marker-color-picker
-          [selectedColor]="markerColor()"
-          (colorSelected)="markerColor.set($event)"
+        <div class="field">
+          <label>Statut</label>
+          <div class="seg" role="radiogroup" aria-label="Statut">
+            <button
+              type="button"
+              role="radio"
+              [attr.aria-checked]="status() === 'draft'"
+              [class.on]="status() === 'draft'"
+              (click)="status.set('draft')"
+            >
+              Brouillon
+            </button>
+            <button
+              type="button"
+              role="radio"
+              [attr.aria-checked]="status() === 'posted'"
+              [class.on]="status() === 'posted'"
+              (click)="status.set('posted')"
+            >
+              Validée
+            </button>
+            <button
+              type="button"
+              role="radio"
+              [attr.aria-checked]="status() === 'void'"
+              [class.on]="status() === 'void'"
+              (click)="status.set('void')"
+            >
+              Annulée
+            </button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Étiquette de couleur <span class="optional">— facultatif</span></label>
+          <app-marker-color-picker
+            [selectedColor]="markerColor()"
+            (colorSelected)="markerColor.set($event)"
+          />
+          <p class="field-hint">Pour repérer d’un coup d’œil — par exemple « à rembourser ».</p>
+        </div>
+        <app-receipt-attach
+          [transactionId]="editedId()"
+          [disabled]="saving()"
+          (pendingFileChange)="onPendingReceiptFile($event)"
+          (applySuggestion)="applyReceiptSuggestion($event)"
         />
-      </div>
-      <app-receipt-attach
-        [transactionId]="editedId()"
-        [disabled]="saving()"
-        (pendingFileChange)="onPendingReceiptFile($event)"
-        (applySuggestion)="applyReceiptSuggestion($event)"
-      />
+      }
     } @else {
       <div class="field">
         <label for="date">Date</label>
@@ -209,11 +246,12 @@
         />
       </div>
       <div class="field">
-        <label>Marqueur <span class="optional">— facultatif</span></label>
+        <label>Étiquette de couleur <span class="optional">— facultatif</span></label>
         <app-marker-color-picker
           [selectedColor]="markerColor()"
           (colorSelected)="markerColor.set($event)"
         />
+        <p class="field-hint">Pour repérer d’un coup d’œil — par exemple « à rembourser ».</p>
       </div>
       <app-receipt-attach
         [transactionId]="editedId()"
