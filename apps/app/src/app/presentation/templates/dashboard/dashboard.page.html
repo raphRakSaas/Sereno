@@ -1,12 +1,21 @@
 <div class="dash">
-  <header class="dash-header">
-    <div class="dash-intro">
-      <p class="greeting">{{ greeting() }} <span aria-hidden="true">👋</span></p>
-      <app-month-switcher [month]="selectedMonth()" (monthChange)="selectedMonth.set($event)" />
+  <header class="dash-scene">
+    <app-sereno-sky
+      class="dash-sky"
+      [progress]="themeProgress()"
+      (toggleRequested)="preferences.toggleTheme()"
+    />
+    <div class="dash-scene-fg">
+      <div class="dash-header">
+        <div class="dash-intro">
+          <p class="greeting">{{ greeting() }} <span aria-hidden="true">👋</span></p>
+          <app-month-switcher [month]="selectedMonth()" (monthChange)="selectedMonth.set($event)" />
+        </div>
+        <a routerLink="/reglages" class="avatar" aria-label="Réglages">
+          <app-icon name="user" [size]="22" />
+        </a>
+      </div>
     </div>
-    <a routerLink="/reglages" class="avatar" aria-label="Réglages">
-      <app-icon name="user" [size]="22" />
-    </a>
   </header>
 
   @if (transactions.error()) {

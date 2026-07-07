@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { ThemeTransitionService } from './theme-transition.service';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type StartScreen = 'dashboard' | 'transactions' | 'calendar' | 'statistics' | 'accounts';
@@ -26,6 +27,7 @@ const DEFAULTS: StoredPreferences = {
 
 @Injectable({ providedIn: 'root' })
 export class UserPreferencesService {
+  private readonly themeTransition = inject(ThemeTransitionService);
   private readonly stored = signal(this.load());
   private readonly systemDark = signal(this.readSystemDark());
 
@@ -38,20 +40,39 @@ export class UserPreferencesService {
   readonly lastSyncAt = signal(this.stored().lastSyncAt);
 
   constructor() {
-    this.applyTheme(this.theme());
+    const isDark = this.computeIsDark(this.theme());
+    this.isDark.set(isDark);
+    this.themeTransition.setInstant(isDark);
+    this.applyThemeAttribute(this.theme());
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
       this.systemDark.set(event.matches);
       if (this.theme() === 'system') {
         this.isDark.set(event.matches);
+        this.themeTransition.setInstant(event.matches);
       }
     });
   }
 
   setTheme(theme: ThemeMode): void {
+    const previousDark = this.isDark();
     this.theme.set(theme);
-    this.isDark.set(this.computeIsDark(theme));
+    const nextDark = this.computeIsDark(theme);
     this.persist({ theme });
-    this.applyTheme(theme);
+
+    const shouldAnimate =
+      theme !== 'system' &&
+      previousDark !== nextDark &&
+      !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!shouldAnimate) {
+      this.isDark.set(nextDark);
+      this.applyThemeAttribute(theme);
+      this.themeTransition.setInstant(nextDark);
+      return;
+    }
+
+    this.isDark.set(nextDark);
+    this.themeTransition.animateTo(nextDark, () => this.applyThemeAttribute(theme));
   }
 
   /** Bascule rapide clair ↔ sombre (ignore le mode système). */
@@ -114,7 +135,7 @@ export class UserPreferencesService {
     }
   }
 
-  private applyTheme(theme: ThemeMode): void {
+  private applyThemeAttribute(theme: ThemeMode): void {
     const root = document.documentElement;
     if (theme === 'system') {
       root.removeAttribute('data-theme');

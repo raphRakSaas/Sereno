@@ -4,8 +4,10 @@
     <router-outlet />
   </main>
   <app-bottom-nav class="bottom-nav" />
-  @if (showThemeToggle()) {
-    <app-theme-toggle class="theme-toggle-fab" />
+  @if (showSkyOverlay()) {
+    <div class="sky-transition-layer" aria-hidden="true">
+      <app-sereno-sky [progress]="themeProgress()" />
+    </div>
   }
 </div>
 

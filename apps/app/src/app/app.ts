@@ -3,6 +3,7 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { filter } from 'rxjs';
 import { ConversionService } from './application/services/conversion.service';
+import { ThemeTransitionService } from './application/services/theme-transition.service';
 import { KeyboardShortcutsService } from './application/services/keyboard-shortcuts.service';
 import { PwaService } from './application/services/pwa.service';
 import { ToastService } from './application/services/toast.service';
@@ -11,10 +12,10 @@ import { CategoriesStore } from './application/stores/categories.store';
 import { TransactionTemplatesStore } from './application/stores/transaction-templates.store';
 import { TransactionsStore } from './application/stores/transactions.store';
 import { PwaBannerComponent } from './presentation/molecules/pwa-banner/pwa-banner.component';
-import { ThemeToggleComponent } from './presentation/atoms/theme-toggle/theme-toggle.component';
 import { BottomNavComponent } from './presentation/organisms/bottom-nav/bottom-nav.component';
 import { ConversionModalComponent } from './presentation/organisms/conversion-modal/conversion-modal.component';
 import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.component';
+import { SerenoSkyComponent } from './presentation/organisms/sereno-sky/sereno-sky.component';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +25,14 @@ import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.com
     ConversionModalComponent,
     PwaBannerComponent,
     SideNavComponent,
-    ThemeToggleComponent,
+    SerenoSkyComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected readonly toasts = inject(ToastService);
+  protected readonly themeTransition = inject(ThemeTransitionService);
   private readonly conversion = inject(ConversionService);
   private readonly shortcuts = inject(KeyboardShortcutsService);
   private readonly pwa = inject(PwaService);
@@ -39,17 +41,12 @@ export class App {
 
   private readonly currentUrl = signal(this.router.url);
 
-  /* Les pages plein écran (formulaires, connexion) portent leur propre bouton
-     Fermer en haut à gauche : on y masque le switch flottant pour éviter tout
-     recouvrement. */
-  protected readonly showThemeToggle = computed(() => {
+  protected readonly themeProgress = this.themeTransition.progress;
+
+  protected readonly showSkyOverlay = computed(() => {
     const url = this.currentUrl().split('?')[0];
-    const fullScreenRoutes = [
-      /^\/transactions\/.+/,
-      /^\/transferts\/.+/,
-      /^\/compte$/,
-    ];
-    return !fullScreenRoutes.some((pattern) => pattern.test(url));
+    const onDashboard = url === '/' || url === '';
+    return this.themeTransition.animating() && !onDashboard;
   });
 
   private readonly accounts = inject(AccountsStore);

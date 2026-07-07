@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../application/services/auth.service';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { ThemeToggleComponent } from '../../atoms/theme-toggle/theme-toggle.component';
 import { LogoComponent } from '../../atoms/logo/logo.component';
 
 /* Navigation desktop (≥ 768px) : rail fixe à gauche. Le mobile garde sa
@@ -9,7 +10,7 @@ import { LogoComponent } from '../../atoms/logo/logo.component';
 @Component({
   selector: 'app-side-nav',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterLink, RouterLinkActive, IconComponent, LogoComponent],
+  imports: [RouterLink, RouterLinkActive, IconComponent, LogoComponent, ThemeToggleComponent],
   template: `
     <nav aria-label="Navigation principale">
       <a routerLink="/" class="brand">
@@ -53,6 +54,8 @@ import { LogoComponent } from '../../atoms/logo/logo.component';
         <app-icon [name]="auth.isSignedIn() ? 'cloud' : 'user'" [size]="16" />
         <span>{{ auth.isSignedIn() ? (auth.user()?.email ?? 'Connecté') : 'Mode invité' }}</span>
       </div>
+
+      <app-theme-toggle [compact]="true" />
     </nav>
   `,
   styles: `

@@ -73,7 +73,7 @@ import { UserPreferencesService } from '../../../application/services/user-prefe
     }
 
     .switch:active {
-      transform: scale(0.97);
+      opacity: 0.88;
     }
 
     .switch:focus-visible {

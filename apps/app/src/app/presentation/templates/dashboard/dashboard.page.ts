@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppModeService } from '../../../application/services/app-mode.service';
+import { ThemeTransitionService } from '../../../application/services/theme-transition.service';
+import { UserPreferencesService } from '../../../application/services/user-preferences.service';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { BudgetsStore } from '../../../application/stores/budgets.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
@@ -17,6 +19,7 @@ import { DonutChartComponent } from '../../molecules/donut-chart/donut-chart.com
 import { ExpenseTileComponent } from '../../molecules/expense-tile/expense-tile.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
+import { SerenoSkyComponent } from '../../organisms/sereno-sky/sereno-sky.component';
 
 interface ExpenseTileData {
   id: string;
@@ -40,6 +43,7 @@ interface ExpenseTileData {
     IconComponent,
     MonthSwitcherComponent,
     RouterLink,
+    SerenoSkyComponent,
     TransactionListItemComponent,
   ],
   templateUrl: './dashboard.page.html',
@@ -47,6 +51,8 @@ interface ExpenseTileData {
 })
 export class DashboardPage implements OnInit {
   protected readonly mode = inject(AppModeService);
+  protected readonly preferences = inject(UserPreferencesService);
+  protected readonly themeTransition = inject(ThemeTransitionService);
   protected readonly accounts = inject(AccountsStore);
   protected readonly budgets = inject(BudgetsStore);
   protected readonly categories = inject(CategoriesStore);
@@ -54,6 +60,8 @@ export class DashboardPage implements OnInit {
   protected readonly transactions = inject(TransactionsStore);
 
   protected readonly selectedMonth = signal(monthOf(new Date()));
+
+  protected readonly themeProgress = this.themeTransition.progress;
 
   protected readonly todayIso = computed(() => {
     this.transactions.items();
