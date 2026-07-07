@@ -1,197 +1,165 @@
-<div class="page">
-  <div class="head">
-    <h1 class="page-title">Statistiques</h1>
-    <app-month-switcher [month]="month()" (monthChange)="month.set($event)" />
-  </div>
+<div class="page stats">
+  <h1 class="page-title">Statistiques</h1>
 
-  <div class="toolbar card">
-    <div class="field">
-      <label for="stats-account">Compte</label>
-      <select
-        id="stats-account"
-        class="input"
-        [ngModel]="accountFilter()"
-        (ngModelChange)="accountFilter.set($event || null)"
-      >
-        <option [ngValue]="null">Tous les comptes</option>
-        @for (account of accounts.items(); track account.id) {
-          <option [ngValue]="account.id">{{ account.name }}</option>
-        }
-      </select>
-    </div>
+  <div class="month-card card">
+    <app-month-switcher [month]="month()" (monthChange)="month.set($event)" />
   </div>
 
   @if (transactions.error()) {
     <p class="notice">{{ transactions.error() }}</p>
   }
 
-  <div class="stats-layout">
-    <div class="col-main">
-      @if (hasAccounts()) {
-        <section class="net-worth card">
-          <div class="net-worth-main">
-            <span class="k">Patrimoine actuel</span>
-            <app-amount [value]="currentNetWorth()" size="hero" />
-            <span class="delta">{{ netWorthDeltaText() }} sur {{ month() + 'T00:00:00' | date: 'MMMM' }}</span>
-          </div>
-        </section>
-
-        <section class="block">
-          <div class="section-head">
-            <h2>Évolution du patrimoine</h2>
-            <span class="caption">{{ month() + 'T00:00:00' | date: 'MMMM yyyy' }}</span>
-          </div>
-          <div class="card chart-card">
-            <app-line-chart
-              [points]="netWorthSeries()"
-              hue="mist-deep"
-              endLabel="Patrimoine en fin de mois :"
-            />
-          </div>
-        </section>
-      }
-
-      @if (hasMonthActivity()) {
-        <section class="summary card">
-          <div class="summary-item">
-            <span class="k">Revenus</span>
-            <app-amount [value]="monthIncome()" size="lg" />
-            <span class="delta">{{ incomeDeltaText() }}</span>
-          </div>
-          <span class="rule"></span>
-          <div class="summary-item">
-            <span class="k">Dépenses</span>
-            <app-amount [value]="monthExpense()" size="lg" />
-            <span class="delta">{{ expenseDeltaText() }}</span>
-          </div>
-          <span class="rule"></span>
-          <div class="summary-item">
-            <span class="k">Solde du mois</span>
-            <app-amount [value]="monthNet()" size="lg" />
-          </div>
-        </section>
-
-        <section class="block">
-          <div class="section-head">
-            <h2>Dépenses par catégorie</h2>
-            <span class="caption">{{ month() + 'T00:00:00' | date: 'MMMM yyyy' }}</span>
-          </div>
-          @if (expenseSlices().length > 0) {
-            <div class="card chart-card">
-              <app-donut-chart [slices]="expenseSlices()" centerLabel="Dépensé" />
-            </div>
-          }
-        </section>
-
-        @if (incomeSlices().length > 0) {
-          <section class="block">
-            <div class="section-head">
-              <h2>Revenus par catégorie</h2>
-            </div>
-            <div class="card chart-card">
-              <app-donut-chart [slices]="incomeSlices()" centerLabel="Reçu" />
-            </div>
-          </section>
-        }
-
-        <section class="block">
-          <div class="section-head">
-            <h2>Tes jours de dépense</h2>
-            <span class="caption">{{ month() + 'T00:00:00' | date: 'MMMM' }}</span>
-          </div>
-          <div class="card chart-card">
-            <app-month-heatmap [days]="dailyExpenses()" [month]="month()" />
-          </div>
-        </section>
-
-        <section class="block">
-          <div class="section-head">
-            <h2>Solde cumulé du mois</h2>
-          </div>
-          <div class="card chart-card">
-            <app-line-chart
-              [points]="cumulativeNet()"
-              hue="sage"
-              [zeroBaseline]="true"
-              endLabel="Solde en fin de mois :"
-            />
-          </div>
-        </section>
-      } @else if (hasAccounts()) {
-        <div class="card">
-          <div class="empty">
-            <h3>Mois calme côté transactions</h3>
-            <p>Aucune transaction en {{ month() + 'T00:00:00' | date: 'MMMM' }}, mais ton patrimoine reste visible ci-dessus.</p>
-          </div>
-        </div>
-      } @else {
-        <div class="card">
-          <div class="empty">
-            <app-strata-ghost />
-            <h3>Pas encore de matière</h3>
-            <p>Ajoute un compte et quelques transactions pour voir tes statistiques prendre forme.</p>
-            <a routerLink="/transactions/nouvelle" class="btn btn-primary">Ajouter une transaction</a>
-          </div>
-        </div>
-      }
+  @if (!hasAccounts()) {
+    <div class="card">
+      <div class="empty">
+        <app-strata-ghost />
+        <h3>Pas encore de matière</h3>
+        <p>Ajoute un compte et quelques transactions pour voir tes statistiques prendre forme.</p>
+        <a routerLink="/transactions/nouvelle" class="btn btn-primary">Ajouter une transaction</a>
+      </div>
+    </div>
+  } @else if (!hasAnyActivity()) {
+    <div class="card">
+      <div class="empty">
+        <h3>Mois calme côté transactions</h3>
+        <p>Aucune transaction en {{ month() + 'T00:00:00' | date: 'MMMM' }}.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="summary-grid">
+      <article class="card summary-card income-card">
+        <span class="k">Revenus</span>
+        <app-amount [value]="monthIncome()" size="lg" />
+      </article>
+      <article class="card summary-card expense-card">
+        <span class="k">Dépenses</span>
+        <app-amount [value]="monthExpense()" size="lg" />
+      </article>
     </div>
 
-    @if (hasMonthActivity()) {
-      <aside class="col-side">
-        <div class="rank-grid">
-          <section class="block">
-            <div class="section-head">
-              <h2>Top dépenses</h2>
-            </div>
-            <div class="card rank-list">
-              @for (line of topExpenseCategories(); track line.id) {
-                <a class="rank-row" [routerLink]="['/transactions']" [queryParams]="activityQuery(line.id)">
-                  <span class="dot" [style.background]="line.color"></span>
-                  <span class="label">{{ line.label }}</span>
-                  <app-amount [value]="line.amount" size="sm" />
-                </a>
-              }
-            </div>
-          </section>
-
-          @if (topIncomeCategories().length > 0) {
-            <section class="block">
-              <div class="section-head">
-                <h2>Top revenus</h2>
-              </div>
-              <div class="card rank-list">
-                @for (line of topIncomeCategories(); track line.id) {
-                  <a class="rank-row" [routerLink]="['/transactions']" [queryParams]="activityQuery(line.id)">
-                    <span class="dot" [style.background]="line.color"></span>
-                    <span class="label">{{ line.label }}</span>
-                    <app-amount [value]="line.amount" size="sm" />
-                  </a>
-                }
-              </div>
-            </section>
-          }
-
-          @if (topAccounts().length > 0) {
-            <section class="block">
-              <div class="section-head">
-                <h2>Comptes les plus actifs</h2>
-              </div>
-              <div class="card rank-list">
-                @for (line of topAccounts(); track line.id) {
-                  <a
-                    class="rank-row"
-                    [routerLink]="['/transactions']"
-                    [queryParams]="accountActivityQuery(line.id)"
-                  >
-                    <span class="label">{{ line.label }}</span>
-                    <app-amount [value]="line.amount" size="sm" />
-                  </a>
-                }
-              </div>
-            </section>
-          }
+    <section class="card savings-card" aria-label="Taux d'épargne">
+      <span class="savings-icon" aria-hidden="true">
+        <app-icon name="wallet" [size]="22" />
+      </span>
+      <div class="savings-body">
+        <span class="k">Taux d'épargne</span>
+        <div
+          class="savings-track"
+          role="progressbar"
+          [attr.aria-valuenow]="savingsRate()"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="savings-fill" [style.width.%]="savingsRate()"></div>
         </div>
-      </aside>
+      </div>
+      <span class="savings-rate">{{ savingsRate() }}%</span>
+    </section>
+
+    @if (expenseSlices().length > 0) {
+      <section class="card block-card">
+        <h2>Répartition des dépenses</h2>
+        <app-donut-chart [slices]="expenseSlices()" centerLabel="Total" />
+      </section>
     }
-  </div>
+
+    <section class="card block-card">
+      <div class="block-head">
+        <h2>Tes jours de dépense</h2>
+        <span class="caption">{{ month() + 'T00:00:00' | date: 'MMMM' }}</span>
+      </div>
+      <app-month-heatmap [days]="dailyExpenses()" [month]="month()" />
+    </section>
+
+    <section class="card block-card">
+      <div class="block-head">
+        <h2>Évolution du solde net</h2>
+        <span class="trend-icon" aria-hidden="true">
+          <app-icon name="chart" [size]="18" />
+        </span>
+      </div>
+      <app-line-chart
+        [points]="netBalanceSeries()"
+        hue="sage"
+        [showAllLabels]="true"
+        endLabel="Solde net en fin de mois :"
+      />
+    </section>
+
+    <section class="card block-card">
+      <div class="block-head">
+        <h2>Revenus vs dépenses</h2>
+        <div class="legend" aria-hidden="true">
+          <span class="legend-item income">Revenus</span>
+          <span class="legend-item expense">Dépenses</span>
+        </div>
+      </div>
+      <app-bar-chart [groups]="barGroups()" />
+    </section>
+
+    <section class="card block-card comparison-card">
+      <h2>Comparaison mensuelle</h2>
+      <div class="comparison-row">
+        <div class="comparison-label">
+          <span class="name">Revenus</span>
+          <span class="delta" [class]="deltaClass(incomeComparison().delta, true)">{{ incomeDeltaText() }}</span>
+        </div>
+        <app-amount [value]="monthIncome()" size="md" />
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-label">
+          <span class="name">Dépenses</span>
+          <span class="delta" [class]="deltaClass(expenseComparison().delta, false)">{{ expenseDeltaText() }}</span>
+        </div>
+        <app-amount [value]="monthExpense()" size="md" />
+      </div>
+      <div class="comparison-row">
+        <div class="comparison-label">
+          <span class="name">Solde net</span>
+          <span class="delta" [class]="deltaClass(netComparison().delta, true)">{{ netDeltaText() }}</span>
+        </div>
+        <app-amount [value]="monthNet()" size="md" />
+      </div>
+    </section>
+
+    @if (showBudgets()) {
+      <section class="card block-card">
+        <h2>Suivi des budgets</h2>
+        <ul class="budget-list">
+          @for (line of budgetLines(); track line.budget.id) {
+            <li class="budget-row" [class.over]="line.isOver">
+              <div class="budget-top">
+                <span class="budget-badge" [style.color]="line.color">
+                  <app-icon [name]="line.icon" [size]="18" />
+                </span>
+                <div class="budget-copy">
+                  <span class="budget-name">{{ line.label }}</span>
+                  <span class="budget-status" [class.over]="line.isOver">{{ budgetStatusText(line) }}</span>
+                </div>
+                <span class="budget-numbers">
+                  <app-amount [value]="line.spent" size="sm" />
+                  <span class="budget-limit">/ <app-amount [value]="line.budget.limitAmount" size="sm" /></span>
+                </span>
+              </div>
+              <div
+                class="budget-track"
+                role="progressbar"
+                [attr.aria-valuenow]="(line.ratio * 100).toFixed(0)"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-label]="'Budget ' + line.label"
+              >
+                <div
+                  class="budget-fill"
+                  [class.over]="line.isOver"
+                  [style.width.%]="line.fillPercent"
+                  [style.background]="line.isOver ? 'var(--amber)' : line.color"
+                ></div>
+              </div>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+  }
 </div>

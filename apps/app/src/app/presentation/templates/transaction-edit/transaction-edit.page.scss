@@ -73,19 +73,19 @@ form {
   padding: var(--space-2) 0 0;
 }
 
-/* Même traitement que le solde hero : Fraunces, l'entier domine. */
+/* Montant saisi : Plex tabulaire, sans le zéro barré de Fraunces. */
 .amount {
   width: 60%;
   max-width: 240px;
   border: none;
   background: none;
   text-align: right;
-  font-family: var(--font-display);
-  font-size: 52px;
-  font-weight: 560;
-  font-variation-settings: 'opsz' 40;
+  font-family: var(--font-text);
+  font-size: 48px;
+  font-weight: 600;
   color: var(--ink);
   font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
   padding: 0;
 }
 
@@ -106,7 +106,8 @@ form {
 }
 
 .amount::placeholder {
-  color: var(--line);
+  color: var(--ink-faint);
+  opacity: 0.45;
 }
 
 .euro {
@@ -194,6 +195,17 @@ form {
   color: var(--ink-soft);
 }
 
+.note-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.note-input {
+  flex: 1;
+  min-width: 0;
+}
+
 .toggle-link {
   margin-top: var(--space-2);
   border: none;
@@ -204,10 +216,6 @@ form {
   font-weight: 500;
   cursor: pointer;
   text-align: left;
-}
-
-.extras-toggle {
-  align-self: flex-start;
 }
 
 .template-grid {

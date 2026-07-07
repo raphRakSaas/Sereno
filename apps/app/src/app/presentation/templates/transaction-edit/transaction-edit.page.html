@@ -49,7 +49,7 @@
           inputmode="decimal"
           autocomplete="off"
           enterkeyhint="done"
-          placeholder="0"
+          placeholder="0,00"
           [ngModel]="amountText()"
           (ngModelChange)="amountText.set($event)"
           class="amount"
@@ -94,35 +94,12 @@
     }
 
     <div class="field">
-      @if (isCreateMode() && favoriteCategoryList().length > 0) {
-        <div class="field-head">
-          <label>{{ type() === 'expense' ? 'Catégories fréquentes' : 'Revenus fréquents' }}</label>
-        </div>
-        <app-category-picker
-          [categories]="favoriteCategoryList()"
-          [selectedId]="categoryId()"
-          (select)="selectCategory($event)"
-        />
-        @if (otherCategories().length > 0) {
-          <button type="button" class="toggle-link" (click)="toggleAllCategories()">
-            {{ showAllCategories() ? 'Masquer les autres' : 'Toutes les catégories' }}
-          </button>
-          @if (showAllCategories()) {
-            <app-category-picker
-              [categories]="otherCategories()"
-              [selectedId]="categoryId()"
-              (select)="selectCategory($event)"
-            />
-          }
-        }
-      } @else {
-        <label>Catégorie</label>
-        <app-category-picker
-          [categories]="pickableCategories()"
-          [selectedId]="categoryId()"
-          (select)="selectCategory($event)"
-        />
-      }
+      <label>Catégorie</label>
+      <app-category-picker
+        [categories]="pickableCategories()"
+        [selectedId]="categoryId()"
+        (select)="selectCategory($event)"
+      />
     </div>
 
     @if (accounts.items().length > 1) {
@@ -136,40 +113,33 @@
       </div>
     }
 
-    @if (!isCreateMode()) {
-      <div class="field">
-        <label>Statut</label>
-        <div class="seg" role="radiogroup" aria-label="Statut">
-          <button
-            type="button"
-            role="radio"
-            [attr.aria-checked]="status() === 'draft'"
-            [class.on]="status() === 'draft'"
-            (click)="status.set('draft')"
-          >
-            Brouillon
-          </button>
-          <button
-            type="button"
-            role="radio"
-            [attr.aria-checked]="status() === 'posted'"
-            [class.on]="status() === 'posted'"
-            (click)="status.set('posted')"
-          >
-            Validée
-          </button>
-          <button
-            type="button"
-            role="radio"
-            [attr.aria-checked]="status() === 'void'"
-            [class.on]="status() === 'void'"
-            (click)="status.set('void')"
-          >
-            Annulée
-          </button>
-        </div>
+    <div class="field">
+      <label for="date">Date</label>
+      <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="onDateChange($event)" />
+    </div>
+
+    <div class="field">
+      <label for="note">Note <span class="optional">— facultatif</span></label>
+      <div class="note-row">
+        <app-merchant-badge
+          [texts]="merchantTexts()"
+          [fallbackIcon]="selectedCategory()?.icon ?? 'dots'"
+          [fallbackColor]="selectedCategory()?.color ?? '#8B948C'"
+          [size]="40"
+          shape="square"
+        />
+        <input
+          id="note"
+          name="note"
+          type="text"
+          class="input note-input"
+          placeholder="Spotify, marché du samedi…"
+          maxlength="120"
+          [ngModel]="note()"
+          (ngModelChange)="note.set($event)"
+        />
       </div>
-    }
+    </div>
 
     @if (isCreateMode()) {
       <app-receipt-attach
@@ -178,96 +148,7 @@
         (pendingFileChange)="onPendingReceiptFile($event)"
         (applySuggestion)="applyReceiptSuggestion($event)"
       />
-
-      <div class="field">
-        <label>Étiquette de couleur <span class="optional">— suggérée automatiquement</span></label>
-        <app-marker-color-picker
-          [selectedColor]="markerColor()"
-          (colorSelected)="onMarkerColorSelected($event)"
-        />
-        <p class="field-hint">Change la couleur si tu veux — une teinte différente est proposée à chaque catégorie.</p>
-      </div>
-
-      <button type="button" class="toggle-link extras-toggle" (click)="toggleExtras()">
-        {{ showExtras() ? 'Moins d’options' : 'Plus d’options' }}
-      </button>
-      @if (showExtras()) {
-        <div class="field">
-          <label for="date">Date</label>
-          <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="date.set($event)" />
-        </div>
-        <div class="field">
-          <label for="note">Note <span class="optional">— facultatif</span></label>
-          <input
-            id="note"
-            name="note"
-            type="text"
-            class="input"
-            placeholder="Marché du samedi…"
-            maxlength="120"
-            [ngModel]="note()"
-            (ngModelChange)="note.set($event)"
-          />
-        </div>
-        <div class="field">
-          <label>Statut</label>
-          <div class="seg" role="radiogroup" aria-label="Statut">
-            <button
-              type="button"
-              role="radio"
-              [attr.aria-checked]="status() === 'draft'"
-              [class.on]="status() === 'draft'"
-              (click)="status.set('draft')"
-            >
-              Brouillon
-            </button>
-            <button
-              type="button"
-              role="radio"
-              [attr.aria-checked]="status() === 'posted'"
-              [class.on]="status() === 'posted'"
-              (click)="status.set('posted')"
-            >
-              Validée
-            </button>
-            <button
-              type="button"
-              role="radio"
-              [attr.aria-checked]="status() === 'void'"
-              [class.on]="status() === 'void'"
-              (click)="status.set('void')"
-            >
-              Annulée
-            </button>
-          </div>
-        </div>
-      }
     } @else {
-      <div class="field">
-        <label for="date">Date</label>
-        <input id="date" name="date" type="date" class="input" [ngModel]="date()" (ngModelChange)="date.set($event)" />
-      </div>
-      <div class="field">
-        <label for="note">Note <span class="optional">— facultatif</span></label>
-        <input
-          id="note"
-          name="note"
-          type="text"
-          class="input"
-          placeholder="Marché du samedi…"
-          maxlength="120"
-          [ngModel]="note()"
-          (ngModelChange)="note.set($event)"
-        />
-      </div>
-      <div class="field">
-        <label>Étiquette de couleur <span class="optional">— facultatif</span></label>
-        <app-marker-color-picker
-          [selectedColor]="markerColor()"
-          (colorSelected)="onMarkerColorSelected($event)"
-        />
-        <p class="field-hint">Pour repérer d’un coup d’œil — par exemple « à rembourser ».</p>
-      </div>
       <app-receipt-attach
         [transactionId]="editedId()"
         [disabled]="saving()"

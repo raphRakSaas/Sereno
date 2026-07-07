@@ -1,32 +1,33 @@
-import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppModeService } from '../../../application/services/app-mode.service';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { BudgetsStore } from '../../../application/stores/budgets.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
+import { RecurringStore } from '../../../application/stores/recurring.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { accountBalanceLines } from '../../../domain/utils/account-balance.util';
 import { GLOBAL_BUDGET_CATEGORY_ID, isGlobalBudget, monthOf } from '../../../domain/models/budget.model';
-import { Transaction } from '../../../domain/models/transaction.model';
-import { isOnOrAfter, toIsoDate, weekStartIso } from '../../../domain/utils/period.utils';
+import { Transaction, isPosted } from '../../../domain/models/transaction.model';
+import { toIsoDate } from '../../../domain/utils/period.utils';
+import { savingsRatePercent } from '../../../domain/utils/stats.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
-import { LogoComponent } from '../../atoms/logo/logo.component';
-import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
+import { DonutChartComponent } from '../../molecules/donut-chart/donut-chart.component';
+import { ExpenseTileComponent } from '../../molecules/expense-tile/expense-tile.component';
+import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
-import { StrataChartComponent, StrataSlice } from '../../organisms/strata-chart/strata-chart.component';
 
-interface BudgetPreviewLine {
-  categoryName: string;
-  categoryColor: string;
-  spent: number;
-  limitAmount: number;
-  ratio: number;
-  fillPercent: number;
-  statusText: string;
-  isOver: boolean;
-  isNear: boolean;
+interface ExpenseTileData {
+  id: string;
+  title: string;
+  meta: string;
+  amount: number;
+  dueDate: string | null;
+  merchantTexts: string[];
+  icon: string;
+  color: string;
+  link: string | string[];
 }
 
 @Component({
@@ -34,12 +35,11 @@ interface BudgetPreviewLine {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AmountComponent,
-    DatePipe,
+    DonutChartComponent,
+    ExpenseTileComponent,
     IconComponent,
-    LogoComponent,
+    MonthSwitcherComponent,
     RouterLink,
-    StrataChartComponent,
-    StrataGhostComponent,
     TransactionListItemComponent,
   ],
   templateUrl: './dashboard.page.html',
@@ -50,18 +50,42 @@ export class DashboardPage implements OnInit {
   protected readonly accounts = inject(AccountsStore);
   protected readonly budgets = inject(BudgetsStore);
   protected readonly categories = inject(CategoriesStore);
+  protected readonly recurring = inject(RecurringStore);
   protected readonly transactions = inject(TransactionsStore);
 
-  protected readonly today = new Date();
-  protected readonly todayIso = toIsoDate(this.today);
-  protected readonly month = monthOf(this.today);
-  protected readonly weekStart = weekStartIso(this.today);
+  protected readonly selectedMonth = signal(monthOf(new Date()));
+
+  protected readonly todayIso = computed(() => {
+    this.transactions.items();
+    return toIsoDate(new Date());
+  });
+
+  constructor() {
+    effect(() => {
+      const month = this.selectedMonth();
+      if (this.mode.isCloud()) {
+        void this.budgets.load(month);
+        if (!this.recurring.loaded()) {
+          void this.recurring.load();
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     if (this.mode.isCloud() && !this.budgets.loaded()) {
-      void this.budgets.load(this.month);
+      void this.budgets.load(this.selectedMonth());
     }
   }
+
+  protected readonly greeting = computed(() => {
+    this.todayIso();
+    const hour = new Date().getHours();
+    if (hour < 18) {
+      return 'Bonjour';
+    }
+    return 'Bonsoir';
+  });
 
   protected readonly totalBalance = computed(() =>
     accountBalanceLines(this.accounts.items(), this.transactions.items(), {
@@ -71,7 +95,7 @@ export class DashboardPage implements OnInit {
   );
 
   protected readonly monthTransactions = computed(() =>
-    this.filterByMonthPrefix(this.transactions.items(), this.month),
+    this.filterByMonthPrefix(this.transactions.items(), this.selectedMonth()),
   );
 
   protected readonly monthIncome = computed(() => this.sumByType(this.monthTransactions(), 'income'));
@@ -80,140 +104,107 @@ export class DashboardPage implements OnInit {
 
   protected readonly monthRemaining = computed(() => this.monthIncome() - this.monthExpense());
 
-  protected readonly dayExpense = computed(() =>
-    this.sumByType(
-      this.transactions.items().filter((transaction) => transaction.date === this.todayIso),
-      'expense',
-    ),
+  protected readonly savingsRate = computed(() =>
+    savingsRatePercent(this.monthIncome(), this.monthExpense()),
   );
 
-  protected readonly weekExpense = computed(() =>
-    this.sumByType(
-      this.transactions.items().filter(
-        (transaction) =>
-          transaction.type === 'expense' &&
-          isOnOrAfter(transaction.date, this.weekStart) &&
-          transaction.date <= this.todayIso,
-      ),
-      'expense',
-    ),
-  );
-
-  protected readonly weather = computed(() => {
-    if (!this.transactions.loaded()) {
-      return '';
+  protected readonly surplusText = computed(() => {
+    if (!this.transactions.loaded() || this.monthIncome() <= 0) {
+      return 'Note tes revenus et dépenses pour voir où tu en es ce mois-ci.';
     }
-    if (this.transactions.count() === 0) {
-      return 'Bienvenue. Note une première dépense pour commencer à y voir clair.';
+    const rate = this.savingsRate();
+    if (rate <= 0) {
+      return 'Les sorties dépassent les entrées ce mois-ci — tu sais où tu en es.';
     }
-    const delta = this.monthRemaining();
-    if (delta >= 0) {
-      return 'Ciel dégagé : ce mois-ci, il rentre plus qu’il ne sort.';
-    }
-    const formatted = new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'EUR',
-      maximumFractionDigits: 0,
-    }).format(-delta);
-    return `Les sorties dépassent les entrées de ${formatted} ce mois-ci. Tu sais où tu en es.`;
+    return `Tu gardes ${rate} % de tes revenus ce mois-ci.`;
   });
 
-  protected readonly slices = computed<StrataSlice[]>(() => {
+  protected readonly expenseSlices = computed(() => {
     const byCategory = new Map<string, number>();
     for (const transaction of this.monthTransactions()) {
-      if (transaction.type !== 'expense' || !transaction.categoryId) continue;
+      if (transaction.type !== 'expense' || !transaction.categoryId) {
+        continue;
+      }
       byCategory.set(
         transaction.categoryId,
         (byCategory.get(transaction.categoryId) ?? 0) + transaction.amount,
       );
     }
     const categories = this.categories.byId();
-    return [...byCategory.entries()].map(([categoryId, amount]) => {
-      const category = categories.get(categoryId);
-      return {
-        id: categoryId,
-        amount,
-        name: category?.name ?? 'Sans catégorie',
-        color: category?.color ?? '#8B948C',
-      };
-    });
-  });
-
-  protected readonly accountLines = computed(() =>
-    accountBalanceLines(this.accounts.items(), this.transactions.items(), { hideArchived: true }).slice(0, 4),
-  );
-
-  protected readonly budgetPreviews = computed((): BudgetPreviewLine[] => {
-    if (!this.mode.isCloud()) {
-      return [];
-    }
-    const spentByCategory = this.spentByCategoryForMonth(this.month);
-    const categories = this.categories.byId();
-    let totalExpenses = 0;
-    for (const transaction of this.filterByMonthPrefix(this.transactions.items(), this.month)) {
-      if (transaction.type === 'expense') {
-        totalExpenses += transaction.amount;
-      }
-    }
-    spentByCategory.set(GLOBAL_BUDGET_CATEGORY_ID, totalExpenses);
-    return this.budgets
-      .items()
-      .map((budget) => {
-        const budgetKey = isGlobalBudget(budget) ? GLOBAL_BUDGET_CATEGORY_ID : budget.categoryId!;
-        const spent = spentByCategory.get(budgetKey) ?? 0;
-        const ratio = budget.limitAmount > 0 ? spent / budget.limitAmount : 0;
-        const category = budget.categoryId ? categories.get(budget.categoryId) : undefined;
+    return [...byCategory.entries()]
+      .map(([categoryId, amount]) => {
+        const category = categories.get(categoryId);
         return {
-          categoryName: isGlobalBudget(budget) ? 'Budget global' : (category?.name ?? 'Catégorie'),
-          categoryColor: category?.color ?? '#8B948C',
-          spent,
-          limitAmount: budget.limitAmount,
-          ratio,
-          fillPercent: Math.min(ratio, 1) * 100,
-          statusText: this.budgetStatusText(spent, budget.limitAmount, ratio),
-          isOver: ratio > 1,
-          isNear: ratio >= 0.8 && ratio <= 1,
+          id: categoryId,
+          name: category?.name ?? 'Sans catégorie',
+          color: category?.color ?? '#8B948C',
+          amount,
         };
       })
-      .sort((left, right) => right.ratio - left.ratio)
-      .slice(0, 3);
+      .sort((left, right) => right.amount - left.amount)
+      .slice(0, 5);
   });
 
-  protected readonly recent = computed(() => this.transactions.items().slice(0, 5));
+  protected readonly upcomingTiles = computed((): ExpenseTileData[] => {
+    const categories = this.categories.byId();
+
+    if (this.mode.isCloud() && this.recurring.items().length > 0) {
+      return [...this.recurring.items()]
+        .filter((rule) => rule.active)
+        .sort((left, right) => left.nextRunDate.localeCompare(right.nextRunDate))
+        .slice(0, 8)
+        .map((rule) => {
+          const category = categories.get(rule.categoryId);
+          return {
+            id: rule.id,
+            title: category?.name ?? 'Récurrence',
+            meta: 'Prochaine échéance',
+            amount: rule.amount,
+            dueDate: rule.nextRunDate,
+            merchantTexts: [category?.name ?? ''],
+            icon: category?.icon ?? 'repeat',
+            color: category?.color ?? '#8B948C',
+            link: '/recurrences',
+          };
+        });
+    }
+
+    return this.transactions
+      .items()
+      .filter((transaction) => transaction.type === 'expense' && isPosted(transaction))
+      .slice(0, 8)
+      .map((transaction) => {
+        const category = transaction.categoryId ? categories.get(transaction.categoryId) : undefined;
+        return {
+          id: transaction.id,
+          title: transaction.note?.trim() || category?.name || 'Dépense',
+          meta: category?.name ?? 'Dépense',
+          amount: transaction.amount,
+          dueDate: transaction.date,
+          merchantTexts: [transaction.note, category?.name].filter((text): text is string => !!text?.trim()),
+          icon: category?.icon ?? 'dots',
+          color: category?.color ?? '#8B948C',
+          link: ['/transactions', transaction.id],
+        };
+      });
+  });
+
+  protected readonly upcomingTitle = computed(() =>
+    this.mode.isCloud() && this.recurring.items().length > 0 ? 'À venir' : 'Dépenses récentes',
+  );
+
+  protected readonly recent = computed(() => this.transactions.items().slice(0, 4));
 
   private filterByMonthPrefix(transactions: Transaction[], monthStart: string): Transaction[] {
     const prefix = monthStart.slice(0, 7);
-    return transactions.filter((transaction) => transaction.date.startsWith(prefix));
+    return transactions.filter(
+      (transaction) => transaction.date.startsWith(prefix) && isPosted(transaction),
+    );
   }
 
   private sumByType(transactions: Transaction[], type: 'income' | 'expense'): number {
     return transactions
-      .filter((transaction) => transaction.type === type)
+      .filter((transaction) => transaction.type === type && isPosted(transaction))
       .reduce((sum, transaction) => sum + transaction.amount, 0);
-  }
-
-  private spentByCategoryForMonth(monthStart: string): Map<string, number> {
-    const sums = new Map<string, number>();
-    const byId = this.categories.byId();
-    for (const transaction of this.filterByMonthPrefix(this.transactions.items(), monthStart)) {
-      if (transaction.type !== 'expense' || !transaction.categoryId) continue;
-      const category = byId.get(transaction.categoryId);
-      const budgetKey = category?.parentId ?? transaction.categoryId;
-      sums.set(budgetKey, (sums.get(budgetKey) ?? 0) + transaction.amount);
-    }
-    return sums;
-  }
-
-  private budgetStatusText(spent: number, limitAmount: number, ratio: number): string {
-    const remaining = limitAmount - spent;
-    const format = (value: number) =>
-      new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(value);
-    if (remaining < 0) {
-      return `Dépassé de ${format(-remaining)}`;
-    }
-    if (ratio >= 0.8) {
-      return `Il reste ${format(remaining)}`;
-    }
-    return `${Math.round(ratio * 100)} % utilisé`;
   }
 }

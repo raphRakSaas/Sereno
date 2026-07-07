@@ -1,6 +1,6 @@
 import { CategoryKind } from '../models/category.model';
 import { Category } from '../models/category.model';
-import { Transaction } from '../models/transaction.model';
+import { isPosted, Transaction } from '../models/transaction.model';
 import { shiftMonth } from './period.utils';
 
 export interface CategoryBreakdownSlice {
@@ -36,6 +36,9 @@ export function filterTransactionsForPeriod(
 ): Transaction[] {
   const monthPrefix = monthIso.slice(0, 7);
   return transactions.filter((transaction) => {
+    if (!isPosted(transaction)) {
+      return false;
+    }
     if (!transaction.date.startsWith(monthPrefix)) {
       return false;
     }
@@ -53,7 +56,7 @@ export function filterTransactionsForPeriod(
 
 export function sumByType(transactions: Transaction[], type: CategoryKind): number {
   return transactions
-    .filter((transaction) => transaction.type === type)
+    .filter((transaction) => transaction.type === type && isPosted(transaction))
     .reduce((sum, transaction) => sum + transaction.amount, 0);
 }
 
@@ -64,7 +67,7 @@ export function breakdownByCategory(
 ): CategoryBreakdownSlice[] {
   const totals = new Map<string, number>();
   for (const transaction of transactions) {
-    if (transaction.type !== type || !transaction.categoryId) {
+    if (transaction.type !== type || !transaction.categoryId || !isPosted(transaction)) {
       continue;
     }
     totals.set(transaction.categoryId, (totals.get(transaction.categoryId) ?? 0) + transaction.amount);
@@ -130,7 +133,7 @@ export function dailyTotalsByType(
     totals.set(day, 0);
   }
   for (const transaction of transactions) {
-    if (transaction.type !== type) {
+    if (transaction.type !== type || !isPosted(transaction)) {
       continue;
     }
     if (!totals.has(transaction.date)) {
@@ -157,11 +160,57 @@ export function cumulativeNetByDay(transactions: Transaction[], days: string[]):
   let runningTotal = 0;
   return days.map((date) => {
     for (const transaction of transactions) {
-      if (transaction.date !== date) {
+      if (transaction.date !== date || !isPosted(transaction)) {
         continue;
       }
       runningTotal += transaction.type === 'income' ? transaction.amount : -transaction.amount;
     }
     return { date, amount: runningTotal };
   });
+}
+
+export interface MonthlyTotals {
+  month: string;
+  label: string;
+  income: number;
+  expense: number;
+  net: number;
+}
+
+const MONTH_LABEL = new Intl.DateTimeFormat('fr-FR', { month: 'short' });
+
+function monthLabel(monthIso: string): string {
+  return MONTH_LABEL.format(new Date(monthIso + 'T00:00:00')).replace('.', '');
+}
+
+/** Revenus, dépenses et solde net pour une fenêtre de mois se terminant à `endMonth`. */
+export function monthlyTotalsSeries(
+  transactions: Transaction[],
+  endMonth: string,
+  count: number,
+  accountId: string | null,
+): MonthlyTotals[] {
+  const series: MonthlyTotals[] = [];
+  for (let offset = -(count - 1); offset <= 0; offset++) {
+    const month = shiftMonth(endMonth, offset);
+    const scoped = filterTransactionsForPeriod(transactions, month, accountId);
+    const income = sumByType(scoped, 'income');
+    const expense = sumByType(scoped, 'expense');
+    series.push({
+      month,
+      label: monthLabel(month),
+      income,
+      expense,
+      net: income - expense,
+    });
+  }
+  return series;
+}
+
+/** Part des revenus épargnée ce mois-ci, bornée entre 0 et 100 %. */
+export function savingsRatePercent(income: number, expense: number): number {
+  if (income <= 0) {
+    return 0;
+  }
+  return Math.max(0, Math.min(100, Math.round(((income - expense) / income) * 100)));
 }

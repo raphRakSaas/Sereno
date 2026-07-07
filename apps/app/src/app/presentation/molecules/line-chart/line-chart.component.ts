@@ -47,9 +47,15 @@ const PAD = 8;
       }
     </div>
 
-    <div class="axis" aria-hidden="true">
-      <span>{{ firstDay() }}</span>
-      <span>{{ lastDay() }}</span>
+    <div class="axis" [class.all-labels]="showAllLabels()" aria-hidden="true">
+      @if (showAllLabels()) {
+        @for (point of points(); track point.date) {
+          <span>{{ point.label }}</span>
+        }
+      } @else {
+        <span>{{ firstDay() }}</span>
+        <span>{{ lastDay() }}</span>
+      }
     </div>
 
     @if (endPoint(); as end) {
@@ -132,6 +138,12 @@ const PAD = 8;
       font-size: 12px;
       color: var(--ink-faint);
     }
+    .axis.all-labels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      text-align: center;
+      text-transform: capitalize;
+    }
     .reading {
       margin: var(--space-3) 0 0;
       font-size: 13px;
@@ -152,6 +164,8 @@ export class LineChartComponent {
   readonly hue = input('mist-deep');
   readonly endLabel = input('Fin de mois :');
   readonly zeroBaseline = input(false);
+  /** Affiche chaque libellé sous l'axe (séries mensuelles). */
+  readonly showAllLabels = input(false);
 
   protected readonly hoverIndex = signal<number | null>(null);
 

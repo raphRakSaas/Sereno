@@ -24,11 +24,11 @@ import { LogoComponent } from '../../atoms/logo/logo.component';
 
       <div class="links">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <app-icon name="strata" [size]="20" />
+          <app-icon name="home" [size]="20" />
           <span>Accueil</span>
         </a>
         <a routerLink="/transactions" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <app-icon name="list" [size]="20" />
+          <app-icon name="activity" [size]="20" />
           <span>Activité</span>
         </a>
         <a routerLink="/calendrier" routerLinkActive="active">
@@ -36,7 +36,7 @@ import { LogoComponent } from '../../atoms/logo/logo.component';
           <span>Calendrier</span>
         </a>
         <a routerLink="/statistiques" routerLinkActive="active">
-          <app-icon name="strata" [size]="20" />
+          <app-icon name="pie" [size]="20" />
           <span>Statistiques</span>
         </a>
         <a routerLink="/budgets" routerLinkActive="active">

@@ -4,8 +4,9 @@
 
 ## Principes
 
-- **Aplats nets, zéro dégradé, zéro ombre portée.** Les surfaces se distinguent par
-  des plans de couleur et des filets 1px (`--line`), pas par du flou ni de la profondeur.
+- **Un seul fond, blanc pur en clair / noir pur en sombre.** Les cartes se
+  distinguent uniquement par un filet 1px (`--line`), jamais par un second
+  plan de fond ni une ombre.
 - **Les montants sont les gros titres.** Chiffres en IBM Plex Sans, `tnum` (tabulaires),
   gros corps, graisse 600. Le signe € et les décimales sont réduits pour laisser
   l'entier dominer.
@@ -21,10 +22,10 @@
 |---|---|---|
 | `--ink` | `#1F2A24` | Texte principal (épicéa sombre) |
 | `--ink-soft` | `#5A665E` | Texte secondaire |
-| `--paper` | `#E4E0D0` | Fond de page (grège chaud, un cran plus profond que les cartes) |
-| `--surface` | `#FBFAF6` | Cartes, feuilles |
-| `--sage` | `#3F5548` | Action primaire, sélection |
-| `--sage-pale` | `#DCE3DA` | Plan d'accueil, fonds doux |
+| `--paper` | `#FFFFFF` | Fond de page — identique à `--surface`, un seul fond |
+| `--surface` | `#FFFFFF` | Cartes, feuilles |
+| `--sage` | `#D14328` | Action primaire, sélection (corail vif) |
+| `--sage-pale` | `#F7DDD3` | Plan d'accueil, fonds doux |
 | `--mist` | `#8FA9B8` | Revenus, information |
 | `--sand` | `#C2B28F` | Accent chaud discret |
 | `--amber` | `#A97C2F` | Dépassement de budget (visible, pas alarmant) |
@@ -34,10 +35,10 @@
 
 Rayon : 10px (cartes), 999px uniquement pour les puces de catégorie.
 
-**Mode sombre** : encre verte très sombre (`--paper #0C100D`, `--surface
-#171B18`), jamais un noir neutre — Sereno garde sa chaleur la nuit (`--clay
-#CD8258`). Tous les couples texte/fond sont validés ≥ 4.5:1 (AA), y compris
-`--ink-faint`.
+**Mode sombre** : `--paper`/`--surface` sont noir pur (`#000000`), même
+principe de fond unique qu'en clair. `--sage` s'éclaircit en corail vif
+(`#FF7A5C`) pour rester lisible sur le noir. Tous les couples texte/fond sont
+validés ≥ 4.5:1 (AA), y compris `--ink-faint`.
 
 ### Gouvernance de l'accent chaud (`--clay`)
 
@@ -82,7 +83,7 @@ creux** — la forme les distingue des pastilles pleines de catégories, pour
   la catégorie, jamais une teinte générée. Au-delà de 7 catégories, la traîne
   est repliée dans « Autres » (gris neutre).
 - **Séquentiel = une teinte** : le calendrier de chaleur des dépenses utilise
-  la sauge du clair au foncé (4 pas), jamais d'arc-en-ciel.
+  `--sage` (corail) du clair au foncé (4 pas), jamais d'arc-en-ciel.
 - **Courbes** : ligne 2 px + aplat de la même teinte à 10 %, point de fin
   cerclé de surface, infobulle au survol — jamais un chiffre sur chaque point.
 - **Mode sombre** : les couleurs de données sont éclaircies uniformément via

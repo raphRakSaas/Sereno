@@ -7,7 +7,9 @@ import {
   cumulativeNetByDay,
   dailyTotalsByType,
   filterTransactionsForPeriod,
+  monthlyTotalsSeries,
   rankedAccounts,
+  savingsRatePercent,
   sumByType,
   topCategories,
 } from './stats.util';
@@ -179,5 +181,32 @@ describe('cumulativeNetByDay', () => {
       { date: '2026-07-02', amount: 70 },
       { date: '2026-07-03', amount: 70 },
     ]);
+  });
+});
+
+describe('monthlyTotalsSeries', () => {
+  it('retourne revenus, dépenses et solde net pour chaque mois de la fenêtre', () => {
+    const transactions = [
+      tx({ date: '2026-05-10', amount: 200, type: 'income' }),
+      tx({ date: '2026-05-12', amount: 50, type: 'expense' }),
+      tx({ date: '2026-06-10', amount: 300, type: 'income' }),
+      tx({ date: '2026-06-15', amount: 100, type: 'expense' }),
+      tx({ date: '2026-07-10', amount: 400, type: 'income' }),
+      tx({ date: '2026-07-20', amount: 150, type: 'expense' }),
+    ];
+    const series = monthlyTotalsSeries(transactions, '2026-07-01', 3, null);
+    expect(series).toHaveLength(3);
+    expect(series[0]).toMatchObject({ month: '2026-05-01', income: 200, expense: 50, net: 150 });
+    expect(series[1]).toMatchObject({ month: '2026-06-01', income: 300, expense: 100, net: 200 });
+    expect(series[2]).toMatchObject({ month: '2026-07-01', income: 400, expense: 150, net: 250 });
+  });
+});
+
+describe('savingsRatePercent', () => {
+  it('calcule le pourcentage épargné et borne le résultat', () => {
+    expect(savingsRatePercent(1000, 700)).toBe(30);
+    expect(savingsRatePercent(0, 0)).toBe(0);
+    expect(savingsRatePercent(100, 150)).toBe(0);
+    expect(savingsRatePercent(100, 0)).toBe(100);
   });
 });

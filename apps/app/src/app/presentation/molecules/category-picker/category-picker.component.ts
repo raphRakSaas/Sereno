@@ -18,7 +18,13 @@ import { IconComponent } from '../../atoms/icon/icon.component';
           [class.sub]="category.parentId"
           (click)="select.emit(category.id)"
         >
-          <span class="dot" [style.background]="category.color"></span>
+          <span
+            class="icon-wrap"
+            [style.background]="categoryColor(category.color)"
+            [style.color]="category.color"
+          >
+            <app-icon [name]="category.icon" [size]="14" />
+          </span>
           <span class="label">{{ labelFor(category) }}</span>
           @if (category.id === selectedId()) {
             <app-icon name="check" [size]="15" />
@@ -53,11 +59,14 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       border-color: var(--sage);
       background: var(--sage-pale);
     }
-    .dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
+    .icon-wrap {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
       flex: none;
+      color: inherit;
     }
   `,
 })
@@ -72,5 +81,9 @@ export class CategoryPickerComponent {
 
   protected labelFor(category: Category): string {
     return categoryDisplayName(category, this.categoriesById());
+  }
+
+  protected categoryColor(color: string): string {
+    return `color-mix(in srgb, ${color} 16%, var(--surface))`;
   }
 }

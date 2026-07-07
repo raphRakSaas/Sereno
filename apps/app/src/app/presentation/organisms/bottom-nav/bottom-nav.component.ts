@@ -9,11 +9,11 @@ import { IconComponent } from '../../atoms/icon/icon.component';
   template: `
     <nav aria-label="Navigation principale">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <app-icon name="strata" />
+        <app-icon name="home" />
         <span>Accueil</span>
       </a>
       <a routerLink="/statistiques" routerLinkActive="active">
-        <app-icon name="chart" />
+        <app-icon name="pie" />
         <span>Statistiques</span>
       </a>
       <a routerLink="/transactions/nouvelle" class="add" aria-label="Ajouter une transaction">
@@ -39,10 +39,10 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     nav {
       display: grid;
       grid-template-columns: 1fr 1fr auto 1fr 1fr;
-      align-items: center;
+      align-items: end;
       background: var(--surface);
       border-top: 1px solid var(--line);
-      padding: 6px 8px calc(6px + var(--safe-bottom));
+      padding: 10px 12px calc(10px + var(--safe-bottom));
     }
     a {
       display: flex;
@@ -73,13 +73,14 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       color: var(--clay);
     }
     .add {
-      width: 52px;
-      height: 52px;
-      margin: 0 10px;
+      width: 56px;
+      height: 56px;
+      margin: -18px 12px 0;
       border-radius: 999px;
       background: var(--sage);
       color: var(--surface);
       justify-content: center;
+      border: 3px solid var(--paper);
     }
     .add:active {
       background: var(--sage-deep);

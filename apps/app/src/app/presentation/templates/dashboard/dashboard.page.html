@@ -1,198 +1,138 @@
 <div class="dash">
-  <header class="hero">
-    <div class="brand-row">
-      <span class="brand">
-        <app-logo [size]="26" [decorative]="true" />
-        Sereno
-      </span>
-      <span class="date">{{ today | date: 'EEEE d MMMM' }}</span>
+  <header class="dash-header">
+    <div class="dash-intro">
+      <p class="greeting">{{ greeting() }} <span aria-hidden="true">👋</span></p>
+      <app-month-switcher [month]="selectedMonth()" (monthChange)="selectedMonth.set($event)" />
     </div>
-    <div class="hero-main">
-      <div class="hero-balance">
-        <p class="eyebrow">Solde total</p>
-        <app-amount [value]="totalBalance()" size="hero" />
-        <span class="hero-accent" aria-hidden="true"></span>
-        @if (weather()) {
-          <p class="weather">{{ weather() }}</p>
-        }
-      </div>
-      <div class="hero-stats">
-        <div class="stat-row">
-          <span class="stat-label">Revenus du mois</span>
-          <span class="stat-value in">
-            <app-icon name="arrow-in" [size]="15" />
-            <app-amount [value]="monthIncome()" size="sm" />
-          </span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Dépenses du mois</span>
-          <span class="stat-value out">
-            <app-icon name="arrow-out" [size]="15" />
-            <app-amount [value]="monthExpense()" size="sm" />
-          </span>
-        </div>
-        <div class="stat-row highlight">
-          <span class="stat-label">Solde restant</span>
-          <span class="stat-value" [class.negative]="monthRemaining() < 0">
-            <app-amount [value]="monthRemaining()" size="sm" />
-          </span>
-        </div>
-      </div>
-    </div>
+    <a routerLink="/reglages" class="avatar" aria-label="Réglages">
+      <app-icon name="user" [size]="22" />
+    </a>
   </header>
 
-  <section class="rhythm card">
-    <div class="rhythm-item">
-      <span class="rhythm-label">Aujourd’hui</span>
-      <app-amount [value]="dayExpense()" size="md" />
+  @if (transactions.error()) {
+    <p class="notice">{{ transactions.error() }}</p>
+  }
+
+  <section class="budget-hero">
+    <div class="budget-hero-copy">
+      <span class="eyebrow">
+        <app-icon name="wallet" [size]="16" />
+        Solde du mois
+      </span>
+      <app-amount [value]="monthRemaining()" size="hero" />
+      <p class="budget-sub">Solde total : <app-amount [value]="totalBalance()" size="sm" /></p>
+      <a routerLink="/transactions/nouvelle" class="btn-add">
+        <app-icon name="plus" [size]="16" />
+        Ajouter
+      </a>
     </div>
-    <span class="rhythm-rule"></span>
-    <div class="rhythm-item">
-      <span class="rhythm-label">Cette semaine</span>
-      <app-amount [value]="weekExpense()" size="md" />
-    </div>
-    <span class="rhythm-rule"></span>
-    <div class="rhythm-item">
-      <span class="rhythm-label">Ce mois-ci</span>
-      <app-amount [value]="monthExpense()" size="md" />
+    <div class="budget-hero-art" aria-hidden="true">
+      <app-icon name="wallet" [size]="56" />
     </div>
   </section>
 
-  <nav class="quick-actions" aria-label="Actions rapides">
-    <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'expense' }" class="quick-action">
-      <app-icon name="arrow-out" [size]="20" />
-      <span>Dépense</span>
-    </a>
-    <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'income' }" class="quick-action">
-      <app-icon name="arrow-in" [size]="20" />
-      <span>Revenu</span>
-    </a>
-    <a routerLink="/budgets" class="quick-action">
-      <app-icon name="wallet" [size]="20" />
-      <span>Budgets</span>
-    </a>
-    <a routerLink="/transferts/nouveau" class="quick-action">
-      <app-icon name="transit" [size]="20" />
-      <span>Transfert</span>
-    </a>
-    <a routerLink="/statistiques" class="quick-action">
-      <app-icon name="strata" [size]="20" />
-      <span>Statistiques</span>
-    </a>
-    <a routerLink="/calendrier" class="quick-action">
-      <app-icon name="calendar" [size]="20" />
-      <span>Calendrier</span>
-    </a>
-  </nav>
-
-  <div class="dash-grid">
-    @if (transactions.error()) {
-      <p class="notice full">{{ transactions.error() }}</p>
-    }
-
-    <section class="col-strata">
-      <div class="section-head">
-        <h2>Où va ton argent</h2>
-        <span class="caption">{{ month + 'T00:00:00' | date: 'MMMM' }}</span>
-      </div>
-      <div class="card strata-card">
-        @if (!transactions.loaded()) {
-          <div class="skeleton skeleton-strata" aria-hidden="true"></div>
-        } @else if (slices().length > 0) {
-          <app-strata-chart [slices]="slices()" [caption]="(month + 'T00:00:00' | date: 'MMMM yyyy') ?? ''" />
-        } @else {
-          <div class="empty">
-            <app-strata-ghost />
-            <h3>Couche après couche</h3>
-            <p>Voilà à quoi ressemblera ton mois : tes dépenses se déposent ici, les plus importantes en premier.</p>
-            <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'expense' }" class="btn btn-primary">Noter une dépense</a>
-          </div>
-        }
-      </div>
-    </section>
-
-    <div class="col-side">
-      @if (accountLines().length > 0) {
-        <section class="col-accounts">
-          <div class="section-head">
-            <h2>Comptes</h2>
-            @if (mode.isCloud()) {
-              <a routerLink="/comptes" class="see-all">Tout voir</a>
-            }
-          </div>
-          <div class="card account-list">
-            @for (line of accountLines(); track line.account.id) {
-              <a class="account-row" [routerLink]="['/transactions']" [queryParams]="{ compte: line.account.id }">
-                <span class="account-name">{{ line.account.name }}</span>
-                <app-amount [value]="line.balance" size="sm" />
-              </a>
-            }
-          </div>
-        </section>
-      }
-
-      @if (mode.isCloud() && budgetPreviews().length > 0) {
-        <section class="col-budgets">
-          <div class="section-head">
-            <h2>Budgets</h2>
-            <a routerLink="/budgets" class="see-all">Tout voir</a>
-          </div>
-          <div class="card budget-list">
-            @for (budget of budgetPreviews(); track budget.categoryName) {
-              <div class="budget-row" [class.over]="budget.isOver" [class.near]="budget.isNear">
-                <div class="budget-head">
-                  <span class="badge" [style.background]="budget.categoryColor + '22'">
-                    <span class="dot" [style.background]="budget.categoryColor"></span>
-                  </span>
-                  <span class="budget-name">{{ budget.categoryName }}</span>
-                  <span class="budget-amount">
-                    <app-amount [value]="budget.spent" size="sm" />
-                    <span class="limit">/ <app-amount [value]="budget.limitAmount" size="sm" /></span>
-                  </span>
-                </div>
-                <div class="track">
-                  <div class="fill" [style.width.%]="budget.fillPercent"></div>
-                </div>
-                <p class="budget-status">{{ budget.statusText }}</p>
-              </div>
-            }
-          </div>
-        </section>
-      }
-
-      <section class="col-recent">
-        <div class="section-head">
-          <h2>Activité récente</h2>
-          @if (recent().length > 0) {
-            <a routerLink="/transactions" class="see-all">Tout voir</a>
-          }
+  <section class="overview card">
+    <div class="overview-top">
+      @if (!transactions.loaded()) {
+        <div class="skeleton skeleton-donut" aria-hidden="true"></div>
+      } @else if (expenseSlices().length > 0) {
+        <app-donut-chart
+          class="overview-donut"
+          [slices]="expenseSlices()"
+          [showLegend]="false"
+          centerLabel="Total"
+        />
+      } @else {
+        <div class="donut-empty" aria-hidden="true">
+          <app-icon name="chart" [size]="28" />
         </div>
-        @if (!transactions.loaded()) {
-          <div class="card list-card" aria-hidden="true">
-            <div class="skeleton skeleton-row"></div>
-            <div class="skeleton skeleton-row"></div>
-            <div class="skeleton skeleton-row"></div>
-          </div>
-        } @else if (recent().length > 0) {
-          <div class="card list-card">
-            @for (transaction of recent(); track transaction.id) {
-              <app-transaction-list-item
-                [transaction]="transaction"
-                [category]="categories.byId().get(transaction.categoryId ?? '')"
-                [categoriesById]="categories.byId()"
-                [accountsById]="accounts.byId()"
-              />
-            }
-          </div>
-        } @else {
-          <div class="card">
-            <div class="empty">
-              <h3>Rien pour l’instant</h3>
-              <p>Deux gestes suffisent : le montant, la catégorie. Sereno s’occupe du reste.</p>
-            </div>
-          </div>
-        }
-      </section>
+      }
+      <div class="overview-copy">
+        <h2>Budget & dépenses</h2>
+        <p>{{ surplusText() }}</p>
+      </div>
     </div>
-  </div>
+
+    <div class="overview-grid">
+      <div class="overview-stat income">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="label">Revenus</span>
+        <app-amount [value]="monthIncome()" size="sm" />
+      </div>
+      <div class="overview-stat expense">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="label">Dépenses</span>
+        <app-amount [value]="monthExpense()" size="sm" />
+      </div>
+      <div class="overview-stat surplus">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="label">Solde</span>
+        <app-amount [value]="monthRemaining()" size="sm" />
+      </div>
+    </div>
+  </section>
+
+  <section class="reminders">
+    <div class="section-head">
+      <h2>{{ upcomingTitle() }}</h2>
+      @if (upcomingTiles().length > 0) {
+        <a routerLink="/transactions" class="see-all">Tout voir</a>
+      }
+    </div>
+
+    @if (!transactions.loaded()) {
+      <div class="reminder-scroll" aria-hidden="true">
+        <div class="skeleton skeleton-tile"></div>
+        <div class="skeleton skeleton-tile"></div>
+      </div>
+    } @else if (upcomingTiles().length > 0) {
+      <div class="reminder-scroll">
+        @for (tile of upcomingTiles(); track tile.id) {
+          <app-expense-tile
+            [title]="tile.title"
+            [meta]="tile.meta"
+            [amount]="tile.amount"
+            [dueDate]="tile.dueDate"
+            [merchantTexts]="tile.merchantTexts"
+            [icon]="tile.icon"
+            [color]="tile.color"
+            [link]="tile.link"
+          />
+        }
+      </div>
+    } @else {
+      <div class="card empty-strip">
+        <p>Aucune dépense pour l’instant. Un montant et une catégorie suffisent.</p>
+        <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'expense' }" class="btn btn-primary btn-sm">
+          Noter une dépense
+        </a>
+      </div>
+    }
+  </section>
+
+  <section class="recent">
+    <div class="section-head">
+      <h2>Activité récente</h2>
+      @if (recent().length > 0) {
+        <a routerLink="/transactions" class="see-all">Tout voir</a>
+      }
+    </div>
+    @if (!transactions.loaded()) {
+      <div class="card list-card" aria-hidden="true">
+        <div class="skeleton skeleton-row"></div>
+        <div class="skeleton skeleton-row"></div>
+      </div>
+    } @else if (recent().length > 0) {
+      <div class="card list-card">
+        @for (transaction of recent(); track transaction.id) {
+          <app-transaction-list-item
+            [transaction]="transaction"
+            [category]="categories.byId().get(transaction.categoryId ?? '')"
+            [categoriesById]="categories.byId()"
+            [accountsById]="accounts.byId()"
+          />
+        }
+      </div>
+    }
+  </section>
 </div>

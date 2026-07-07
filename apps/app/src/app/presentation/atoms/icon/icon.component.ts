@@ -20,6 +20,8 @@ const ICON_PATHS: Record<string, string[]> = {
   dots: ['M5.5 12h.01', 'M12 12h.01', 'M18.5 12h.01'],
 
   // Navigation & actions
+  pie: ['M12 3a9 9 0 1 0 9 9', 'M12 3v9h9', 'M12 12 9 9'],
+  activity: ['M4 18.5h2', 'M4 12h4', 'M4 5.5h6', 'M14 18.5h6', 'M14 12h4', 'M14 5.5h2'],
   strata: ['M4 18.5h16', 'M4 13.5h11', 'M4 8.5h6.5'],
   list: ['M8.5 6.5H20', 'M8.5 12H20', 'M8.5 17.5H20', 'M4.5 6.5h.01', 'M4.5 12h.01', 'M4.5 17.5h.01'],
   plus: ['M12 5.5v13', 'M5.5 12h13'],

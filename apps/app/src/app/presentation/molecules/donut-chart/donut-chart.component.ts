@@ -60,7 +60,7 @@ const OTHER_COLOR = '#77807a';
         </div>
       </div>
 
-      <ul class="legend">
+      <ul class="legend" [class.hidden]="!showLegend()">
         @for (arc of arcs(); track arc.id) {
           <li
             [class.dimmed]="hovered() !== null && hovered() !== arc.id"
@@ -122,6 +122,9 @@ const OTHER_COLOR = '#77807a';
       text-transform: uppercase;
       color: var(--ink-soft);
     }
+    .legend.hidden {
+      display: none;
+    }
     .legend {
       list-style: none;
       margin: 0;
@@ -171,6 +174,8 @@ export class DonutChartComponent {
   readonly slices = input.required<DonutSlice[]>();
   readonly currency = input('EUR');
   readonly centerLabel = input('Total');
+  /** Masque la légende latérale (accueil compact). */
+  readonly showLegend = input(true);
 
   protected readonly hovered = signal<string | null>(null);
 

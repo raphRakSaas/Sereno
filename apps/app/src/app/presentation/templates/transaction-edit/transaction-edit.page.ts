@@ -20,20 +20,17 @@ import { ReceiptsStore } from '../../../application/stores/receipts.store';
 import { TransactionTemplatesStore } from '../../../application/stores/transaction-templates.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { CategoryKind } from '../../../domain/models/category.model';
-import { TransactionStatus } from '../../../domain/models/transaction.model';
 import { TransactionTemplate } from '../../../domain/models/transaction-template.model';
 import {
-  categoriesWithoutFavorites,
-  favoriteCategories,
   lastUsedCategoryId,
   suggestCategoryIdFromNote,
 } from '../../../domain/utils/category-usage.util';
 import { suggestMarkerColor } from '../../../domain/utils/marker-color.util';
 import { toIsoDate } from '../../../domain/utils/period.utils';
 import { AmountComponent } from '../../atoms/amount/amount.component';
+import { MerchantBadgeComponent } from '../../atoms/merchant-badge/merchant-badge.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { CategoryPickerComponent } from '../../molecules/category-picker/category-picker.component';
-import { MarkerColorPickerComponent } from '../../molecules/marker-color-picker/marker-color-picker.component';
 import {
   ReceiptAttachComponent,
   ReceiptSuggestionApply,
@@ -48,10 +45,14 @@ function parseAmount(text: string): number | null {
   return Math.round(amountValue * 100) / 100;
 }
 
+function isIsoDate(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
 @Component({
   selector: 'app-transaction-edit-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AmountComponent, CategoryPickerComponent, FormsModule, IconComponent, MarkerColorPickerComponent, ReceiptAttachComponent],
+  imports: [AmountComponent, CategoryPickerComponent, FormsModule, IconComponent, MerchantBadgeComponent, ReceiptAttachComponent],
   templateUrl: './transaction-edit.page.html',
   styleUrl: './transaction-edit.page.scss',
 })
@@ -78,15 +79,11 @@ export class TransactionEditPage {
   protected readonly accountId = signal<string | null>(null);
   protected readonly date = signal(toIsoDate(new Date()));
   protected readonly note = signal('');
-  protected readonly markerColor = signal<string | null>(null);
-  protected readonly status = signal<TransactionStatus>('posted');
   protected readonly detachFromRecurrence = signal(false);
   protected readonly linkedRecurringRuleId = signal<string | null>(null);
 
   protected readonly hint = signal('');
   protected readonly confirmingDelete = signal(false);
-  protected readonly showAllCategories = signal(false);
-  protected readonly showExtras = signal(false);
   protected readonly saving = signal(false);
   protected readonly pendingReceiptFile = signal<File | null>(null);
   protected readonly templateFormOpen = signal(false);
@@ -98,19 +95,21 @@ export class TransactionEditPage {
 
   /** L'utilisateur a choisi une catégorie manuellement — on n'écrase plus via la note. */
   private readonly categoryTouched = signal(false);
-  /** L'utilisateur a choisi une couleur d'étiquette manuellement. */
-  private readonly markerColorTouched = signal(false);
 
   protected readonly pickableCategories = computed(() =>
     this.type() === 'expense' ? this.categories.expenseCategories() : this.categories.incomeCategories(),
   );
 
-  protected readonly favoriteCategoryList = computed(() =>
-    favoriteCategories(this.transactions.items(), this.pickableCategories(), this.type()),
-  );
+  protected readonly selectedCategory = computed(() => {
+    const categoryId = this.categoryId();
+    if (!categoryId) {
+      return undefined;
+    }
+    return this.pickableCategories().find((category) => category.id === categoryId);
+  });
 
-  protected readonly otherCategories = computed(() =>
-    categoriesWithoutFavorites(this.pickableCategories(), this.favoriteCategoryList()),
+  protected readonly merchantTexts = computed(() =>
+    [this.note(), this.selectedCategory()?.name].filter((text): text is string => !!text?.trim()),
   );
 
   protected readonly amountSuggestions = computed(() => {
@@ -127,7 +126,7 @@ export class TransactionEditPage {
     return [...amounts];
   });
 
-  protected readonly recentMarkerColors = computed(() => {
+  private readonly recentMarkerColors = computed(() => {
     const colors: string[] = [];
     for (const transaction of this.transactions.items()) {
       if (!transaction.markerColor || colors.includes(transaction.markerColor)) {
@@ -170,13 +169,9 @@ export class TransactionEditPage {
       this.accountId.set(existing.accountId);
       this.date.set(existing.date);
       this.note.set(existing.note ?? '');
-      this.markerColor.set(existing.markerColor);
-      this.status.set(existing.status ?? 'posted');
       this.linkedRecurringRuleId.set(existing.recurringRuleId);
       this.detachFromRecurrence.set(false);
       this.categoryTouched.set(true);
-      this.showAllCategories.set(true);
-      this.showExtras.set(true);
     });
 
     effect(() => {
@@ -209,28 +204,14 @@ export class TransactionEditPage {
       }
     });
 
-    effect(() => {
-      if (this.editedId() || this.markerColorTouched()) {
-        return;
-      }
-      const selectedCategoryId = this.categoryId();
-      if (!selectedCategoryId) {
-        return;
-      }
-      this.markerColor.set(
-        suggestMarkerColor(selectedCategoryId, this.recentMarkerColors()),
-      );
-    });
-
     const queryType = this.route.snapshot.queryParamMap.get('type');
     if (queryType === 'income' || queryType === 'expense') {
       this.type.set(queryType);
     }
 
     const queryDate = this.route.snapshot.queryParamMap.get('date');
-    if (queryDate && /^\d{4}-\d{2}-\d{2}$/.test(queryDate)) {
+    if (queryDate && isIsoDate(queryDate)) {
       this.date.set(queryDate);
-      this.showExtras.set(true);
     }
 
     effect(() => {
@@ -265,7 +246,6 @@ export class TransactionEditPage {
     }
     this.note.set(template.note ?? '');
     this.categoryTouched.set(true);
-    this.showAllCategories.set(true);
     this.hint.set('');
   }
 
@@ -311,14 +291,16 @@ export class TransactionEditPage {
     if (suggestion.amount !== undefined) {
       this.amountText.set(suggestion.amount.toString().replace('.', ','));
     }
-    if (suggestion.date) {
+    if (suggestion.date && isIsoDate(suggestion.date)) {
       this.date.set(suggestion.date);
-      this.showExtras.set(true);
     }
     if (suggestion.merchant) {
       this.note.set(suggestion.merchant);
-      this.showExtras.set(true);
     }
+  }
+
+  protected onDateChange(value: string): void {
+    this.date.set(isIsoDate(value) ? value : toIsoDate(new Date()));
   }
 
   protected setType(transactionType: CategoryKind): void {
@@ -343,19 +325,6 @@ export class TransactionEditPage {
   protected applyAmountSuggestion(amount: number): void {
     this.amountText.set(amount.toString().replace('.', ','));
     this.hint.set('');
-  }
-
-  protected onMarkerColorSelected(color: string | null): void {
-    this.markerColorTouched.set(true);
-    this.markerColor.set(color);
-  }
-
-  protected toggleAllCategories(): void {
-    this.showAllCategories.update((visible) => !visible);
-  }
-
-  protected toggleExtras(): void {
-    this.showExtras.update((visible) => !visible);
   }
 
   protected async save(): Promise<void> {
@@ -451,7 +420,7 @@ export class TransactionEditPage {
     date: string;
     note: string | null;
     markerColor: string | null;
-    status: TransactionStatus;
+    status: 'posted';
     recurringRuleId: string | null;
     transferToAccountId: null;
   } | null {
@@ -474,6 +443,9 @@ export class TransactionEditPage {
       return null;
     }
 
+    const rawDate = this.date().trim();
+    const selectedDate = isIsoDate(rawDate) ? rawDate : toIsoDate(new Date());
+
     this.hint.set('');
     const recurringRuleId =
       this.detachFromRecurrence() && this.linkedRecurringRuleId()
@@ -484,10 +456,10 @@ export class TransactionEditPage {
       categoryId: selectedCategoryId,
       amount,
       type: this.type(),
-      date: this.date(),
+      date: selectedDate,
       note: this.note().trim() || null,
-      markerColor: this.markerColor(),
-      status: this.status(),
+      markerColor: suggestMarkerColor(selectedCategoryId, this.recentMarkerColors()),
+      status: 'posted',
       recurringRuleId,
       transferToAccountId: null,
     };
@@ -496,8 +468,6 @@ export class TransactionEditPage {
   private resetForNextEntry(): void {
     this.amountText.set('');
     this.note.set('');
-    this.markerColor.set(null);
-    this.markerColorTouched.set(false);
     this.hint.set('');
     this.pendingReceiptFile.set(null);
     this.categoryTouched.set(false);

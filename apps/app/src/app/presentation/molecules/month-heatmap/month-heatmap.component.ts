@@ -14,7 +14,7 @@ interface HeatCell extends HeatDay {
   title: string;
 }
 
-/* Calendrier de chaleur du mois : une case par jour, une seule teinte (sauge)
+/* Calendrier de chaleur du mois : une case par jour, une seule teinte (--sage)
    du clair au foncé — plus la journée a dépensé, plus la case est profonde.
    Toucher une case ouvre l'activité du jour. Séquentiel = magnitude, jamais
    d'arc-en-ciel. */

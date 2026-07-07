@@ -5,24 +5,24 @@ import { Category } from '../../../domain/models/category.model';
 import { isTransfer, Transaction } from '../../../domain/models/transaction.model';
 import { categoryDisplayName } from '../../../domain/utils/category-tree.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
-import { IconComponent } from '../../atoms/icon/icon.component';
+import { MerchantBadgeComponent } from '../../atoms/merchant-badge/merchant-badge.component';
 
 @Component({
   selector: 'app-transaction-list-item',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AmountComponent, IconComponent, RouterLink],
+  imports: [AmountComponent, MerchantBadgeComponent, RouterLink],
   template: `
     <a class="row" [class.marked]="!!transaction().markerColor" [routerLink]="editLink()">
       @if (transaction().markerColor; as marker) {
         <span class="marker" [style.background]="marker" aria-hidden="true"></span>
       }
-      <span
-        class="badge"
-        [style.background]="tint()"
-        [style.color]="isTransferRow() ? 'var(--sand)' : color()"
-      >
-        <app-icon [name]="isTransferRow() ? 'transit' : (category()?.icon ?? 'dots')" [size]="19" />
-      </span>
+      <app-merchant-badge
+        [texts]="merchantTexts()"
+        [fallbackIcon]="isTransferRow() ? 'transit' : (category()?.icon ?? 'dots')"
+        [fallbackColor]="isTransferRow() ? 'var(--sand)' : (category()?.color ?? '#8B948C')"
+        [size]="38"
+        shape="square"
+      />
       <span class="text">
         @if (isTransferRow()) {
           <span class="name">{{ transferLabel() }}</span>
@@ -72,14 +72,6 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     }
     .row:active {
       background: var(--sage-pale);
-    }
-    .badge {
-      flex: none;
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
     }
     .text {
       flex: 1;
@@ -132,13 +124,13 @@ export class TransactionListItemComponent {
       : ['/transactions', this.transaction().id],
   );
 
-  protected readonly color = computed(() => this.category()?.color ?? 'var(--ink-soft)');
+  protected readonly merchantTexts = computed(() => {
+    const transaction = this.transaction();
+    const category = this.category();
+    return [transaction.note, category?.name].filter((text): text is string => !!text?.trim());
+  });
 
-  protected readonly tint = computed(() =>
-    this.isTransferRow()
-      ? 'color-mix(in srgb, var(--sand) 22%, var(--surface))'
-      : `color-mix(in srgb, ${this.category()?.color ?? '#8B948C'} 14%, var(--surface))`,
-  );
+  protected readonly color = computed(() => this.category()?.color ?? 'var(--ink-soft)');
 
   protected transferLabel(): string {
     const transaction = this.transaction();
