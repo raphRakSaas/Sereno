@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--sage-deep);
+  color: var(--accent-deep);
 }
 
 .block-head h2 {
@@ -52,7 +52,7 @@ p {
   font-style: italic;
   font-weight: 600;
   font-size: 22px;
-  color: var(--sage-deep);
+  color: var(--accent-deep);
 }
 
 .about-links {
@@ -63,7 +63,7 @@ p {
 }
 
 .about-links a {
-  color: var(--sage);
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -133,7 +133,7 @@ p {
 }
 
 .links app-icon:first-child {
-  color: var(--sage-deep);
+  color: var(--accent-deep);
 }
 
 .links app-icon:last-child {

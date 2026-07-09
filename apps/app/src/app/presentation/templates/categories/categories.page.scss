@@ -108,7 +108,7 @@ section .eyebrow {
 .promote {
   border: none;
   background: none;
-  color: var(--sage-deep);
+  color: var(--accent-deep);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -166,9 +166,9 @@ section .eyebrow {
 }
 
 .icon-choice.on {
-  border-color: var(--sage);
-  background: var(--sage-pale);
-  color: var(--sage-deep);
+  border-color: var(--accent);
+  background: var(--accent-pale);
+  color: var(--accent-deep);
 }
 
 .actions {

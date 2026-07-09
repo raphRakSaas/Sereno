@@ -1,0 +1,122 @@
+<div class="onboarding-shell">
+
+  @if (step() === 1) {
+    <section class="panel panel-light">
+      <div class="panel-inner">
+        <div class="masthead">
+          <app-logo [size]="24" [decorative]="true" />
+          <span class="wordmark">sereno</span>
+        </div>
+        <p class="tagline">Vois clair dans ton argent, sans anxiété.</p>
+
+        <div class="progress" aria-hidden="true"><span class="on"></span><span></span></div>
+
+        <h1>Bienvenue sur Sereno</h1>
+        <p class="lede">Deux chiffres suffisent pour que ton tableau de bord ait déjà de quoi te parler. Tout reste modifiable ensuite.</p>
+
+        <div class="field">
+          <label for="income">Revenu mensuel, environ</label>
+          <div class="amount-field">
+            <input
+              id="income"
+              type="text"
+              inputmode="decimal"
+              placeholder="0,00"
+              autocomplete="off"
+              [ngModel]="incomeText()"
+              (ngModelChange)="incomeText.set($event)"
+              class="input"
+            />
+            <span class="euro">€</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary btn-block" (click)="goToStep2()">Continuer</button>
+          <button type="button" class="btn-skip" (click)="skipAll()" [disabled]="saving()">
+            Passer, je remplirai plus tard
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel panel-dark">
+      <div class="panel-inner">
+        <app-lottie-player src="lottie/onboarding-1.lottie" class="illustration" />
+        <h2>Vois clair, dès le premier chiffre.</h2>
+        <p>Un revenu mensuel suffit pour que ton solde disponible ait un sens dès aujourd'hui.</p>
+      </div>
+    </aside>
+  } @else {
+    <section class="panel panel-light">
+      <div class="panel-inner">
+        <div class="progress" aria-hidden="true"><span class="on"></span><span class="on"></span></div>
+
+        <button type="button" class="back" (click)="backToStep1()">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5l-6 6 6 6"/></svg>
+          Retour
+        </button>
+
+        <h1>Ta plus grosse dépense fixe</h1>
+        <p class="lede">Loyer, crédit, ou l'abonnement qui revient chaque mois — note-le une fois, il est là pour de bon.</p>
+
+        <div class="field">
+          <label for="expense-name">Nom de la dépense</label>
+          <input
+            id="expense-name"
+            type="text"
+            placeholder="Loyer"
+            autocomplete="off"
+            [ngModel]="expenseName()"
+            (ngModelChange)="expenseName.set($event)"
+            class="input"
+          />
+        </div>
+
+        <div class="field">
+          <label for="expense-amount">Montant</label>
+          <div class="amount-field">
+            <input
+              id="expense-amount"
+              type="text"
+              inputmode="decimal"
+              placeholder="0,00"
+              autocomplete="off"
+              [ngModel]="expenseText()"
+              (ngModelChange)="expenseText.set($event)"
+              class="input"
+            />
+            <span class="euro">€</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Catégorie</label>
+          <app-category-picker
+            [categories]="expenseCategories()"
+            [selectedId]="expenseCategoryId()"
+            (select)="expenseCategoryId.set($event)"
+          />
+        </div>
+
+        <div class="actions">
+          <button type="button" class="btn btn-primary btn-block" (click)="finish()" [disabled]="saving()">
+            {{ saving() ? 'Un instant…' : "C'est parti" }}
+          </button>
+          <button type="button" class="btn-skip" (click)="skipExpense()" [disabled]="saving()">
+            Passer, je remplirai plus tard
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="panel panel-dark">
+      <div class="panel-inner">
+        <app-lottie-player src="lottie/onboarding-2.lottie" class="illustration" />
+        <h2>La plus grosse dépense d'abord.</h2>
+        <p>C'est souvent elle qui pèse le plus sur le budget — une fois notée, le reste suit tout seul.</p>
+      </div>
+    </aside>
+  }
+
+</div>

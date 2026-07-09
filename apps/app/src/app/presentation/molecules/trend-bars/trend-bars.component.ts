@@ -69,7 +69,7 @@ export interface TrendBar {
       width: 100%;
       min-height: 2px;
       border-radius: 3px 3px 0 0;
-      background: var(--bar-color, var(--sage));
+      background: var(--bar-color, var(--accent));
       transition: opacity 0.15s ease;
     }
     .bar.empty {
@@ -150,6 +150,6 @@ export class TrendBarsComponent {
     if (this.kind() === 'net') {
       return 'var(--sand)';
     }
-    return 'var(--sage)';
+    return 'var(--accent)';
   }
 }

@@ -143,7 +143,7 @@ const MIN_H = 9;
       min-width: 0;
     }
     .legend button.active {
-      background: var(--sage-pale);
+      background: var(--accent-pale);
     }
     .legend button.dimmed {
       opacity: 0.45;

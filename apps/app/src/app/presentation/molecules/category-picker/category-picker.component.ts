@@ -3,6 +3,26 @@ import { Category } from '../../../domain/models/category.model';
 import { categoryDisplayName } from '../../../domain/utils/category-tree.util';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
+/* Icônes 3D colorées (Fluent Emoji, MIT) plutôt que le trait fin habituel :
+   la sélection de catégorie est l'endroit où un peu de relief/couleur aide
+   à repérer vite, contrairement à la nav où le trait discret reste la règle. */
+const CATEGORY_ICON_IMAGE: Record<string, string> = {
+  home: 'home.png',
+  basket: 'basket.png',
+  transit: 'transit.png',
+  dining: 'dining.png',
+  health: 'health.png',
+  leisure: 'leisure.png',
+  repeat: 'repeat.png',
+  clothing: 'clothing.png',
+  dots: 'dots.png',
+  work: 'work.png',
+  sparkle: 'sparkle.png',
+  gift: 'gift.png',
+  building: 'building.png',
+  chart: 'chart.png',
+};
+
 @Component({
   selector: 'app-category-picker',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,12 +38,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
           [class.sub]="category.parentId"
           (click)="select.emit(category.id)"
         >
-          <span
-            class="icon-wrap"
-            [style.background]="categoryColor(category.color)"
-            [style.color]="category.color"
-          >
-            <app-icon [name]="category.icon" [size]="14" />
+          <span class="icon-wrap">
+            <img [src]="iconSrc(category.icon)" alt="" width="22" height="22" />
           </span>
           <span class="label">{{ labelFor(category) }}</span>
           @if (category.id === selectedId()) {
@@ -42,8 +58,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     button {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      padding: 8px 13px;
+      gap: 6px;
+      padding: 6px 13px 6px 8px;
       border-radius: 999px;
       border: 1px solid var(--line);
       background: var(--surface);
@@ -56,17 +72,20 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       font-size: 13px;
     }
     button.selected {
-      border-color: var(--sage);
-      background: var(--sage-pale);
+      border-color: var(--accent);
+      background: var(--accent-pale);
     }
     .icon-wrap {
       display: grid;
       place-items: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 7px;
+      width: 26px;
+      height: 26px;
       flex: none;
-      color: inherit;
+    }
+    .icon-wrap img {
+      display: block;
+      width: 22px;
+      height: 22px;
     }
   `,
 })
@@ -83,7 +102,7 @@ export class CategoryPickerComponent {
     return categoryDisplayName(category, this.categoriesById());
   }
 
-  protected categoryColor(color: string): string {
-    return `color-mix(in srgb, ${color} 16%, var(--surface))`;
+  protected iconSrc(icon: string): string {
+    return `category-icons/${CATEGORY_ICON_IMAGE[icon] ?? CATEGORY_ICON_IMAGE['dots']}`;
   }
 }

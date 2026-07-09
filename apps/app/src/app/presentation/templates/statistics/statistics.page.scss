@@ -1,6 +1,6 @@
 .stats {
-  --income: #2d7a5f;
-  --expense: #b4603a;
+  --income: var(--mist-deep);
+  --expense: var(--sand);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -48,8 +48,8 @@
   align-items: center;
   gap: var(--space-4);
   padding: var(--space-4);
-  background: var(--sage-deep);
-  color: var(--surface);
+  background: var(--accent-deep);
+  color: var(--on-accent);
 }
 
 .savings-icon {

@@ -10,17 +10,6 @@
   background: var(--paper);
 }
 
-.sky-transition-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 90;
-  pointer-events: none;
-  padding-top: var(--safe-top);
-  background: var(--paper);
-}
-
 .side-nav {
   display: none;
 }
@@ -39,6 +28,11 @@
 
   .bottom-nav {
     display: none;
+  }
+
+  /* Page plein écran (onboarding…) : pas de rail, une seule colonne. */
+  .frame.fullscreen {
+    display: block;
   }
 }
 

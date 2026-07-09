@@ -89,8 +89,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       width: 52px;
       height: 52px;
       border-radius: 999px;
-      background: var(--sage-pale);
-      color: var(--sage-deep);
+      background: var(--accent-pale);
+      color: var(--accent-deep);
     }
     h2 {
       font-size: 22px;

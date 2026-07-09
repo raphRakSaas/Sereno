@@ -63,27 +63,28 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       height: 26px;
       border-radius: 999px;
     }
-    /* L'onglet actif porte la pastille chaude : le repère permanent de
-       l'accent signature (--clay), discret mais immanquable. */
+    /* L'onglet actif porte la pastille bleue : seul repère de couleur de la
+       nav, « où je suis ». Le bouton + reste noir/blanc, comme dans la
+       sidebar — c'est l'action, pas la position. */
     a.active {
       color: var(--ink);
     }
     a.active app-icon {
-      background: var(--clay-soft);
-      color: var(--clay);
+      background: var(--accent-pale);
+      color: var(--accent);
     }
     .add {
       width: 56px;
       height: 56px;
       margin: -18px 12px 0;
       border-radius: 999px;
-      background: var(--sage);
-      color: var(--surface);
+      background: var(--ink);
+      color: var(--paper);
       justify-content: center;
       border: 3px solid var(--paper);
     }
     .add:active {
-      background: var(--sage-deep);
+      opacity: 0.85;
     }
   `,
 })

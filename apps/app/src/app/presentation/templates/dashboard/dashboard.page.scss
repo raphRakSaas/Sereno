@@ -1,5 +1,6 @@
-/* Accueil — inspiration Dribbble (cartes aérées, camembert compact, tuiles
-   horizontales) dans le vocabulaire Sereno : aplats, filets 1px, pas d'ombres. */
+/* Dashboard — bento sur bureau, colonne unique en mobile. Noir/blanc + accent
+   bleu unique ; le strata (répartition des dépenses) reste la pièce centrale
+   signature de Sereno. Aplats nets, ombre douce en clair, filet en sombre. */
 
 .dash {
   display: flex;
@@ -8,41 +9,26 @@
   padding: 0 var(--space-4) var(--space-6);
 }
 
-.dash-scene {
-  position: relative;
+/* ── Hero card ─────────────────────────────────────────────────── */
+
+.hero-card {
+  padding: var(--space-4) var(--space-4) 0;
   margin: 0 calc(-1 * var(--space-4));
-  min-height: 148px;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
 }
 
-.dash-sky {
-  display: block;
-}
-
-.dash-scene-fg {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: calc(var(--space-3) + var(--safe-top)) var(--space-4) var(--space-3);
-  pointer-events: none;
-}
-
-.dash-scene-fg .dash-header,
-.dash-scene-fg a,
-.dash-scene-fg button {
-  pointer-events: auto;
-}
-
-.dash-header {
+.hero-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-3);
+  padding: var(--safe-top) 0 var(--space-3);
 }
 
-.dash-intro {
+.hero-intro {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -52,146 +38,197 @@
 .greeting {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 560;
-  letter-spacing: -0.01em;
-  color: color-mix(in srgb, var(--ink) 88%, #ffffff);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
 .avatar {
   flex: none;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
   display: grid;
   place-items: center;
-  color: var(--ink-soft);
+  color: var(--ink-faint);
   text-decoration: none;
 }
 
-.budget-hero {
+.hero-main {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  padding: var(--space-5) var(--space-4);
-  border-radius: 16px;
-  background: var(--sage-pale);
-  border: 1px solid var(--line);
+  padding-bottom: var(--space-5);
 }
 
-.budget-hero-copy {
+.hero-balance {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
 }
 
-.eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.balance-label {
   font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-soft);
+  font-weight: 700;
+  color: var(--ink-faint);
 }
 
-.budget-sub {
+.balance-trend {
   margin: 0;
-  font-size: 13px;
-  color: var(--ink-faint);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.balance-trend.positive { color: var(--mist-deep); }
+.balance-trend.negative { color: var(--amber); }
+
+.hero-illustration {
+  flex: none;
+  width: 96px;
+  height: 96px;
+}
+
+/* ── Carte budget (intégrée dans le hero) ─────────────────────── */
+
+.budget-card {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  margin-bottom: var(--space-5);
+}
+
+.budget-card-top {
   display: flex;
   align-items: baseline;
-  gap: 4px;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.budget-card-top h2 {
+  margin: 0;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.budget-numbers {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
   flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.budget-limit {
+  font-size: 13px;
+  color: var(--ink-faint);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.budget-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.budget-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.budget-track.near:not(.over) .budget-fill { background: var(--sand); }
+.budget-track.over .budget-fill           { background: var(--amber); }
+
+.budget-footer {
+  margin: 10px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
 }
 
 .btn-add {
-  margin-top: var(--space-2);
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  align-self: flex-start;
-  padding: 8px 14px;
+  gap: 5px;
+  padding: 7px 13px;
   border-radius: 999px;
   border: 1px solid var(--line);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--ink);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-decoration: none;
 }
 
-.budget-hero-art {
-  flex: none;
-  display: grid;
-  place-items: center;
-  width: 88px;
-  color: var(--sage);
-  opacity: 0.55;
-}
+/* ── Répartition des dépenses (strata) ────────────────────────── */
 
 .overview {
   padding: var(--space-4);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--clay-soft) 45%, var(--surface));
-  border: 1px solid var(--line);
 }
 
-.overview-top {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
+.overview-head {
   margin-bottom: var(--space-4);
 }
 
-.overview-donut {
-  flex: none;
+.overview-head h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
 }
 
-.overview-donut .donut {
-  gap: 0;
-}
-
-.overview-donut .ring {
-  width: 120px;
-  height: 120px;
-}
-
-.donut-empty {
-  flex: none;
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-  border: 1px dashed var(--line);
-  display: grid;
-  place-items: center;
-  color: var(--ink-faint);
-}
-
-.overview-copy {
-  flex: 1;
-  min-width: 0;
-}
-
-.overview-copy h2 {
-  margin: 0 0 6px;
-  font-size: 17px;
-}
-
-.overview-copy p {
+.overview-head p {
   margin: 0;
-  font-size: 14px;
+  font-size: 13.5px;
   color: var(--ink-soft);
   line-height: 1.45;
+}
+
+.strata-slot {
+  min-height: 224px;
+}
+
+.strata-slot.skeleton {
+  border-radius: var(--radius);
+}
+
+.strata-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 224px;
+  text-align: center;
+}
+
+.strata-empty p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  max-width: 26ch;
 }
 
 .overview-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .overview-stat {
@@ -200,32 +237,32 @@
   gap: 4px;
   padding: var(--space-3);
   border-radius: 12px;
-  background: var(--surface);
+  background: var(--surface-2);
   border: 1px solid var(--line);
 }
 
 .overview-stat .dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 3px;
 }
 
 .overview-stat .label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 700;
   color: var(--ink-faint);
 }
 
-.overview-stat.income .dot {
-  background: var(--mist-deep);
-}
+.overview-stat.income .dot  { background: var(--mist-deep); }
+.overview-stat.expense .dot { background: var(--ink); }
+.overview-stat.surplus .dot { background: var(--accent); }
 
-.overview-stat.expense .dot {
-  background: var(--clay);
-}
+/* ── Sections inférieures ─────────────────────────────────────── */
 
-.overview-stat.surplus .dot {
-  background: var(--sand);
+.dash-lower {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
 }
 
 .section-head {
@@ -236,15 +273,12 @@
   margin-bottom: var(--space-3);
 }
 
-.section-head h2 {
-  margin: 0;
-  font-size: 18px;
-}
+.section-head h2 { margin: 0; font-size: 16px; }
 
 .see-all {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--sage);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
   text-decoration: none;
 }
 
@@ -257,9 +291,7 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.reminder-scroll app-expense-tile {
-  scroll-snap-align: start;
-}
+.reminder-scroll app-expense-tile { scroll-snap-align: start; }
 
 .empty-strip {
   padding: var(--space-4);
@@ -267,22 +299,20 @@
   flex-direction: column;
   gap: var(--space-3);
   align-items: flex-start;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
+}
+
+.empty-strip img {
+  align-self: center;
 }
 
 .empty-strip p {
   margin: 0;
-  font-size: 14.5px;
+  font-size: 14px;
   color: var(--ink-soft);
 }
 
 .list-card {
   padding: 4px 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
 }
 
 .list-card app-transaction-list-item + app-transaction-list-item {
@@ -290,22 +320,18 @@
   border-top: 1px solid var(--line);
 }
 
-.skeleton-donut {
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-}
+/* ── Skeletons ────────────────────────────────────────────────── */
 
 .skeleton-tile {
   flex: none;
   width: 260px;
   height: 108px;
-  border-radius: 16px;
+  border-radius: var(--radius-lg);
 }
 
 .skeleton-row {
   height: 52px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin: 8px 0;
 }
 
@@ -314,18 +340,32 @@
   font-size: 14px;
 }
 
+/* ── Responsive : bento sur bureau ────────────────────────────── */
+
 @media (min-width: 768px) {
   .dash {
-    max-width: 520px;
-    margin: 0 auto;
     padding: 24px 0 64px;
   }
 
-  .dash-scene {
+  .hero-card {
     margin: 0;
-    border-radius: 16px;
-    overflow: hidden;
+    padding: var(--space-5);
+    border-radius: var(--radius-lg);
     border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  .hero-top {
+    padding-top: 0;
+  }
+
+  .greeting {
+    font-size: 24px;
+  }
+
+  .hero-illustration {
+    width: 116px;
+    height: 116px;
   }
 
   .reminder-scroll app-expense-tile {
@@ -335,10 +375,46 @@
 
 @media (min-width: 1024px) {
   .dash {
-    max-width: 720px;
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: var(--space-5);
+    align-items: start;
   }
 
-  .budget-hero {
-    padding: var(--space-6);
+  .hero-card {
+    grid-column: 1 / -1;
+  }
+
+  .overview {
+    grid-column: 1 / -1;
+  }
+
+  .dash-lower {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  .reminder-scroll {
+    flex-direction: column;
+    overflow: visible;
+  }
+
+  .reminder-scroll app-expense-tile {
+    width: 100%;
+  }
+
+  .notice {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1280px) {
+  .dash {
+    max-width: 1320px;
   }
 }

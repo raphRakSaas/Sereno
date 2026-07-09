@@ -26,7 +26,7 @@
   font-style: italic;
   font-weight: 600;
   font-size: 24px;
-  color: var(--sage-deep);
+  color: var(--accent-deep);
 }
 
 .intro h1 {
@@ -94,7 +94,7 @@ form {
 .swap button {
   border: none;
   background: none;
-  color: var(--sage);
+  color: var(--accent);
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
@@ -107,8 +107,8 @@ form {
   width: 52px;
   height: 52px;
   border-radius: 999px;
-  background: var(--sage-pale);
-  color: var(--sage-deep);
+  background: var(--accent-pale);
+  color: var(--accent-deep);
 }
 
 @media (min-width: 768px) {

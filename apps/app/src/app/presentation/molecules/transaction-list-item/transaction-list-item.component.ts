@@ -71,7 +71,7 @@ import { MerchantBadgeComponent } from '../../atoms/merchant-badge/merchant-badg
       border-radius: 2px;
     }
     .row:active {
-      background: var(--sage-pale);
+      background: var(--accent-pale);
     }
     .text {
       flex: 1;

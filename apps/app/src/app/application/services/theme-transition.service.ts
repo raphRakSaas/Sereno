@@ -70,12 +70,12 @@ export class ThemeTransitionService {
     if (!meta) {
       return;
     }
-    const lightSky = '#d4e8f2';
-    const darkSky = '#0e0f11';
+    const lightPaper = '#ffffff';
+    const darkPaper = '#000000';
     const blend = Math.round(value * 100);
     meta.setAttribute(
       'content',
-      `color-mix(in srgb, ${lightSky} ${100 - blend}%, ${darkSky})`,
+      `color-mix(in srgb, ${lightPaper} ${100 - blend}%, ${darkPaper})`,
     );
   }
 

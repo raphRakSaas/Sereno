@@ -1,44 +1,56 @@
 /* Sereno — feuille de style globale.
-   Aplats nets, pas de dégradés, pas d'ombres portées : les surfaces se
-   distinguent par la couleur et des filets 1px. Voir docs/DESIGN.md. */
+   Noir/blanc purs + un seul accent fonctionnel (bleu). Aplats nets, pas de
+   dégradés : les surfaces se distinguent par la couleur, un filet 1px et une
+   ombre douce (nulle en sombre). Voir docs/DESIGN.md. */
 
-@use '@fontsource-variable/fraunces' as fraunces;
-@use '@fontsource/ibm-plex-sans/400.css' as plex400;
-@use '@fontsource/ibm-plex-sans/500.css' as plex500;
-@use '@fontsource/ibm-plex-sans/600.css' as plex600;
+@use '@fontsource-variable/plus-jakarta-sans' as jakarta;
 
 :root {
-  /* Encres */
+  /* Encres — noir pur en clair, blanc pur en sombre */
   --theme-t: 0;
-  --ink: color-mix(in srgb, #1e2a24 calc((1 - var(--theme-t)) * 100%), #ecefea);
-  --ink-soft: color-mix(in srgb, #566159 calc((1 - var(--theme-t)) * 100%), #a2aba3);
-  --ink-faint: color-mix(in srgb, #77837a calc((1 - var(--theme-t)) * 100%), #79827b);
+  --ink: color-mix(in srgb, #0b0b0c calc((1 - var(--theme-t)) * 100%), #f5f5f6);
+  --ink-soft: color-mix(in srgb, #5b5b60 calc((1 - var(--theme-t)) * 100%), #a6a6ac);
+  --ink-faint: color-mix(in srgb, #8a8a90 calc((1 - var(--theme-t)) * 100%), #75767c);
 
-  /* Surfaces — fond unique qui s'assombrit en continu */
-  --paper: color-mix(in srgb, #f7f8fa calc((1 - var(--theme-t)) * 100%), #0e0f11);
-  --surface: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #16181d);
-  --sage-pale: color-mix(in srgb, #f7ddd3 calc((1 - var(--theme-t)) * 100%), #3a1712);
+  /* Surfaces — fond unique qui s'assombrit en continu, jusqu'au noir pur */
+  --paper: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #000000);
+  --surface: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #121214);
+  --surface-2: color-mix(in srgb, #f6f6f7 calc((1 - var(--theme-t)) * 100%), #1a1a1d);
 
-  /* Corail identique jour et nuit */
-  --sage: #ff7a59;
-  --sage-deep: color-mix(in srgb, #a8331e calc((1 - var(--theme-t)) * 100%), #ffa08a);
-  --mist: color-mix(in srgb, #7fa0ae calc((1 - var(--theme-t)) * 100%), #7fa2b2);
-  --mist-deep: color-mix(in srgb, #547485 calc((1 - var(--theme-t)) * 100%), #a2c1d0);
-  --sand: color-mix(in srgb, #c6b792 calc((1 - var(--theme-t)) * 100%), #b7a57f);
-  --amber: color-mix(in srgb, #a97c2f calc((1 - var(--theme-t)) * 100%), #cda255);
-  --amber-pale: color-mix(in srgb, #f0e7d4 calc((1 - var(--theme-t)) * 100%), #241e14);
+  /* Accent fonctionnel unique : navigation active, liens, CTA, focus —
+     légèrement éclairci en sombre pour rester lisible sur le noir pur. */
+  --accent: color-mix(in srgb, #3a5cff calc((1 - var(--theme-t)) * 100%), #5b7cff);
+  --accent-deep: color-mix(in srgb, #2743d6 calc((1 - var(--theme-t)) * 100%), #7c97ff);
+  --accent-pale: color-mix(in srgb, #eef1ff calc((1 - var(--theme-t)) * 100%), #181d30);
+  --on-accent: #ffffff;
 
-  /* Accent chaud signature */
-  --clay: color-mix(in srgb, #b4603a calc((1 - var(--theme-t)) * 100%), #cd8258);
-  --clay-soft: color-mix(in srgb, #f3e4db calc((1 - var(--theme-t)) * 100%), #2a2019);
+  /* Revenus / positif */
+  --mist: color-mix(in srgb, #17a76a calc((1 - var(--theme-t)) * 100%), #33c481);
+  --mist-deep: color-mix(in srgb, #128f5a calc((1 - var(--theme-t)) * 100%), #33c481);
+
+  /* Neutre tertiaire (virements…) */
+  --sand: color-mix(in srgb, #6b7280 calc((1 - var(--theme-t)) * 100%), #9aa0a6);
+
+  /* Dépassement de budget — jamais rouge, toujours ambre : on explique, on n'alarme pas */
+  --amber: color-mix(in srgb, #c6821a calc((1 - var(--theme-t)) * 100%), #e8a93c);
+  --amber-pale: color-mix(in srgb, #fbf0dd calc((1 - var(--theme-t)) * 100%), #2c2213);
+
+  /* Alertes système réelles uniquement (sync, erreurs) — jamais pour un dépassement de budget */
+  --red: color-mix(in srgb, #e5484d calc((1 - var(--theme-t)) * 100%), #ff6b6e);
+  --red-pale: color-mix(in srgb, #fdebec calc((1 - var(--theme-t)) * 100%), #301418);
 
   /* Structure */
-  --line: color-mix(in srgb, #d8ded1 calc((1 - var(--theme-t)) * 100%), #23262d);
-  --radius: 10px;
+  --line: color-mix(in srgb, #eaeaec calc((1 - var(--theme-t)) * 100%), #242428);
+  --radius: 12px;
+  --radius-lg: 20px;
+  /* Ombre douce en clair, invisible en sombre (le filet --line suffit) */
+  --shadow:
+    0 1px 2px rgba(20, 20, 22, calc(0.04 * (1 - var(--theme-t)))),
+    0 12px 28px rgba(20, 20, 22, calc(0.06 * (1 - var(--theme-t))));
 
   /* Typo */
-  --font-display: 'Fraunces Variable', georgia, serif;
-  --font-text: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-display: 'Plus Jakarta Sans Variable', -apple-system, 'Segoe UI', sans-serif;
+  --font-text: 'Plus Jakarta Sans Variable', -apple-system, 'Segoe UI', sans-serif;
 
   /* Espacements */
   --space-1: 4px;
@@ -88,9 +100,8 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 560;
-  font-variation-settings: 'opsz' 40;
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   margin: 0;
 }
 
@@ -106,7 +117,7 @@ textarea {
 }
 
 a {
-  color: var(--sage);
+  color: var(--accent);
 }
 
 /* Montants : chiffres tabulaires, toujours */
@@ -117,7 +128,7 @@ a {
 
 /* Focus clavier visible partout */
 :focus-visible {
-  outline: 2px solid var(--sage);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -142,14 +153,6 @@ a {
 
 .page-title {
   font-size: 26px;
-}
-
-/* Mobile : le switch de thème flotte en haut à gauche — on décale la première
-   ligne de titre pour lui laisser sa place, sans jamais la recouvrir. */
-@media (max-width: 767px) {
-  .page-title {
-    padding-left: 62px;
-  }
 }
 
 @media (min-width: 768px) {
@@ -178,7 +181,8 @@ a {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
 }
 
 .btn {
@@ -197,21 +201,21 @@ a {
 }
 
 .btn-primary {
-  background: var(--sage);
-  color: var(--surface);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .btn-primary:active {
-  background: var(--sage-deep);
+  background: var(--accent-deep);
 }
 
 @media (hover: hover) {
   .btn-primary:hover:not(:disabled) {
-    background: var(--sage-deep);
+    background: var(--accent-deep);
   }
 
   .btn-ghost:hover {
-    background: var(--sage-pale);
+    background: var(--accent-pale);
   }
 }
 
@@ -223,7 +227,7 @@ a {
 
 .btn-ghost {
   background: transparent;
-  color: var(--sage);
+  color: var(--accent);
   border-color: var(--line);
 }
 
@@ -256,8 +260,8 @@ a {
 }
 
 .seg button.on {
-  background: var(--sage);
-  color: var(--surface);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .field {
@@ -283,7 +287,7 @@ a {
 
 .input:focus {
   outline: none;
-  border-color: var(--sage);
+  border-color: var(--accent);
 }
 
 /* Bandeau d'information calme (erreurs comprises : on explique, on n'alarme pas) */

@@ -214,7 +214,7 @@ export class StatisticsPage {
           fillPercent: Math.min(ratio, 1) * 100,
           isOver: ratio > 1,
           remaining: budget.limitAmount - used,
-          color: category?.color ?? 'var(--sage)',
+          color: category?.color ?? 'var(--accent)',
           icon: category?.icon ?? 'wallet',
         };
       })

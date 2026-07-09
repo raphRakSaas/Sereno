@@ -1,8 +1,7 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppModeService } from '../../../application/services/app-mode.service';
-import { ThemeTransitionService } from '../../../application/services/theme-transition.service';
-import { UserPreferencesService } from '../../../application/services/user-preferences.service';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { BudgetsStore } from '../../../application/stores/budgets.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
@@ -15,11 +14,11 @@ import { toIsoDate } from '../../../domain/utils/period.utils';
 import { savingsRatePercent } from '../../../domain/utils/stats.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
-import { DonutChartComponent } from '../../molecules/donut-chart/donut-chart.component';
 import { ExpenseTileComponent } from '../../molecules/expense-tile/expense-tile.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
+import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
-import { SerenoSkyComponent } from '../../organisms/sereno-sky/sereno-sky.component';
+import { StrataChartComponent } from '../../organisms/strata-chart/strata-chart.component';
 
 interface ExpenseTileData {
   id: string;
@@ -38,12 +37,13 @@ interface ExpenseTileData {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AmountComponent,
-    DonutChartComponent,
+    DatePipe,
     ExpenseTileComponent,
     IconComponent,
     MonthSwitcherComponent,
     RouterLink,
-    SerenoSkyComponent,
+    StrataChartComponent,
+    StrataGhostComponent,
     TransactionListItemComponent,
   ],
   templateUrl: './dashboard.page.html',
@@ -51,8 +51,6 @@ interface ExpenseTileData {
 })
 export class DashboardPage implements OnInit {
   protected readonly mode = inject(AppModeService);
-  protected readonly preferences = inject(UserPreferencesService);
-  protected readonly themeTransition = inject(ThemeTransitionService);
   protected readonly accounts = inject(AccountsStore);
   protected readonly budgets = inject(BudgetsStore);
   protected readonly categories = inject(CategoriesStore);
@@ -60,8 +58,6 @@ export class DashboardPage implements OnInit {
   protected readonly transactions = inject(TransactionsStore);
 
   protected readonly selectedMonth = signal(monthOf(new Date()));
-
-  protected readonly themeProgress = this.themeTransition.progress;
 
   protected readonly todayIso = computed(() => {
     this.transactions.items();
@@ -125,6 +121,57 @@ export class DashboardPage implements OnInit {
       return 'Les sorties dépassent les entrées ce mois-ci — tu sais où tu en es.';
     }
     return `Tu gardes ${rate} % de tes revenus ce mois-ci.`;
+  });
+
+  protected readonly savingsTrendText = computed(() => {
+    if (!this.transactions.loaded() || this.monthIncome() <= 0) {
+      return null;
+    }
+    const rate = this.savingsRate();
+    const sign = rate > 0 ? '+' : '';
+    return `${sign}${rate} % ce mois-ci`;
+  });
+
+  protected readonly globalBudget = computed(() => {
+    if (!this.mode.isCloud()) {
+      return null;
+    }
+    return this.budgets.items().find((budget) => isGlobalBudget(budget)) ?? null;
+  });
+
+  protected readonly globalBudgetRatio = computed(() => {
+    const budget = this.globalBudget();
+    if (!budget || budget.limitAmount <= 0) {
+      return 0;
+    }
+    return this.monthExpense() / budget.limitAmount;
+  });
+
+  protected readonly globalBudgetPercent = computed(() => Math.min(this.globalBudgetRatio() * 100, 100));
+
+  protected readonly globalBudgetNear = computed(() => {
+    const ratio = this.globalBudgetRatio();
+    return ratio >= 0.8 && ratio <= 1;
+  });
+
+  protected readonly globalBudgetOver = computed(() => this.globalBudgetRatio() > 1);
+
+  /** Largeur de la jauge : budget présent → ratio réel, absent → proportion dépenses/revenus (indicatif). */
+  protected readonly globalBudgetFill = computed(() => {
+    if (this.globalBudget()) {
+      return this.globalBudgetPercent();
+    }
+    if (this.monthIncome() <= 0) {
+      return 0;
+    }
+    return Math.min((this.monthExpense() / this.monthIncome()) * 100, 100);
+  });
+
+  protected readonly budgetFloatHint = computed(() => {
+    if (!this.mode.isCloud()) {
+      return 'Tes revenus et dépenses du mois, en un coup d’œil.';
+    }
+    return 'Fixe un budget global pour suivre tes dépenses ce mois-ci.';
   });
 
   protected readonly expenseSlices = computed(() => {

@@ -26,8 +26,8 @@
 }
 
 .filter-toggle.on {
-  background: var(--sage-pale);
-  color: var(--sage-deep);
+  background: var(--accent-pale);
+  color: var(--accent-deep);
 }
 
 .filter-toggle .badge {
@@ -35,8 +35,8 @@
   height: 18px;
   padding: 0 5px;
   border-radius: 999px;
-  background: var(--sage);
-  color: var(--surface);
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 11px;
   font-weight: 600;
   line-height: 18px;

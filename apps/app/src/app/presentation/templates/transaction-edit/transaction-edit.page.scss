@@ -57,7 +57,7 @@ form {
   gap: var(--space-3);
   padding: var(--space-4) var(--space-4) var(--space-5);
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--clay-soft) 55%, var(--paper));
+  background: color-mix(in srgb, var(--accent-pale) 55%, var(--paper));
   transition: background 0.2s ease;
 }
 
@@ -152,8 +152,8 @@ form {
 
 @media (hover: hover) {
   .amount-chip:hover {
-    border-color: var(--sage);
-    background: var(--sage-pale);
+    border-color: var(--accent);
+    background: var(--accent-pale);
   }
 }
 
@@ -211,7 +211,7 @@ form {
   border: none;
   background: none;
   padding: 0;
-  color: var(--sage);
+  color: var(--accent);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;

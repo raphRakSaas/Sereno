@@ -1,0 +1,318 @@
+/* Onboarding — toujours un panneau clair (le formulaire) et un panneau
+   sombre (l'illustration + une phrase), quel que soit le thème choisi par
+   ailleurs dans l'app. Les tokens sont donc figés ici, pas hérités du
+   thème global : tout composant partagé (bouton, champ, category-picker)
+   qui lit --ink/--surface/--line/--accent reste correct dans les deux
+   panneaux. Empilé sur mobile (bande sombre en haut, formulaire en bas),
+   côte à côte sur grand écran. */
+
+.onboarding-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-inner {
+  width: 100%;
+  max-width: 400px;
+  padding: calc(var(--space-6) + var(--safe-top)) var(--space-5) var(--space-6);
+}
+
+/* ── Panneau clair (formulaire) — toujours clair ─────────────────── */
+
+.panel-light {
+  order: 2;
+  --ink: #0b0b0c;
+  --ink-soft: #5b5b60;
+  --ink-faint: #8a8a90;
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --surface-2: #f6f6f7;
+  --line: #eaeaec;
+  --accent: #3a5cff;
+  --accent-deep: #2743d6;
+  --accent-pale: #eef1ff;
+  --on-accent: #ffffff;
+  --shadow: 0 1px 2px rgba(20, 20, 22, 0.04), 0 12px 28px rgba(20, 20, 22, 0.06);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── Panneau sombre (illustration + phrase) — toujours sombre ────── */
+
+.panel-dark {
+  order: 1;
+  --ink: #f5f5f6;
+  --ink-soft: #a6a6ac;
+  --ink-faint: #75767c;
+  --paper: #000000;
+  --surface: #121214;
+  --surface-2: #1a1a1d;
+  --line: #242428;
+  --accent: #5b7cff;
+  --accent-deep: #7c97ff;
+  --accent-pale: #181d30;
+  --on-accent: #ffffff;
+  --shadow: none;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: center;
+  min-height: 34vh;
+  padding: var(--space-5) 0;
+}
+
+.panel-dark .panel-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-5);
+}
+
+.panel-dark .illustration {
+  width: 100%;
+  max-width: 200px;
+  aspect-ratio: 1 / 1;
+  margin-bottom: var(--space-2);
+}
+
+.panel-dark h2 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.panel-dark p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  max-width: 34ch;
+}
+
+/* ── Contenu du panneau clair ─────────────────────────────────────── */
+
+.progress {
+  display: flex;
+  gap: 6px;
+  margin-bottom: var(--space-4);
+}
+
+.progress span {
+  width: 20px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--line);
+}
+
+.progress span.on {
+  background: var(--accent);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: var(--space-3);
+  color: var(--ink-faint);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back svg {
+  width: 15px;
+  height: 15px;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.masthead .wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  margin: 0 0 var(--space-5);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+
+.panel-light h1 {
+  font-size: 22px;
+  margin-bottom: var(--space-2);
+}
+
+.lede {
+  margin: 0 0 var(--space-4);
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-4);
+}
+
+.field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.amount-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.amount-field .input {
+  padding-right: 34px;
+  text-align: right;
+}
+
+.amount-field .euro {
+  position: absolute;
+  right: 14px;
+  color: var(--ink-faint);
+  font-size: 15px;
+  pointer-events: none;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.btn-skip {
+  background: none;
+  border: none;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.btn-skip:hover {
+  color: var(--ink-soft);
+}
+
+/* ── Mobile : tout doit rentrer sans scroll, on allège le texte ──────── */
+
+@media (max-width: 1023px) {
+  .panel-inner {
+    padding: calc(var(--space-4) + var(--safe-top)) var(--space-4) var(--space-4);
+  }
+
+  .tagline {
+    display: none;
+  }
+
+  .panel-dark {
+    min-height: 0;
+    padding: var(--space-4) 0;
+  }
+
+  .panel-dark .panel-inner {
+    padding: var(--space-4) var(--space-4);
+    gap: 6px;
+  }
+
+  .panel-dark .illustration {
+    max-width: 100px;
+    margin-bottom: 0;
+  }
+
+  .panel-dark h2 {
+    font-size: 16px;
+  }
+
+  .panel-dark p {
+    display: none;
+  }
+
+  .masthead {
+    margin-bottom: 4px;
+  }
+
+  .lede {
+    display: none;
+  }
+
+  .field {
+    margin-bottom: var(--space-2);
+  }
+
+  /* Le sélecteur de catégorie défile horizontalement plutôt que de passer
+     à la ligne — sinon les 8 puces poussent la page à scroller. ::ng-deep
+     est nécessaire ici : app-category-picker est un composant enfant, ses
+     éléments internes portent son propre attribut d'encapsulation, pas
+     celui de cette page — un sélecteur descendant classique ne matcherait
+     jamais rien. */
+  app-category-picker ::ng-deep .grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  app-category-picker ::ng-deep .grid button {
+    flex: none;
+  }
+}
+
+/* ── Bureau : côte à côte, formulaire à gauche, illustration à droite ── */
+
+@media (min-width: 1024px) {
+  .onboarding-shell {
+    flex-direction: row;
+  }
+
+  .panel {
+    flex: 1;
+    min-height: 100dvh;
+  }
+
+  .panel-light {
+    order: 1;
+  }
+
+  .panel-dark {
+    order: 2;
+    min-height: 100dvh;
+  }
+
+  .panel-dark .illustration {
+    max-width: 320px;
+  }
+
+  .panel-dark h2 {
+    font-size: 26px;
+  }
+
+  .panel-dark p {
+    font-size: 15px;
+  }
+}

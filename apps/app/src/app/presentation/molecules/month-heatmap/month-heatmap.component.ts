@@ -14,7 +14,7 @@ interface HeatCell extends HeatDay {
   title: string;
 }
 
-/* Calendrier de chaleur du mois : une case par jour, une seule teinte (--sage)
+/* Calendrier de chaleur du mois : une case par jour, une seule teinte (--accent)
    du clair au foncé — plus la journée a dépensé, plus la case est profonde.
    Toucher une case ouvre l'activité du jour. Séquentiel = magnitude, jamais
    d'arc-en-ciel. */
@@ -100,21 +100,21 @@ interface HeatCell extends HeatDay {
       color: var(--ink-faint);
     }
     .cell[data-level='1'] {
-      background: color-mix(in srgb, var(--sage) 16%, var(--surface));
+      background: color-mix(in srgb, var(--accent) 16%, var(--surface));
     }
     .cell[data-level='2'] {
-      background: color-mix(in srgb, var(--sage) 36%, var(--surface));
+      background: color-mix(in srgb, var(--accent) 36%, var(--surface));
     }
     .cell[data-level='3'] {
-      background: color-mix(in srgb, var(--sage) 62%, var(--surface));
-      color: var(--surface);
+      background: color-mix(in srgb, var(--accent) 62%, var(--surface));
+      color: var(--on-accent);
     }
     .cell[data-level='4'] {
-      background: color-mix(in srgb, var(--sage) 88%, var(--surface));
-      color: var(--surface);
+      background: color-mix(in srgb, var(--accent) 88%, var(--surface));
+      color: var(--on-accent);
     }
     .cell:not(.blank):active {
-      outline: 2px solid var(--sage);
+      outline: 2px solid var(--accent);
       outline-offset: 1px;
     }
     .scale {
@@ -131,16 +131,16 @@ interface HeatCell extends HeatDay {
       border-radius: 4px;
     }
     .scale .step[data-level='1'] {
-      background: color-mix(in srgb, var(--sage) 16%, var(--surface));
+      background: color-mix(in srgb, var(--accent) 16%, var(--surface));
     }
     .scale .step[data-level='2'] {
-      background: color-mix(in srgb, var(--sage) 36%, var(--surface));
+      background: color-mix(in srgb, var(--accent) 36%, var(--surface));
     }
     .scale .step[data-level='3'] {
-      background: color-mix(in srgb, var(--sage) 62%, var(--surface));
+      background: color-mix(in srgb, var(--accent) 62%, var(--surface));
     }
     .scale .step[data-level='4'] {
-      background: color-mix(in srgb, var(--sage) 88%, var(--surface));
+      background: color-mix(in srgb, var(--accent) 88%, var(--surface));
     }
     .reading {
       margin: var(--space-2) 0 0;

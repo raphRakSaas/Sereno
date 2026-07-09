@@ -3,7 +3,6 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { filter } from 'rxjs';
 import { ConversionService } from './application/services/conversion.service';
-import { ThemeTransitionService } from './application/services/theme-transition.service';
 import { KeyboardShortcutsService } from './application/services/keyboard-shortcuts.service';
 import { PwaService } from './application/services/pwa.service';
 import { ToastService } from './application/services/toast.service';
@@ -15,44 +14,35 @@ import { PwaBannerComponent } from './presentation/molecules/pwa-banner/pwa-bann
 import { BottomNavComponent } from './presentation/organisms/bottom-nav/bottom-nav.component';
 import { ConversionModalComponent } from './presentation/organisms/conversion-modal/conversion-modal.component';
 import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.component';
-import { SerenoSkyComponent } from './presentation/organisms/sereno-sky/sereno-sky.component';
+
+/* Routes qui ne portent pas le châssis (sidebar/nav basse) — pages
+   plein écran à part entière, pas des vues du dashboard. */
+const FULLSCREEN_ROUTES = ['/bienvenue'];
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    BottomNavComponent,
-    ConversionModalComponent,
-    PwaBannerComponent,
-    SideNavComponent,
-    SerenoSkyComponent,
-  ],
+  imports: [RouterOutlet, BottomNavComponent, ConversionModalComponent, PwaBannerComponent, SideNavComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App {
   protected readonly toasts = inject(ToastService);
-  protected readonly themeTransition = inject(ThemeTransitionService);
   private readonly conversion = inject(ConversionService);
   private readonly shortcuts = inject(KeyboardShortcutsService);
   private readonly pwa = inject(PwaService);
   private readonly swUpdate = inject(SwUpdate, { optional: true });
   private readonly router = inject(Router);
 
-  private readonly currentUrl = signal(this.router.url);
-
-  protected readonly themeProgress = this.themeTransition.progress;
-
-  protected readonly showSkyOverlay = computed(() => {
-    const url = this.currentUrl().split('?')[0];
-    const onDashboard = url === '/' || url === '';
-    return this.themeTransition.animating() && !onDashboard;
-  });
-
   private readonly accounts = inject(AccountsStore);
   private readonly categories = inject(CategoriesStore);
   private readonly transactions = inject(TransactionsStore);
   private readonly templates = inject(TransactionTemplatesStore);
+
+  private readonly currentUrl = signal(this.router.url);
+
+  protected readonly hideShell = computed(() =>
+    FULLSCREEN_ROUTES.includes(this.currentUrl().split('?')[0]),
+  );
 
   constructor() {
     // L'initializer (app.config) a déjà chargé les stores si une session

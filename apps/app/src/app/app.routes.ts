@@ -1,14 +1,20 @@
 import { Routes } from '@angular/router';
 import { cloudOnlyGuard } from './presentation/guards/cloud-only.guard';
+import { onboardingGuard } from './presentation/guards/onboarding.guard';
 import { startScreenGuard } from './presentation/guards/start-screen.guard';
 
 export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [startScreenGuard],
+    canActivate: [onboardingGuard, startScreenGuard],
     loadComponent: () => import('./presentation/templates/dashboard/dashboard.page').then((m) => m.DashboardPage),
     title: 'Sereno',
+  },
+  {
+    path: 'bienvenue',
+    loadComponent: () => import('./presentation/templates/onboarding/onboarding.page').then((m) => m.OnboardingPage),
+    title: 'Bienvenue — Sereno',
   },
   {
     path: 'transactions',
