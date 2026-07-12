@@ -89,7 +89,7 @@
           <article class="card budget" [class.over]="line.isOver" [class.near]="line.isNear" [class.projected]="line.isProjectedOver && !line.isOver">
             <button type="button" class="budget-head" (click)="openEdit(line)">
               <span class="badge" [style.color]="line.category?.color ?? 'var(--ink-soft)'">
-                <app-icon [name]="line.category?.icon ?? 'wallet'" [size]="19" />
+                <app-category-icon [name]="line.category?.icon ?? 'wallet'" [size]="19" />
               </span>
               <span class="name">{{ line.label }}</span>
               <span class="numbers">

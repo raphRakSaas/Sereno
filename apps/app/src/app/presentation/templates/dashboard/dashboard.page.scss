@@ -78,6 +78,9 @@
   color: var(--ink-faint);
 }
 
+/* Solde négatif : ambre douce, jamais rouge — on constate, on n'alarme pas. */
+.balance-value.negative { color: var(--amber); }
+
 .balance-trend {
   margin: 0;
   font-size: 13.5px;
@@ -86,6 +89,20 @@
 
 .balance-trend.positive { color: var(--mist-deep); }
 .balance-trend.negative { color: var(--amber); }
+
+/* Onboarding incomplet : invitation à saisir le revenu, pas un nombre négatif. */
+.balance-prompt {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+  max-width: 22ch;
+}
+
+.balance-cta {
+  margin-top: 12px;
+  width: fit-content;
+}
 
 .hero-illustration {
   flex: none;
@@ -111,6 +128,16 @@
   gap: var(--space-3);
   margin-bottom: var(--space-3);
 }
+
+.budget-card-heading {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-faint);
+  text-decoration: none;
+}
+
+.budget-card-heading h2 { color: var(--ink); }
 
 .budget-card-top h2 {
   margin: 0;
@@ -256,6 +283,10 @@
 .overview-stat.income .dot  { background: var(--mist-deep); }
 .overview-stat.expense .dot { background: var(--ink); }
 .overview-stat.surplus .dot { background: var(--accent); }
+
+/* Solde négatif : point et montant en ambre, cohérent avec le hero. */
+.overview-stat.surplus.negative .dot { background: var(--amber); }
+.overview-stat.surplus.negative app-amount { color: var(--amber); }
 
 /* ── Sections inférieures ─────────────────────────────────────── */
 

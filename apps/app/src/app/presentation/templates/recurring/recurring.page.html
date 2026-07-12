@@ -122,7 +122,7 @@
         <div class="row" [class.paused]="!rule.active">
           <button type="button" class="main" (click)="openEdit(rule)">
             <span class="badge" [style.color]="categoryById().get(rule.categoryId)?.color ?? 'var(--ink-soft)'">
-              <app-icon [name]="categoryById().get(rule.categoryId)?.icon ?? 'repeat'" [size]="19" />
+              <app-category-icon [name]="categoryById().get(rule.categoryId)?.icon ?? 'repeat'" [size]="19" />
             </span>
             <span class="text">
               <span class="name">{{ categoryById().get(rule.categoryId)?.name ?? 'Catégorie' }}</span>

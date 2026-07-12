@@ -24,6 +24,7 @@ import {
   topCategories,
 } from '../../../domain/utils/stats.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
+import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { BarChartComponent } from '../../molecules/bar-chart/bar-chart.component';
 import { DonutChartComponent } from '../../molecules/donut-chart/donut-chart.component';
@@ -68,6 +69,7 @@ interface BudgetStatLine {
   imports: [
     AmountComponent,
     BarChartComponent,
+    CategoryIconComponent,
     DatePipe,
     DonutChartComponent,
     IconComponent,

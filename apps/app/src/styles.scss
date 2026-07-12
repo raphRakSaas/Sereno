@@ -24,9 +24,10 @@
   --accent-pale: color-mix(in srgb, #eef1ff calc((1 - var(--theme-t)) * 100%), #181d30);
   --on-accent: #ffffff;
 
-  /* Revenus / positif */
+  /* Revenus / positif — le vert « profond » sert aussi de texte (soldes, tendances) :
+     en clair #0e7d4e atteint 4.5:1 (AA texte), en sombre #33c481 monte à 9.3:1. */
   --mist: color-mix(in srgb, #17a76a calc((1 - var(--theme-t)) * 100%), #33c481);
-  --mist-deep: color-mix(in srgb, #128f5a calc((1 - var(--theme-t)) * 100%), #33c481);
+  --mist-deep: color-mix(in srgb, #0e7d4e calc((1 - var(--theme-t)) * 100%), #33c481);
 
   /* Neutre tertiaire (virements…) */
   --sand: color-mix(in srgb, #6b7280 calc((1 - var(--theme-t)) * 100%), #9aa0a6);

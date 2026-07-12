@@ -11,6 +11,7 @@ import {
   upcomingOccurrences,
 } from '../../../domain/utils/recurring-schedule.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
+import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { CategoryPickerComponent } from '../../molecules/category-picker/category-picker.component';
 
@@ -22,7 +23,7 @@ function todayIso(): string {
 @Component({
   selector: 'app-recurring-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AmountComponent, CategoryPickerComponent, DatePipe, FormsModule, IconComponent],
+  imports: [AmountComponent, CategoryIconComponent, CategoryPickerComponent, DatePipe, FormsModule, IconComponent],
   templateUrl: './recurring.page.html',
   styleUrl: './recurring.page.scss',
 })

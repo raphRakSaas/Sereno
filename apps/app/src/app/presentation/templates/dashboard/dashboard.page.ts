@@ -85,10 +85,16 @@ export class DashboardPage implements OnInit {
   protected readonly greeting = computed(() => {
     this.todayIso();
     const hour = new Date().getHours();
-    if (hour < 18) {
+    if (hour >= 5 && hour < 12) {
       return 'Bonjour';
     }
-    return 'Bonsoir';
+    if (hour >= 12 && hour < 18) {
+      return 'Bon après-midi';
+    }
+    if (hour >= 18 && hour < 22) {
+      return 'Bonsoir';
+    }
+    return 'Bonne nuit';
   });
 
   protected readonly totalBalance = computed(() =>
@@ -107,6 +113,15 @@ export class DashboardPage implements OnInit {
   protected readonly monthExpense = computed(() => this.sumByType(this.monthTransactions(), 'expense'));
 
   protected readonly monthRemaining = computed(() => this.monthIncome() - this.monthExpense());
+
+  /** Solde négatif : teinte ambre douce (jamais rouge), convention commune à l'app. */
+  protected readonly isBalanceNegative = computed(() => this.monthRemaining() < 0);
+
+  /** Onboarding « revenu plus tard » : un solde brut négatif n'a pas de sens ici,
+     on invite à saisir le revenu plutôt que d'afficher un gros nombre négatif. */
+  protected readonly needsIncome = computed(
+    () => this.transactions.loaded() && this.monthIncome() === 0 && this.monthExpense() > 0,
+  );
 
   protected readonly savingsRate = computed(() =>
     savingsRatePercent(this.monthIncome(), this.monthExpense()),

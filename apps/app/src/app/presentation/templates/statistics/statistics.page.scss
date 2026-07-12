@@ -79,14 +79,16 @@
 .savings-track {
   height: 8px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--surface) 22%, transparent);
+  /* Sillon sombre creusé dans la carte indigo : reste lisible à 0 % (le vide se
+     distingue nettement du fond) comme du remplissage clair au-dessus. */
+  background: rgba(0, 0, 0, 0.22);
   overflow: hidden;
 }
 
 .savings-fill {
   height: 100%;
   border-radius: inherit;
-  background: var(--surface);
+  background: var(--on-accent);
   transition: width 0.3s ease;
 }
 
@@ -162,6 +164,11 @@
 
 .comparison-card h2 {
   margin-bottom: 2px;
+}
+
+/* Solde net négatif : ambre douce, même convention que le solde de l'accueil. */
+.net-amount.negative {
+  color: var(--amber);
 }
 
 .comparison-row {

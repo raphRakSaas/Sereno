@@ -98,6 +98,8 @@
       <app-category-picker
         [categories]="pickableCategories()"
         [selectedId]="categoryId()"
+        [collapsible]="type() === 'income'"
+        [primaryIds]="commonIncomeCategoryIds"
         (select)="selectCategory($event)"
       />
     </div>

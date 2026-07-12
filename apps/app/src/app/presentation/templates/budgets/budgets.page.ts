@@ -17,6 +17,7 @@ import {
 import { Category } from '../../../domain/models/category.model';
 import { toIsoDate } from '../../../domain/utils/period.utils';
 import { AmountComponent } from '../../atoms/amount/amount.component';
+import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
 
@@ -36,7 +37,7 @@ interface BudgetLine {
 @Component({
   selector: 'app-budgets-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AmountComponent, FormsModule, IconComponent, MonthSwitcherComponent],
+  imports: [AmountComponent, CategoryIconComponent, FormsModule, IconComponent, MonthSwitcherComponent],
   templateUrl: './budgets.page.html',
   styleUrl: './budgets.page.scss',
 })

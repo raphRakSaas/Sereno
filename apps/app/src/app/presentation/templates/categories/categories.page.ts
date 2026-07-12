@@ -4,6 +4,7 @@ import { ToastService } from '../../../application/services/toast.service';
 import { CategoriesStore } from '../../../application/stores/categories.store';
 import { Category, CategoryKind } from '../../../domain/models/category.model';
 import { categoryDisplayName, isSubcategory } from '../../../domain/utils/category-tree.util';
+import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
 /* Gamme validée (contraste + daltonisme, cf. docs/DESIGN.md) : les catégories
@@ -21,7 +22,7 @@ const ICON_CHOICES = [
 @Component({
   selector: 'app-categories-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, IconComponent],
+  imports: [CategoryIconComponent, FormsModule, IconComponent],
   templateUrl: './categories.page.html',
   styleUrl: './categories.page.scss',
 })

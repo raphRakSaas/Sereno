@@ -118,7 +118,7 @@
           <span class="name">Solde net</span>
           <span class="delta" [class]="deltaClass(netComparison().delta, true)">{{ netDeltaText() }}</span>
         </div>
-        <app-amount [value]="monthNet()" size="md" />
+        <app-amount class="net-amount" [class.negative]="monthNet() < 0" [value]="monthNet()" size="md" />
       </div>
     </section>
 
@@ -130,7 +130,7 @@
             <li class="budget-row" [class.over]="line.isOver">
               <div class="budget-top">
                 <span class="budget-badge" [style.color]="line.color">
-                  <app-icon [name]="line.icon" [size]="18" />
+                  <app-category-icon [name]="line.icon" [size]="18" />
                 </span>
                 <div class="budget-copy">
                   <span class="budget-name">{{ line.label }}</span>

@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { resolveMerchantBrand } from '../../../domain/utils/merchant-brand.util';
-import { IconComponent } from '../icon/icon.component';
+import { CategoryIconComponent } from '../category-icon/category-icon.component';
 
 /* Pastille : logo de marque reconnu dans le libellé, sinon icône de catégorie. */
 @Component({
   selector: 'app-merchant-badge',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [IconComponent],
+  imports: [CategoryIconComponent],
   template: `
     <span
       class="badge"
@@ -20,7 +20,7 @@ import { IconComponent } from '../icon/icon.component';
       @if (brand(); as merchant) {
         <img [src]="merchant.logoUrl" [alt]="merchant.name" class="logo" />
       } @else {
-        <app-icon [name]="fallbackIcon()" [size]="iconSize()" />
+        <app-category-icon [name]="fallbackIcon()" [size]="iconSize()" />
       }
     </span>
   `,

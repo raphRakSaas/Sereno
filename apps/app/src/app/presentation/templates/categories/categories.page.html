@@ -83,7 +83,7 @@
               [attr.aria-label]="'Pictogramme ' + choice"
               [attr.aria-pressed]="icon() === choice"
             >
-              <app-icon [name]="choice" [size]="20" />
+              <app-category-icon [name]="choice" [size]="20" />
             </button>
           }
         </div>
@@ -116,7 +116,7 @@
         @let parent = node.category;
         <div class="row" [class.readonly]="parent.isDefault" [class.archived]="isArchived(parent)">
           <span class="badge" [style.color]="parent.color">
-            <app-icon [name]="parent.icon" [size]="19" />
+            <app-category-icon [name]="parent.icon" [size]="19" />
           </span>
           <span class="name">{{ parent.name }}</span>
           <span class="kind">{{ parent.type === 'income' ? 'Revenu' : 'Dépense' }}</span>
@@ -167,7 +167,7 @@
         @for (child of node.children; track child.id) {
           <div class="row sub" [class.readonly]="child.isDefault" [class.archived]="isArchived(child)">
             <span class="badge" [style.color]="child.color">
-              <app-icon [name]="child.icon" [size]="17" />
+              <app-category-icon [name]="child.icon" [size]="17" />
             </span>
             <span class="name">{{ child.name }}</span>
             <span class="kind">{{ child.type === 'income' ? 'Revenu' : 'Dépense' }}</span>

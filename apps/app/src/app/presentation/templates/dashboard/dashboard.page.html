@@ -15,11 +15,19 @@
     <div class="hero-main">
       <div class="hero-balance">
         <span class="balance-label">Solde disponible</span>
-        <app-amount [value]="monthRemaining()" size="hero" />
-        @if (savingsTrendText(); as trend) {
-          <p class="balance-trend" [class.positive]="savingsRate() >= 0" [class.negative]="savingsRate() < 0">
-            {{ trend }}
-          </p>
+        @if (needsIncome()) {
+          <p class="balance-prompt">Ajoute ton revenu pour voir ton solde réel.</p>
+          <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'income' }" class="btn-add balance-cta">
+            <app-icon name="plus" [size]="15" />
+            Ajouter mon revenu
+          </a>
+        } @else {
+          <app-amount class="balance-value" [class.negative]="isBalanceNegative()" [value]="monthRemaining()" size="hero" />
+          @if (savingsTrendText(); as trend) {
+            <p class="balance-trend" [class.positive]="savingsRate() >= 0" [class.negative]="savingsRate() < 0">
+              {{ trend }}
+            </p>
+          }
         }
       </div>
       <img class="hero-illustration" src="illustrations/epargne.svg" alt="" aria-hidden="true" width="120" height="120" />
@@ -28,7 +36,10 @@
     <!-- Carte budget : chevauche le bas du hero -->
     <article class="budget-card">
       <div class="budget-card-top">
-        <h2>Budget mensuel</h2>
+        <a routerLink="/budgets" class="budget-card-heading">
+          <h2>Budget mensuel</h2>
+          <app-icon name="chevron-right" [size]="16" />
+        </a>
         @if (globalBudget(); as budget) {
           <p class="budget-numbers">
             <app-amount [value]="monthExpense()" size="md" />
@@ -104,7 +115,7 @@
         <span class="label">Dépenses</span>
         <app-amount [value]="monthExpense()" size="sm" />
       </div>
-      <div class="overview-stat surplus">
+      <div class="overview-stat surplus" [class.negative]="isBalanceNegative()">
         <span class="dot" aria-hidden="true"></span>
         <span class="label">Solde</span>
         <app-amount [value]="monthRemaining()" size="sm" />

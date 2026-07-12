@@ -20,6 +20,7 @@ import { ReceiptsStore } from '../../../application/stores/receipts.store';
 import { TransactionTemplatesStore } from '../../../application/stores/transaction-templates.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { CategoryKind } from '../../../domain/models/category.model';
+import { DEFAULT_CATEGORIES } from '../../../domain/data/default-categories';
 import { TransactionTemplate } from '../../../domain/models/transaction-template.model';
 import {
   lastUsedCategoryId,
@@ -48,6 +49,20 @@ function parseAmount(text: string): number | null {
 function isIsoDate(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
+
+/* Revenus les plus fréquents montrés d'emblée ; le reste (placements, pensions…)
+   se déplie à la demande — « deux gestes suffisent », charge cognitive minimale. */
+const COMMON_INCOME_CATEGORY_NAMES = new Set([
+  'Salaire',
+  'Freelance & indépendant',
+  'Allocations & aides familiales',
+  'Remboursements reçus',
+  'Autres revenus',
+]);
+
+const COMMON_INCOME_CATEGORY_IDS = DEFAULT_CATEGORIES.filter(
+  (category) => category.type === 'income' && COMMON_INCOME_CATEGORY_NAMES.has(category.name),
+).map((category) => category.id);
 
 @Component({
   selector: 'app-transaction-edit-page',
@@ -95,6 +110,8 @@ export class TransactionEditPage {
 
   /** L'utilisateur a choisi une catégorie manuellement — on n'écrase plus via la note. */
   private readonly categoryTouched = signal(false);
+
+  protected readonly commonIncomeCategoryIds = COMMON_INCOME_CATEGORY_IDS;
 
   protected readonly pickableCategories = computed(() =>
     this.type() === 'expense' ? this.categories.expenseCategories() : this.categories.incomeCategories(),
