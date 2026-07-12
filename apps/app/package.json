@@ -8,6 +8,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:watch": "ng test --watch",
+    "test:coverage": "ng test --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:report": "playwright show-report",
+    "e2e:install": "playwright install chromium",
     "generate:icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
@@ -32,6 +38,8 @@
     "@angular/cli": "^21.2.18",
     "@angular/compiler-cli": "^21.2.0",
     "@ngx-env/builder": "^21.0.1",
+    "@playwright/test": "^1.61.1",
+    "@vitest/coverage-v8": "^4.1.10",
     "jsdom": "^29.1.1",
     "png-to-ico": "^3.0.1",
     "prettier": "^3.8.1",

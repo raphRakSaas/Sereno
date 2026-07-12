@@ -40,6 +40,13 @@ yarn.lock
 # Astro
 .astro/
 
+# Playwright (tests e2e)
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+.last-run.json
+
 # Divers
 .sass-cache/
 connect.lock

@@ -32,7 +32,7 @@ l'app te parle calmement, jamais en rouge, jamais en te culpabilisant.
 | Backend (connecté) | Supabase — Postgres + RLS, Auth, Edge Functions, pg_cron |
 | PWA | @angular/service-worker (ngsw) |
 | Config | @ngx-env/builder (`.env`, variables `NG_APP_*`) |
-| Tests | Vitest (builder natif Angular, jsdom) |
+| Tests | Vitest (unitaire/intégration, jsdom) + Playwright (e2e) |
 | Hébergement | Cloudflare Pages (`sereno-2qj.pages.dev`) |
 
 Séparation stricte en quatre couches — les composants et les stores ne
@@ -57,9 +57,22 @@ mode courant ; à l'inscription, les données locales sont migrées vers Supabas
 ```bash
 npm install          # installe tous les workspaces
 npm start            # l'app sur http://localhost:4200 (mode invité, zéro config)
-npm test             # tests de l'app (Vitest)
+npm test             # tests unitaires + intégration (Vitest)
 npm run start:website   # le site sur http://localhost:4321
 ```
+
+### Tests
+
+```bash
+npm test                 # unitaires + intégration (une passe)
+npm run test:watch       # relance à chaque modification
+npm run test:coverage    # rapport de couverture (coverage/)
+npm run e2e:install      # une fois : télécharge Chromium pour Playwright
+npm run e2e              # tests end-to-end (parcours utilisateur, mode invité)
+```
+
+Détail des niveaux de test, de la couverture et du dépannage :
+[`TESTING.md`](TESTING.md).
 
 L'app tourne entièrement en local : compte par défaut et catégories créés au
 premier lancement. Aucune variable d'environnement requise.

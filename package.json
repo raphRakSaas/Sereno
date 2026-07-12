@@ -11,6 +11,11 @@
     "start": "npm run start -w @sereno/app",
     "build": "npm run build -w @sereno/app",
     "test": "npm run test -w @sereno/app",
+    "test:watch": "npm run test:watch -w @sereno/app",
+    "test:coverage": "npm run test:coverage -w @sereno/app",
+    "e2e": "npm run e2e -w @sereno/app",
+    "e2e:ui": "npm run e2e:ui -w @sereno/app",
+    "e2e:install": "npm run e2e:install -w @sereno/app",
     "start:website": "npm run dev -w @sereno/website",
     "build:website": "npm run build -w @sereno/website"
   }
