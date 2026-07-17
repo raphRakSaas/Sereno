@@ -22,17 +22,20 @@
   800, ~46-54px, l'entier domine, décimales et devise réduites (45-65 %
   d'opacité).
 - **Un accent unique : Rausch.** Dégradé (`--accent-gradient`,
-  `linear-gradient(155deg, #FF5A5F 0%, #FC642D 100%)`) sur les grandes
-  surfaces (carte solde, bannières, logo) ; à plat (`--accent`, `#FF5A5F`) sur
-  les CTA et petits éléments. Jamais les deux traitements sur un même écran.
+  `linear-gradient(155deg, #E61E4D 0%, #E31C5F 50%, #D70466 100%)`) sur les
+  grandes surfaces (carte solde, bannières, logo) — le même sweep magenta que
+  le search orb Airbnb ; à plat (`--accent`, `#FF385C`) sur les CTA et petits
+  éléments. Jamais les deux traitements sur un même écran.
 - **Voix calme.** Tutoiement, jamais de culpabilisation. Le dépassement de
   budget est un fait énoncé posément, pas une faute — voir la gouvernance des
   couleurs sémantiques ci-dessous.
 
 ## Tokens
 
-Palette de marque alignée sur Airbnb (airbnb.design) : `#FF5A5F` Rausch,
-`#00A699` Babu, `#FC642D` Arches, `#484848` Hof, `#767676` Foggy.
+Palette de marque alignée sur le **produit Airbnb actuel** (pas le Rausch
+2014 `#FF5A5F`, trop terne) : `#FF385C` Rausch, dégradé CTA
+`#E61E4D → #E31C5F → #D70466`, `#E00B41` pressed, `#00A699` Babu,
+`#FC642D` Arches, `#484848` Hof, `#767676` Foggy.
 
 | Token | Valeur (clair) | Usage |
 |---|---|---|
@@ -43,16 +46,16 @@ Palette de marque alignée sur Airbnb (airbnb.design) : `#FF5A5F` Rausch,
 | `--surface` | `#F7F6F3` | Cartes — aplat distinct du fond de page |
 | `--surface-2` | `#EFECE6` | Éléments imbriqués (ex. bouton de suppression sur une carte) |
 | `--line` | `#E7E5DF` | Filets, séparateurs |
-| `--accent` / `--accent-2` | `#FF5A5F` / `#FC642D` | Les deux arrêts du dégradé signature (Rausch → Arches) ; `--accent` seul sert d'à-plat |
-| `--accent-gradient` | `linear-gradient(155deg, var(--accent), var(--accent-2))` | Grandes surfaces (hero, bannières, logo) |
-| `--accent-deep` | `#E04E53` | Pressed/hover sur à-plat Rausch |
-| `--accent-pale` | `#FFE8E9` | Fonds teintés génériques (chips, lignes actives) |
+| `--accent` / `--accent-2` | `#FF385C` / `#D70466` | À-plat CTA (Rausch) / arrêt magenta du dégradé |
+| `--accent-gradient` | `linear-gradient(155deg, #E61E4D, #E31C5F, #D70466)` | Grandes surfaces (hero, bannières, logo) — sweep Airbnb |
+| `--accent-deep` | `#E00B41` | Pressed/hover sur à-plat Rausch |
+| `--accent-pale` | `#FFD1DA` | Fonds teintés génériques (chips, lignes actives) |
 | `--mist` / `--mist-deep` | `#00A699` / `#008C82` | Revenus, montants positifs (Babu) |
 | `--sand` | `#767676` | Neutre tertiaire (virements, budgets proches de la limite) |
 | `--amber` / `--amber-pale` | `#FC642D` / `#FFF0E8` | **Objectif d'épargne** (Arches) |
 | `--goal-badge` / `--goal-text` | `#FFE0D0` / `#A84A20` | Objectif d'épargne (badge icône / texte) |
-| `--overrun-bg` / `--overrun-badge` / `--overrun-text` | `#FFE8E9` / `#FFD5D7` / `#C4454A` | **Dépassement de budget** |
-| `--red` / `--red-pale` | `#FF5A5F` / `#FFE8E9` | Alertes système réelles uniquement (sync, erreurs) — jamais le dépassement |
+| `--overrun-bg` / `--overrun-badge` / `--overrun-text` | `#FFF0F3` / `#FFD1DA` / `#B0123C` | **Dépassement de budget** |
+| `--red` / `--red-pale` | `#FF385C` / `#FFF0F3` | Alertes système réelles uniquement (sync, erreurs) — jamais le dépassement |
 
 Rayons : `--radius` 14px (boutons/champs), `--radius-lg` 20px (cartes),
 `--radius-hero` 28px (carte hero — 26-36px), `--radius-pill` 999px (pilules),
@@ -60,8 +63,8 @@ Rayons : `--radius` 14px (boutons/champs), `--radius-lg` 20px (cartes),
 
 Ombres : les cartes sont en aplat pur, **sans ombre par défaut**
 (`--shadow: none`). L'ombre ne sert plus qu'à l'accent : `--shadow-cta`
-(`0 8px 20px rgba(255,90,95,.3)`) sur les CTA, `--shadow-fab`
-(`0 10px 24px rgba(255,90,95,.4)`) sur le bouton flottant d'ajout.
+(`0 8px 20px rgba(255,56,92,.3)`) sur les CTA, `--shadow-fab`
+(`0 10px 24px rgba(255,56,92,.4)`) sur le bouton flottant d'ajout.
 
 **Mode sombre** : dérivé du même mécanisme `--theme-t` (color-mix continu),
 best-effort en l'absence de valeurs sombres dans le handoff — fond noir pur,

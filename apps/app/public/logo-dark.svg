@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Sereno">
-  <rect width="64" height="64" rx="18" fill="#2e1718"/>
-  <circle cx="32" cy="26" r="10.5" fill="#ff7a7e"/>
-  <path d="M15 41h34" stroke="#ff7a7e" stroke-width="3.4" stroke-linecap="round"/>
-  <path d="M21 48.5h22" stroke="#ff8558" stroke-width="3.4" stroke-linecap="round"/>
+  <rect width="64" height="64" rx="18" fill="#2e1419"/>
+  <circle cx="32" cy="26" r="10.5" fill="#ff6b85"/>
+  <path d="M15 41h34" stroke="#ff6b85" stroke-width="3.4" stroke-linecap="round"/>
+  <path d="M21 48.5h22" stroke="#ff4d8a" stroke-width="3.4" stroke-linecap="round"/>
 </svg>

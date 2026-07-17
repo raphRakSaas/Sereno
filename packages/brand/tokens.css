@@ -1,8 +1,10 @@
 /* Sereno — tokens de marque partagés.
    Copie de référence des custom properties de apps/app/src/styles.scss :
    l'app reste la source canonique ; si elle change, répercuter ici.
-   Palette Airbnb (airbnb.design) : #ff5a5f Rausch, #00a699 Babu,
+   Palette Airbnb produit actuel : #ff385c Rausch, dégradé
+   #e61e4d → #e31c5f → #d70466, #e00b41 pressed, #00a699 Babu,
    #fc642d Arches, #484848 Hof, #767676 Foggy.
+   (L'ancien Rausch 2014 #ff5a5f est abandonné — trop terne.)
    Règles d'usage (docs/DESIGN.md) : accent unique Rausch (dégradé sur les
    grandes surfaces, à plat sur les CTA) ; la carte a son propre aplat
    (--surface), distinct du fond de page (--paper) ; --clay/--clay-soft sont
@@ -19,11 +21,11 @@
   /* Surfaces — la carte a son propre aplat, distinct du fond de page blanc */
   --paper: #ffffff;
   --surface: #f7f6f3;
-  --sage-pale: #ffe8e9;
+  --sage-pale: #ffd1da;
 
-  /* Accents — Airbnb Rausch (#ff5a5f) comme couleur unique de marque */
-  --sage: #ff5a5f;
-  --sage-deep: #e04e53;
+  /* Accents — Airbnb Rausch actuel (#ff385c) comme couleur unique de marque */
+  --sage: #ff385c;
+  --sage-deep: #e00b41;
   --mist: #00a699;
   --mist-deep: #008c82;
   --sand: #767676;
@@ -53,9 +55,9 @@
   --ink-faint: #7d8088;
   --paper: #000000;
   --surface: #17181d;
-  --sage-pale: #2e1718;
-  --sage: #ff7a7e;
-  --sage-deep: #e8607a;
+  --sage-pale: #2e1419;
+  --sage: #ff6b85;
+  --sage-deep: #ff3d6a;
   --mist: #26c4b8;
   --mist-deep: #26c4b8;
   --sand: #9aa0a6;
@@ -71,9 +73,9 @@
     --ink-faint: #7d8088;
     --paper: #000000;
     --surface: #17181d;
-    --sage-pale: #2e1718;
-    --sage: #ff7a7e;
-    --sage-deep: #e8607a;
+    --sage-pale: #2e1419;
+    --sage: #ff6b85;
+    --sage-deep: #ff3d6a;
     --mist: #26c4b8;
     --mist-deep: #26c4b8;
     --sand: #9aa0a6;
