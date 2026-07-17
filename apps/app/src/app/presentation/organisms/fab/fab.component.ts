@@ -20,8 +20,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
   styles: `
     :host {
       position: fixed;
-      right: 20px;
-      bottom: calc(86px + var(--safe-bottom));
+      right: var(--page-gutter);
+      bottom: calc(var(--nav-height) + var(--space-3) + var(--safe-bottom));
       z-index: 20;
     }
     @media (min-width: 768px) {

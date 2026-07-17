@@ -1,4 +1,10 @@
-<div class="frame" [class.fullscreen]="hideShell()">
+<div
+  class="frame"
+  [class.fullscreen]="hideShell()"
+  [class.has-header]="!hideShell() && !isRootTab()"
+  [class.has-fab]="!hideShell() && showFab()"
+  [class.has-nav]="!hideShell() && isRootTab()"
+>
   @if (!hideShell()) {
     <app-side-nav class="side-nav" />
   }

@@ -99,7 +99,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       left: 12px;
       right: 12px;
       z-index: 45;
-      bottom: calc(80px + var(--safe-bottom));
+      bottom: calc(var(--nav-height) + var(--space-3) + var(--safe-bottom));
       display: flex;
       align-items: center;
       gap: 10px;

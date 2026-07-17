@@ -36,9 +36,9 @@ import { IconComponent } from '../../atoms/icon/icon.component';
   styles: `
     :host {
       display: block;
-      position: sticky;
-      bottom: 0;
+      position: relative;
       z-index: 30;
+      flex-shrink: 0;
     }
     nav {
       display: flex;
