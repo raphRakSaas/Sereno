@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#EDEBE4;font-family:'IBM Plex Sans',system-ui,sans-serif}
+  .amt{font-feature-settings:'tnum';font-variant-numeric:tabular-nums;font-family:'Sora',system-ui,sans-serif}
+  .lbl{font:600 11px/1 'IBM Plex Sans',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#9A9DA6}
+  ::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+
+<div style="padding:48px 32px;display:flex;flex-direction:column;gap:20px;align-items:center">
+<p class="lbl" style="max-width:760px;text-align:center;color:#77817A;font-size:11.5px;line-height:1.6">Emplacements Lottie prêts (lecteur chargé) mais sans URL codée en dur pour éviter un lien mort — colle-moi un lien lottiefiles.com et je le branche directement dans les zones marquées « Lottie ». Icônes en 3D (Fluent Emoji), tab bar docked classique.</p>
+<div style="display:flex;gap:40px;align-items:flex-start;flex-wrap:wrap;justify-content:center">
+
+  <!-- ============ MOBILE — PROTOTYPE CLIQUABLE ============ -->
+  <div>
+    <div class="lbl" style="margin-bottom:12px;text-align:center">Mobile — prototype cliquable</div>
+    <div style="width:402px;height:860px;background:#FFFFFF;border-radius:36px;overflow:hidden;box-shadow:0 24px 64px rgba(20,20,22,.18);position:relative;display:flex;flex-direction:column" data-screen-label="Sereno — mobile">
+
+      <div style="flex:1;overflow-y:auto;position:relative">
+
+        <!-- ---------- ONBOARDING : WELCOME ---------- -->
+        <sc-if value="{{ isOnbWelcome }}" hint-placeholder-val="{{ true }}">
+          <div style="height:100%;display:flex;flex-direction:column;justify-content:space-between;padding:0 28px 32px;background:linear-gradient(155deg,#FF4D6D 0%,#FF7A56 100%)">
+            <div style="display:flex;align-items:center;gap:9px">
+              <div style="width:32px;height:32px;flex:none;border-radius:9px;background:#14151A;display:flex;align-items:center;justify-content:center;font:800 15px 'Sora',sans-serif;color:#fff">S</div>
+              <span style="font:800 16px 'Sora',sans-serif;color:#fff;letter-spacing:-0.01em">Sereno</span>
+            </div>
+            <div style="height:190px;margin:0 -28px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);position:relative">
+              <div style="width:180px;height:180px;border-radius:24px;border:1px dashed rgba(255,255,255,.4)"></div>
+              <span style="position:absolute;font:600 11px 'IBM Plex Sans',sans-serif;color:rgba(255,255,255,.7)">Lottie · illustration bienvenue</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start;margin-top:28px">
+              <div style="font:800 30px/1.15 'Sora',sans-serif;color:#fff;letter-spacing:-0.02em">Vois clair dans<br/>ton argent.</div>
+              <p style="margin:0;font:500 15px/1.5 'IBM Plex Sans',sans-serif;color:rgba(255,255,255,.85);max-width:28ch">On configure ton tableau de bord en 30 secondes. Aucun compte requis.</p>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <a onClick="{{ onbNext }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:16px;border-radius:16px;background:#14151A;color:#fff;font:700 15.5px 'IBM Plex Sans',sans-serif">Commencer sans compte</a>
+              <a onClick="{{ goToAuth }}" style="cursor:pointer;text-align:center;padding:8px;font:600 13.5px 'IBM Plex Sans',sans-serif;color:rgba(255,255,255,.9)">J'ai déjà un compte</a>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ---------- ONBOARDING : INCOME ---------- -->
+        <sc-if value="{{ isOnbIncome }}">
+          <div style="padding:24px 24px 32px;display:flex;flex-direction:column;height:100%;box-sizing:border-box">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px">
+              <a onClick="{{ onbBack }}" style="cursor:pointer;width:36px;height:36px;border-radius:11px;background:#F7F6F3;display:flex;align-items:center;justify-content:center;font-size:16px;color:#14151A">←</a>
+              <div style="flex:1;display:flex;gap:5px">
+                <sc-for list="{{ onbDots }}" as="d" hint-placeholder-count="3">
+                  <span style="flex:1;height:4px;border-radius:3px;background:{{ d.bg }}"></span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="font:800 24px/1.2 'Sora',sans-serif;color:#14151A;letter-spacing:-0.02em;margin-bottom:6px">Quel est ton revenu mensuel&nbsp;?</div>
+            <p style="margin:0 0 32px;font:500 14px 'IBM Plex Sans',sans-serif;color:#6B6E76">Ça nous permet de calculer ton solde disponible dès l'arrivée sur le tableau de bord.</p>
+            <div style="text-align:center;margin-bottom:auto">
+              <span class="amt" style="font:800 48px/1.1 'Sora',sans-serif;color:#14151A">{{ onbIncome }}&nbsp;€</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:24px 0">
+              <sc-for list="{{ onbKeypad }}" as="k" hint-placeholder-count="9">
+                <a onClick="{{ k.onPress }}" style="cursor:pointer;text-align:center;padding:14px 0;border-radius:12px;background:#F7F6F3;font:600 17px 'Sora',sans-serif;color:#14151A;text-decoration:none">{{ k.label }}</a>
+              </sc-for>
+            </div>
+            <a onClick="{{ onbNext }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;padding:15px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 15px 'IBM Plex Sans',sans-serif;text-decoration:none">Continuer</a>
+          </div>
+        </sc-if>
+
+        <!-- ---------- ONBOARDING : MAIN EXPENSES ---------- -->
+        <sc-if value="{{ isOnbExpenses }}">
+          <div style="padding:24px 24px 32px">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px">
+              <a onClick="{{ onbBack }}" style="cursor:pointer;width:36px;height:36px;border-radius:11px;background:#F7F6F3;display:flex;align-items:center;justify-content:center;font-size:16px;color:#14151A">←</a>
+              <div style="flex:1;display:flex;gap:5px">
+                <sc-for list="{{ onbDots }}" as="d" hint-placeholder-count="3">
+                  <span style="flex:1;height:4px;border-radius:3px;background:{{ d.bg }}"></span>
+                </sc-for>
+              </div>
+            </div>
+            <div style="font:800 24px/1.2 'Sora',sans-serif;color:#14151A;letter-spacing:-0.02em;margin-bottom:6px">Tes dépenses principales</div>
+            <p style="margin:0 0 20px;font:500 14px 'IBM Plex Sans',sans-serif;color:#6B6E76">Ajoute les postes que tu veux suivre et entre un montant approximatif — tout reste modifiable plus tard. Cette étape est facultative.</p>
+
+            <sc-if value="{{ onbAddedRows.length }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px">
+                <sc-for list="{{ onbAddedRows }}" as="row" hint-placeholder-count="0">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:#F7F6F3">
+                    <div style="width:26px;height:26px;flex:none;background-image:url('{{ row.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+                    <span style="flex:1;font:700 13.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ row.name }}</span>
+                    <input value="{{ row.value }}" onInput="{{ row.onInput }}" inputmode="decimal" placeholder="0" style="box-sizing:border-box;width:84px;text-align:right;padding:9px 10px;border-radius:10px;border:1px solid #E7E5DF;font:700 14px 'Sora',sans-serif;color:#14151A"/>
+                    <span style="font:600 13px 'IBM Plex Sans',sans-serif;color:#9A9DA6">€</span>
+                    <a onClick="{{ row.onRemove }}" style="cursor:pointer;flex:none;width:26px;height:26px;border-radius:50%;background:#EFECE6;display:flex;align-items:center;justify-content:center;font:600 13px sans-serif;color:#6B6E76;text-decoration:none">×</a>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <span class="lbl" style="display:block;margin-bottom:10px">Ajouter un poste</span>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px">
+              <sc-for list="{{ onbAvailableChips }}" as="c" hint-placeholder-count="6">
+                <a onClick="{{ c.onAdd }}" style="cursor:pointer;display:flex;align-items:center;gap:6px;padding:9px 14px;border-radius:999px;border:1px solid #E7E5DF;font:600 13px 'IBM Plex Sans',sans-serif;color:#14151A;text-decoration:none">
+                  <div style="width:16px;height:16px;flex:none;background-image:url('{{ c.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+                  + {{ c.name }}
+                </a>
+              </sc-for>
+            </div>
+
+            <a onClick="{{ onbNext }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;padding:15px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 15px 'IBM Plex Sans',sans-serif;text-decoration:none;margin-bottom:12px">Continuer</a>
+            <a onClick="{{ onbNext }}" style="cursor:pointer;display:block;text-align:center;font:600 13px 'IBM Plex Sans',sans-serif;color:#9A9DA6">Passer cette étape</a>
+          </div>
+        </sc-if>
+
+        <!-- ---------- ONBOARDING : READY ---------- -->
+        <sc-if value="{{ isOnbReady }}">
+          <div style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;padding:24px 24px 32px">
+            <div style="height:180px;display:flex;align-items:center;justify-content:center;background:#F7F6F3;border-radius:20px;position:relative">
+              <div style="width:150px;height:150px;border-radius:20px;border:1px dashed #D8D5CC"></div>
+              <span style="position:absolute;font:600 11px 'IBM Plex Sans',sans-serif;color:#9A9DA6">Lottie · succès / confettis</span>
+            </div>
+            <div style="margin-top:24px">
+              <div style="font:800 24px/1.2 'Sora',sans-serif;color:#14151A;letter-spacing:-0.02em;margin-bottom:6px">Ton tableau de bord est prêt</div>
+              <p style="margin:0 0 20px;font:500 14px 'IBM Plex Sans',sans-serif;color:#6B6E76">On a préparé ton solde à partir de ce que tu viens d'indiquer.</p>
+              <div style="display:flex;gap:12px;margin-bottom:8px">
+                <div style="flex:1;padding:16px;border-radius:14px;background:#F7F6F3">
+                  <span class="lbl">Revenu</span>
+                  <div class="amt" style="font:700 18px 'Sora',sans-serif;color:#0E9F5C;margin-top:4px">+{{ onbIncomeLabel }}</div>
+                </div>
+                <div style="flex:1;padding:16px;border-radius:14px;background:#F7F6F3">
+                  <span class="lbl">Dépenses</span>
+                  <div class="amt" style="font:700 18px 'Sora',sans-serif;color:#14151A;margin-top:4px">−{{ onbExpenseLabel }}</div>
+                </div>
+              </div>
+            </div>
+            <a onClick="{{ onbFinish }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;padding:15px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 15px 'IBM Plex Sans',sans-serif;box-shadow:0 8px 20px rgba(255,77,109,.3);text-decoration:none">Aller à mon tableau de bord</a>
+          </div>
+        </sc-if>
+
+        <!-- ---------- AUTH ---------- -->
+        <sc-if value="{{ isAuth }}">
+          <div style="padding:24px 24px 32px">
+            <a onClick="{{ goBack }}" style="cursor:pointer;display:inline-flex;width:36px;height:36px;border-radius:11px;background:#F7F6F3;align-items:center;justify-content:center;font-size:16px;color:#14151A;margin-bottom:24px">←</a>
+            <div style="font:800 26px/1.15 'Sora',sans-serif;color:#14151A;letter-spacing:-0.02em;margin-bottom:6px">Crée ton compte</div>
+            <p style="margin:0 0 28px;font:500 14px/1.5 'IBM Plex Sans',sans-serif;color:#6B6E76">Synchronise tes données, plusieurs comptes, catégories personnalisées et bien plus.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
+              <a style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;border:1px solid #E7E5DF;font:600 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">Continuer avec Google</a>
+              <a style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;border:1px solid #E7E5DF;font:600 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">Continuer avec Apple</a>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+              <div style="flex:1;height:1px;background:#E7E5DF"></div><span style="font:500 12px 'IBM Plex Sans',sans-serif;color:#9A9DA6">ou</span><div style="flex:1;height:1px;background:#E7E5DF"></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px">
+              <span style="font:600 13px 'IBM Plex Sans',sans-serif;color:#6B6E76">Adresse e-mail</span>
+              <input placeholder="toi@exemple.com" style="box-sizing:border-box;padding:13px 14px;border-radius:12px;border:1px solid #E7E5DF;font:500 15px 'IBM Plex Sans',sans-serif;color:#14151A"/>
+            </div>
+            <a onClick="{{ onbFinish }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:15px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 15px 'IBM Plex Sans',sans-serif;box-shadow:0 8px 20px rgba(255,77,109,.3)">Continuer avec e-mail</a>
+            <a onClick="{{ onbNext }}" style="cursor:pointer;display:block;text-align:center;margin-top:16px;font:600 13px 'IBM Plex Sans',sans-serif;color:#9A9DA6">Continuer sans compte</a>
+          </div>
+        </sc-if>
+
+        <!-- ---------- APP SHELL ---------- -->
+        <sc-if value="{{ showAppShell }}">
+
+          <sc-if value="{{ showBackHeader }}">
+            <div style="display:flex;align-items:center;gap:12px;padding:20px 20px 4px">
+              <a onClick="{{ goBack }}" style="cursor:pointer;display:inline-flex;width:36px;height:36px;border-radius:11px;background:#F7F6F3;align-items:center;justify-content:center;font-size:16px;color:#14151A;flex:none">←</a>
+              <span style="font:700 17px 'Sora',sans-serif;color:#14151A">{{ headerTitle }}</span>
+            </div>
+          </sc-if>
+
+          <!-- DASHBOARD -->
+          <sc-if value="{{ isDashboard }}">
+            <div style="padding:22px 20px 0">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+                <div style="width:24px;height:24px;flex:none;border-radius:7px;background:linear-gradient(155deg,#FF4D6D,#FF7A56);display:flex;align-items:center;justify-content:center;font:800 12px 'Sora',sans-serif;color:#fff">S</div>
+                <span style="font:800 13px 'Sora',sans-serif;color:#14151A;letter-spacing:-0.01em">Sereno</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+                <div style="font:800 20px 'Sora',sans-serif;color:#14151A;letter-spacing:-0.02em">Bonsoir</div>
+                <a onClick="{{ goSettings }}" style="cursor:pointer;width:36px;height:36px;border-radius:50%;background:#14151A;display:flex;align-items:center;justify-content:center;font:600 13px sans-serif;color:#fff">M</a>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font:600 12.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6;margin-bottom:20px">
+                <span>‹</span><span style="color:#6B6E76">Juillet 2026</span><span>›</span>
+              </div>
+            </div>
+
+            <div style="margin:0 20px 20px;padding:26px;border-radius:26px;background:linear-gradient(155deg,#FF4D6D 0%,#FF7A56 100%);color:#fff;display:flex;flex-direction:column;gap:8px">
+              <span class="lbl" style="color:rgba(255,255,255,.75)">Solde disponible</span>
+              <span class="amt" style="font:800 46px/1 'Sora',sans-serif;letter-spacing:-0.02em;white-space:nowrap">{{ balanceLabel }}</span>
+              <span style="font:700 13px 'IBM Plex Sans',sans-serif;color:#FFE9C7">{{ balanceTrend }}</span>
+            </div>
+
+            <a onClick="{{ goBudgets }}" style="cursor:pointer;text-decoration:none;display:block;margin:0 20px 12px;padding:18px;border-radius:20px;background:#F7F6F3;border:1px solid #EFECE5">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+                <span class="lbl">Budget mensuel</span>
+                <span class="amt" style="font:700 15px 'Sora',sans-serif;color:#14151A">155&nbsp;€ <span style="color:#9A9DA6;font-weight:500;font-size:12px">/ 500&nbsp;€</span></span>
+              </div>
+              <div style="height:8px;border-radius:999px;background:#E7E5DF;overflow:hidden"><div style="width:31%;height:100%;background:#14151A;border-radius:999px"></div></div>
+              <span style="display:block;margin-top:8px;font:600 12px 'IBM Plex Sans',sans-serif;color:#6B6E76">31&nbsp;% utilisé</span>
+            </a>
+
+            <a onClick="{{ goBudgets }}" style="cursor:pointer;margin:0 20px 16px;padding:14px 16px;border-radius:16px;background:#FFEDEF;display:flex;align-items:center;gap:12px;text-decoration:none">
+              <div style="width:34px;height:34px;flex:none;border-radius:10px;background:#FFD9DE;display:flex;align-items:center;justify-content:center;font-size:16px">⚠️</div>
+              <div style="flex:1"><div style="font:700 12.5px 'IBM Plex Sans',sans-serif;color:#14151A">Dépassement — Loisirs</div><div style="font:500 12px 'IBM Plex Sans',sans-serif;color:#B33A52">18&nbsp;% au-dessus du budget</div></div>
+              <span class="amt" style="font:700 15px 'Sora',sans-serif;color:#FF4D6D">62,00&nbsp;€</span>
+            </a>
+
+            <div style="margin:0 20px 16px;padding:18px;border-radius:20px;background:#F7F6F3">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+                <div style="font:700 14px 'Sora',sans-serif;color:#14151A">Top catégories</div>
+                <a onClick="{{ goStatistics }}" style="cursor:pointer;font:600 12.5px 'IBM Plex Sans',sans-serif;color:#FF4D6D;text-decoration:none">Voir les stats</a>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <sc-for list="{{ topCategories }}" as="cat" hint-placeholder-count="3">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                      <span style="display:flex;align-items:center;gap:8px;font:600 13px 'IBM Plex Sans',sans-serif;color:#14151A">
+                        <div style="width:16px;height:16px;flex:none;background-image:url('{{ cat.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>{{ cat.name }}
+                      </span>
+                      <span class="amt" style="font-size:13px;color:#6B6E76">{{ cat.spentLabel }}</span>
+                    </div>
+                    <div style="height:6px;border-radius:999px;background:#E7E5DF;overflow:hidden"><div style="width:{{ cat.pct }}%;height:100%;border-radius:999px;background:{{ cat.color }}"></div></div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="margin:0 20px 16px;padding:16px 18px;border-radius:18px;background:#FFF4E9;display:flex;align-items:center;gap:12px">
+              <div style="width:34px;height:34px;flex:none;border-radius:10px;background:#FFE6C7;display:flex;align-items:center;justify-content:center;font-size:16px">🎯</div>
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+                  <span class="lbl" style="color:#B98A3E">Objectif · Vacances</span>
+                </div>
+                <div style="height:7px;border-radius:999px;background:#FFE6C7;overflow:hidden;margin-bottom:8px"><div style="width:54%;height:100%;background:#C6862F;border-radius:999px"></div></div>
+                <span class="amt" style="font:600 12.5px 'IBM Plex Sans',sans-serif;color:#8A6A38">810&nbsp;€ <span style="color:#B99E71">/ 1&nbsp;500&nbsp;€</span></span>
+              </div>
+            </div>
+
+            <div style="padding:0 20px 24px">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+                <div style="font:700 14px 'Sora',sans-serif;color:#14151A">Transactions récentes</div>
+                <a onClick="{{ goTransactions }}" style="cursor:pointer;font:600 12.5px 'IBM Plex Sans',sans-serif;color:#FF4D6D;text-decoration:none">Tout voir</a>
+              </div>
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ recentTx }}" as="tx" hint-placeholder-count="3">
+                  <a onClick="{{ tx.onOpen }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #E7E5DF">
+                    <div style="width:36px;height:36px;border-radius:11px;background:{{ tx.badgeBg }};display:flex;align-items:center;justify-content:center;flex:none"><div style="width:20px;height:20px;flex:none;background-image:url('{{ tx.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+                    <div style="flex:1"><div style="font:600 13.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ tx.title }}</div><div style="font:400 12px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ tx.meta }}</div></div>
+                    <span class="amt" style="font-weight:700;font-size:14.5px;color:{{ tx.amountColor }}">{{ tx.amountLabel }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- TRANSACTIONS -->
+          <sc-if value="{{ isTransactions }}">
+            <div style="padding:20px 20px 0">
+              <div style="display:flex;gap:8px;margin-bottom:16px">
+                <sc-for list="{{ filters }}" as="f" hint-placeholder-count="3">
+                  <a onClick="{{ f.onSelect }}" style="cursor:pointer;padding:9px 16px;border-radius:999px;font:600 13px 'IBM Plex Sans',sans-serif;text-decoration:none;background:{{ f.bg }};color:{{ f.color }}">{{ f.label }}</a>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;padding-bottom:110px">
+                <sc-for list="{{ filteredTx }}" as="tx" hint-placeholder-count="6">
+                  <a onClick="{{ tx.onOpen }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #E7E5DF">
+                    <div style="width:38px;height:38px;border-radius:11px;background:{{ tx.badgeBg }};display:flex;align-items:center;justify-content:center;flex:none"><div style="width:22px;height:22px;flex:none;background-image:url('{{ tx.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div></div>
+                    <div style="flex:1"><div style="font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">{{ tx.title }}</div><div style="font:400 12.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ tx.meta }} · {{ tx.date }}</div></div>
+                    <span class="amt" style="font-weight:700;font-size:15px;color:{{ tx.amountColor }}">{{ tx.amountLabel }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- TX EDIT -->
+          <sc-if value="{{ isTxEdit }}">
+            <div style="padding:0 20px 32px">
+              <div style="display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;border:1px solid #E7E5DF;border-radius:12px;margin-bottom:24px">
+                <sc-for list="{{ txTypes }}" as="t" hint-placeholder-count="3">
+                  <a onClick="{{ t.onSelect }}" style="cursor:pointer;text-align:center;padding:9px 0;border-radius:9px;font:600 14px 'IBM Plex Sans',sans-serif;text-decoration:none;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</a>
+                </sc-for>
+              </div>
+
+              <div style="text-align:center;margin-bottom:28px">
+                <span class="lbl">Montant</span>
+                <div class="amt" style="font:800 46px/1.1 'Sora',sans-serif;color:#14151A;margin-top:6px">{{ txAmount }}&nbsp;€</div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px">
+                <sc-for list="{{ keypad }}" as="k" hint-placeholder-count="9">
+                  <a onClick="{{ k.onPress }}" style="cursor:pointer;text-align:center;padding:14px 0;border-radius:12px;background:#F7F6F3;font:600 17px 'Sora',sans-serif;color:#14151A;text-decoration:none">{{ k.label }}</a>
+                </sc-for>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:2px;border:1px solid #E7E5DF;border-radius:16px;margin-bottom:20px;overflow:hidden">
+                <a onClick="{{ openCategoryModal }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #E7E5DF">
+                  <span style="display:flex;align-items:center;gap:10px;font:500 14.5px 'IBM Plex Sans',sans-serif;color:#14151A"><div style="width:20px;height:20px;flex:none;background-image:url('{{ selectedCategoryIcon }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>{{ selectedCategoryName }}</span>
+                  <span style="color:#9A9DA6">›</span>
+                </a>
+                <a onClick="{{ openAccountModal }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #E7E5DF">
+                  <span style="font:500 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ selectedAccountName }}</span>
+                  <span style="color:#9A9DA6">›</span>
+                </a>
+                <a onClick="{{ openMarkerModal }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #E7E5DF">
+                  <span style="display:flex;align-items:center;gap:10px;font:500 14.5px 'IBM Plex Sans',sans-serif;color:#14151A"><span style="width:14px;height:14px;border-radius:50%;border:2.5px solid {{ markerColor }}"></span>Marqueur</span>
+                  <span style="color:#9A9DA6">›</span>
+                </a>
+                <a onClick="{{ openReceiptModal }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:14px 16px">
+                  <span style="display:flex;align-items:center;gap:10px;font:500 14.5px 'IBM Plex Sans',sans-serif;color:#14151A"><div style="width:20px;height:20px;flex:none;background-image:url('{{ receiptIcon }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>Joindre un reçu</span>
+                  <span style="color:#9A9DA6">›</span>
+                </a>
+              </div>
+
+              <input placeholder="Ajouter une note" style="box-sizing:border-box;width:100%;padding:13px 14px;border-radius:12px;border:1px solid #E7E5DF;font:500 14.5px 'IBM Plex Sans',sans-serif;color:#14151A;margin-bottom:24px"/>
+
+              <a onClick="{{ trySave }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;padding:15px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 15px 'IBM Plex Sans',sans-serif;box-shadow:0 8px 20px rgba(255,77,109,.3);text-decoration:none">Enregistrer</a>
+            </div>
+          </sc-if>
+
+          <!-- TRANSFER EDIT -->
+          <sc-if value="{{ isTransferEdit }}">
+            <div style="padding:0 20px 32px">
+              <div style="text-align:center;margin-bottom:24px">
+                <span class="lbl">Montant du virement</span>
+                <div class="amt" style="font:800 42px/1.1 'Sora',sans-serif;color:#14151A;margin-top:6px">250,00&nbsp;€</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+                <div style="padding:16px;border-radius:16px;background:#F7F6F3;display:flex;justify-content:space-between;align-items:center">
+                  <span style="font:500 14px 'IBM Plex Sans',sans-serif;color:#6B6E76">Depuis</span>
+                  <span style="font:700 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">Compte courant</span>
+                </div>
+                <div style="text-align:center;color:#9A9DA6">↓</div>
+                <div style="padding:16px;border-radius:16px;background:#F7F6F3;display:flex;justify-content:space-between;align-items:center">
+                  <span style="font:500 14px 'IBM Plex Sans',sans-serif;color:#6B6E76">Vers</span>
+                  <span style="font:700 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">Livret épargne</span>
+                </div>
+              </div>
+              <a onClick="{{ goBack }}" style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;width:100%;padding:15px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 15px 'IBM Plex Sans',sans-serif;text-decoration:none">Confirmer le virement</a>
+            </div>
+          </sc-if>
+
+          <!-- BUDGETS -->
+          <sc-if value="{{ isBudgets }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ budgets }}" as="b" hint-placeholder-count="4">
+                <div style="padding:16px 18px;border-radius:18px;background:#F7F6F3">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+                    <span style="display:flex;align-items:center;gap:8px;font:700 14px 'IBM Plex Sans',sans-serif;color:#14151A"><span style="width:9px;height:9px;border-radius:3px;background:{{ b.color }}"></span>{{ b.name }}</span>
+                    <span class="amt" style="font-size:13.5px;font-weight:600;color:{{ b.textColor }}">{{ b.spentLabel }} / {{ b.limitLabel }}</span>
+                  </div>
+                  <div style="height:8px;border-radius:999px;background:#E7E5DF;overflow:hidden"><div style="width:{{ b.pct }}%;height:100%;border-radius:999px;background:{{ b.fillColor }}"></div></div>
+                </div>
+              </sc-for>
+              <a style="cursor:pointer;text-align:center;margin-top:8px;padding:14px;border-radius:14px;border:1px dashed #E7E5DF;font:600 14px 'IBM Plex Sans',sans-serif;color:#6B6E76;text-decoration:none">+ Nouveau budget</a>
+            </div>
+          </sc-if>
+
+          <!-- ACCOUNTS -->
+          <sc-if value="{{ isAccounts }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ accounts }}" as="a" hint-placeholder-count="2">
+                <div style="padding:18px;border-radius:18px;background:#F7F6F3;display:flex;justify-content:space-between;align-items:center">
+                  <div><div style="font:700 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ a.name }}</div><div style="font:500 12.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ a.type }}</div></div>
+                  <span class="amt" style="font:700 17px 'Sora',sans-serif;color:#14151A">{{ a.balanceLabel }}</span>
+                </div>
+              </sc-for>
+              <a onClick="{{ openCloudPaywall }}" style="cursor:pointer;text-align:center;margin-top:8px;padding:14px;border-radius:14px;border:1px dashed #E7E5DF;font:600 14px 'IBM Plex Sans',sans-serif;color:#6B6E76;text-decoration:none">+ Ajouter un compte</a>
+            </div>
+          </sc-if>
+
+          <!-- CATEGORIES -->
+          <sc-if value="{{ isCategories }}">
+            <div style="padding:0 20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <sc-for list="{{ allCategories }}" as="cat" hint-placeholder-count="6">
+                <div style="padding:16px;border-radius:16px;background:#F7F6F3;display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+                  <span style="width:34px;height:34px;border-radius:10px;background:{{ cat.colorSoft }};display:flex;align-items:center;justify-content:center"><div style="width:20px;height:20px;flex:none;background-image:url('{{ cat.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div></span>
+                  <span style="font:600 13.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ cat.name }}</span>
+                </div>
+              </sc-for>
+              <a onClick="{{ openCloudPaywall }}" style="cursor:pointer;padding:16px;border-radius:16px;border:1px dashed #E7E5DF;display:flex;align-items:center;justify-content:center;font:600 13.5px 'IBM Plex Sans',sans-serif;color:#6B6E76;text-decoration:none">+ Nouvelle</a>
+            </div>
+          </sc-if>
+
+          <!-- RECURRING -->
+          <sc-if value="{{ isRecurring }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ recurring }}" as="r" hint-placeholder-count="3">
+                <div style="padding:14px 16px;border-radius:16px;background:#F7F6F3;display:flex;align-items:center;gap:12px">
+                  <div style="width:24px;height:24px;flex:none;background-image:url('{{ r.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+                  <div style="flex:1"><div style="font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">{{ r.name }}</div><div style="font:500 12px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ r.freq }}</div></div>
+                  <span class="amt" style="font:700 14.5px 'Sora',sans-serif;color:#14151A">{{ r.amountLabel }}</span>
+                </div>
+              </sc-for>
+              <a onClick="{{ openCloudPaywall }}" style="cursor:pointer;text-align:center;margin-top:4px;padding:14px;border-radius:14px;border:1px dashed #E7E5DF;font:600 14px 'IBM Plex Sans',sans-serif;color:#6B6E76;text-decoration:none">+ Nouvelle récurrence</a>
+            </div>
+          </sc-if>
+
+          <!-- INSTALLMENTS -->
+          <sc-if value="{{ isInstallments }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ installments }}" as="p" hint-placeholder-count="2">
+                <div style="padding:16px 18px;border-radius:18px;background:#F7F6F3">
+                  <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+                    <span style="font:700 14px 'IBM Plex Sans',sans-serif;color:#14151A">{{ p.name }}</span>
+                    <span style="font:500 12.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ p.paidMonths }}/{{ p.months }} mois</span>
+                  </div>
+                  <div style="height:8px;border-radius:999px;background:#E7E5DF;overflow:hidden;margin-bottom:8px"><div style="width:{{ p.pct }}%;height:100%;border-radius:999px;background:#14151A"></div></div>
+                  <span class="amt" style="font-size:12.5px;color:#6B6E76">{{ p.paidLabel }} / {{ p.totalLabel }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- TEMPLATES -->
+          <sc-if value="{{ isTemplates }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ templates }}" as="t" hint-placeholder-count="3">
+                <a style="cursor:pointer;text-decoration:none;padding:14px 16px;border-radius:16px;background:#F7F6F3;display:flex;align-items:center;gap:12px">
+                  <div style="width:24px;height:24px;flex:none;background-image:url('{{ t.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+                  <span style="flex:1;font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">{{ t.name }}</span>
+                  <span class="amt" style="font:700 14.5px 'Sora',sans-serif;color:#14151A">{{ t.amountLabel }}</span>
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- CALENDAR -->
+          <sc-if value="{{ isCalendar }}">
+            <div style="padding:0 20px 24px">
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:20px">
+                <sc-for list="{{ calendarDays }}" as="d" hint-placeholder-count="30">
+                  <a onClick="{{ d.onSelect }}" style="cursor:pointer;text-decoration:none;aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:{{ d.bg }};color:{{ d.color }};font:600 12px 'IBM Plex Sans',sans-serif">
+                    {{ d.n }}
+                    <sc-if value="{{ d.hasSpend }}"><span style="width:4px;height:4px;border-radius:50%;background:#FF4D6D"></span></sc-if>
+                  </a>
+                </sc-for>
+              </div>
+              <div style="font:700 14px 'Sora',sans-serif;color:#14151A;margin-bottom:10px">{{ selectedDayLabel }}</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ selectedDayTx }}" as="tx" hint-placeholder-count="2">
+                  <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #E7E5DF">
+                    <span style="font:500 13.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ tx.title }}</span>
+                    <span class="amt" style="font-weight:700;font-size:13.5px;color:{{ tx.amountColor }}">{{ tx.amountLabel }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- STATISTICS -->
+          <sc-if value="{{ isStatistics }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:16px">
+              <div style="padding:18px;border-radius:18px;background:#F7F6F3">
+                <div style="font:700 14px 'Sora',sans-serif;color:#14151A;margin-bottom:14px">Revenus / Dépenses — 6 mois</div>
+                <div style="display:flex;align-items:flex-end;gap:10px;height:110px">
+                  <sc-for list="{{ monthBars }}" as="m" hint-placeholder-count="6">
+                    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end">
+                      <div style="width:100%;border-radius:6px 6px 0 0;background:#14151A;height:{{ m.h }}%"></div>
+                      <span style="font:600 10.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ m.label }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="padding:18px;border-radius:18px;background:#F7F6F3">
+                <div style="font:700 14px 'Sora',sans-serif;color:#14151A;margin-bottom:6px">Répartition par catégorie</div>
+                <div style="position:relative;width:300px;height:300px;margin:0 auto">
+                  <div style="position:absolute;left:50%;top:50%;width:170px;height:170px;border-radius:50%;transform:translate(-50%,-50%);background:{{ pieGradient }}"></div>
+                  <div style="position:absolute;left:50%;top:50%;width:98px;height:98px;border-radius:50%;transform:translate(-50%,-50%);background:#F7F6F3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px">
+                    <span class="lbl" style="font-size:10px">Dépensé</span>
+                    <span class="amt" style="font:700 15px 'Sora',sans-serif;color:#14151A">{{ pieTotalLabel }}</span>
+                  </div>
+                  <svg width="300" height="300" style="position:absolute;left:0;top:0;pointer-events:none">
+                    <sc-for list="{{ pieCategories }}" as="cat" hint-placeholder-count="4">
+                      <line x1="{{ cat.x1 }}" y1="{{ cat.y1 }}" x2="{{ cat.x2 }}" y2="{{ cat.y2 }}" stroke="#D8D5CC" stroke-width="1.5"></line>
+                      <circle cx="{{ cat.x1 }}" cy="{{ cat.y1 }}" r="3.5" fill="{{ cat.color }}"></circle>
+                    </sc-for>
+                  </svg>
+                  <sc-for list="{{ pieCategories }}" as="cat" hint-placeholder-count="4">
+                    <div style="position:absolute;left:{{ cat.xText }}px;top:{{ cat.yText }}px;width:70px;transform:translate(-50%,-50%);text-align:{{ cat.align }}">
+                      <div style="font:700 12px 'IBM Plex Sans',sans-serif;color:#14151A;white-space:nowrap">{{ cat.name }}</div>
+                      <div style="font:600 11px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ cat.pct }}%</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- SETTINGS -->
+          <sc-if value="{{ isSettings }}">
+            <div style="padding:0 20px 24px;display:flex;flex-direction:column;gap:16px">
+              <div style="padding:16px;border-radius:16px;background:linear-gradient(155deg,#FF4D6D 0%,#FF7A56 100%);color:#fff;display:flex;justify-content:space-between;align-items:center">
+                <div>
+                  <div style="font:700 14px 'IBM Plex Sans',sans-serif">Mode invité</div>
+                  <div style="font:500 12px 'IBM Plex Sans',sans-serif;opacity:.85">Tes données restent sur cet appareil</div>
+                </div>
+                <a onClick="{{ goToAuth }}" style="cursor:pointer;padding:9px 14px;border-radius:10px;background:#fff;color:#14151A;font:700 12.5px 'IBM Plex Sans',sans-serif;text-decoration:none">Créer un compte</a>
+              </div>
+              <sc-for list="{{ settingsRows }}" as="s" hint-placeholder-count="5">
+                <a onClick="{{ s.onOpen }}" style="cursor:pointer;text-decoration:none;display:flex;justify-content:space-between;align-items:center;padding:14px 4px;border-bottom:1px solid #E7E5DF">
+                  <span style="font:500 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ s.label }}</span>
+                  <span style="color:#9A9DA6">›</span>
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- MENU -->
+          <sc-if value="{{ isMenu }}">
+            <div style="padding:20px 20px 24px;display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ menuRows }}" as="m" hint-placeholder-count="6">
+                <a onClick="{{ m.onOpen }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:12px;padding:15px 16px;border-radius:16px;background:#F7F6F3">
+                  <div style="width:24px;height:24px;flex:none;background-image:url('{{ m.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+                  <span style="flex:1;font:600 14.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ m.label }}</span>
+                  <span style="color:#9A9DA6">›</span>
+                </a>
+              </sc-for>
+            </div>
+          </sc-if>
+
+        </sc-if>
+      </div>
+
+      <!-- TAB BAR (docked) -->
+      <sc-if value="{{ showTabBar }}">
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:8px 6px calc(10px + env(safe-area-inset-bottom, 0px));background:#FFFFFF;border-top:1px solid #E7E5DF;display:flex;align-items:stretch;gap:2px">
+          <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+            <a onClick="{{ t.onSelect }}" style="cursor:pointer;text-decoration:none;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px 0;border-radius:12px;background:{{ t.pillBg }}">
+              <div style="width:22px;height:22px;background-image:url('{{ t.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center;{{ t.iconFilter }}"></div>
+              <span style="font:700 11px 'IBM Plex Sans',sans-serif;color:{{ t.textColor }}">{{ t.label }}</span>
+            </a>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- FAB -->
+      <sc-if value="{{ showFab }}">
+        <a onClick="{{ tapAdd }}" style="cursor:pointer;text-decoration:none;position:absolute;right:20px;bottom:{{ fabBottom }}px;width:56px;height:56px;border-radius:50%;background:#FF4D6D;color:#fff;display:flex;align-items:center;justify-content:center;font:700 26px sans-serif;box-shadow:0 10px 24px rgba(255,77,109,.4)">+</a>
+      </sc-if>
+
+      <!-- MODAL -->
+      <sc-if value="{{ modalOpen }}">
+        <div onClick="{{ closeModal }}" style="position:absolute;inset:0;background:rgba(20,20,22,.45);display:flex;align-items:flex-end;z-index:10">
+          <div onClick="{{ stop }}" style="width:100%;max-height:78%;overflow-y:auto;background:#fff;border-radius:24px 24px 0 0;padding:20px 20px 28px;box-sizing:border-box">
+            <div style="width:36px;height:4px;border-radius:2px;background:#E7E5DF;margin:0 auto 18px"></div>
+
+            <sc-if value="{{ modalCategory }}">
+              <div style="font:700 16px 'Sora',sans-serif;color:#14151A;margin-bottom:16px">Choisir une catégorie</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <sc-for list="{{ allCategories }}" as="cat" hint-placeholder-count="6">
+                  <a onClick="{{ cat.onPick }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:10px;padding:14px;border-radius:14px;background:#F7F6F3">
+                    <span style="width:30px;height:30px;border-radius:9px;background:{{ cat.colorSoft }};display:flex;align-items:center;justify-content:center"><div style="width:18px;height:18px;flex:none;background-image:url('{{ cat.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div></span>
+                    <span style="font:600 13.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ cat.name }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ modalAccount }}">
+              <div style="font:700 16px 'Sora',sans-serif;color:#14151A;margin-bottom:16px">Choisir un compte</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ accounts }}" as="a" hint-placeholder-count="2">
+                  <a onClick="{{ a.onPick }}" style="cursor:pointer;text-decoration:none;display:flex;justify-content:space-between;padding:14px 16px;border-radius:14px;background:#F7F6F3">
+                    <span style="font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">{{ a.name }}</span>
+                    <span class="amt" style="font:600 13.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6">{{ a.balanceLabel }}</span>
+                  </a>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ modalMarker }}">
+              <div style="font:700 16px 'Sora',sans-serif;color:#14151A;margin-bottom:16px">Couleur du marqueur</div>
+              <div style="display:flex;gap:12px;flex-wrap:wrap">
+                <sc-for list="{{ markerColors }}" as="c" hint-placeholder-count="6">
+                  <a onClick="{{ c.onPick }}" style="cursor:pointer;width:40px;height:40px;border-radius:50%;background:{{ c.hex }};border:3px solid {{ c.ring }}"></a>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ modalReceipt }}">
+              <div style="font:700 16px 'Sora',sans-serif;color:#14151A;margin-bottom:16px">Joindre un reçu</div>
+              <div style="border:2px dashed #E7E5DF;border-radius:16px;padding:28px 16px;text-align:center;margin-bottom:14px">
+                <div style="width:34px;height:34px;margin:0 auto 8px;background-image:url('{{ cameraIcon }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+                <div style="font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">Prendre une photo ou glisser un fichier</div>
+              </div>
+              <a onClick="{{ openAiPaywall }}" style="cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:14px;background:#F7F6F3;font:700 14px 'IBM Plex Sans',sans-serif;color:#14151A"><div style="width:18px;height:18px;flex:none;background-image:url('{{ sparklesIcon }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>Scanner automatiquement (IA)</a>
+            </sc-if>
+
+            <sc-if value="{{ modalDelete }}">
+              <div style="font:700 16px 'Sora',sans-serif;color:#14151A;margin-bottom:8px">Supprimer cette transaction ?</div>
+              <p style="margin:0 0 20px;font:500 13.5px 'IBM Plex Sans',sans-serif;color:#6B6E76">Cette action est définitive.</p>
+              <div style="display:flex;gap:10px">
+                <a onClick="{{ closeModal }}" style="cursor:pointer;flex:1;text-align:center;text-decoration:none;padding:14px;border-radius:14px;background:#F7F6F3;font:700 14px 'IBM Plex Sans',sans-serif;color:#14151A">Annuler</a>
+                <a onClick="{{ confirmDelete }}" style="cursor:pointer;flex:1;text-align:center;text-decoration:none;padding:14px;border-radius:14px;background:#FF4D6D;font:700 14px 'IBM Plex Sans',sans-serif;color:#fff">Supprimer</a>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ modalShare }}">
+              <div style="font:700 16px 'Sora',sans-serif;color:#14151A;margin-bottom:16px">Exporter / partager</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <a style="cursor:pointer;text-decoration:none;padding:14px 16px;border-radius:14px;background:#F7F6F3;font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">Exporter en CSV</a>
+                <a style="cursor:pointer;text-decoration:none;padding:14px 16px;border-radius:14px;background:#F7F6F3;font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">Exporter en PDF</a>
+                <a style="cursor:pointer;text-decoration:none;padding:14px 16px;border-radius:14px;background:#F7F6F3;font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">Partager le lien</a>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ modalPaywall }}">
+              <div style="width:52px;height:52px;margin-bottom:10px;background-image:url('{{ paywallIcon }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+              <div style="font:800 19px 'Sora',sans-serif;color:#14151A;margin-bottom:8px">{{ paywallTitle }}</div>
+              <p style="margin:0 0 22px;font:500 14px/1.5 'IBM Plex Sans',sans-serif;color:#6B6E76">{{ paywallBody }}</p>
+              <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+                <a style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;border:1px solid #E7E5DF;font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">Continuer avec Google</a>
+                <a style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;border-radius:14px;border:1px solid #E7E5DF;font:600 14px 'IBM Plex Sans',sans-serif;color:#14151A">Continuer avec Apple</a>
+                <a style="cursor:pointer;box-sizing:border-box;display:flex;align-items:center;justify-content:center;padding:14px;border-radius:14px;background:#FF4D6D;color:#fff;font:700 14px 'IBM Plex Sans',sans-serif;box-shadow:0 8px 20px rgba(255,77,109,.3)">Continuer avec e-mail</a>
+              </div>
+              <a onClick="{{ closeModal }}" style="cursor:pointer;display:block;text-align:center;font:600 12.5px 'IBM Plex Sans',sans-serif;color:#9A9DA6">Plus tard</a>
+            </sc-if>
+
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+
+  <!-- ============ DESKTOP — REFERENCE HAUTE-FIDÉLITÉ ============ -->
+  <div>
+    <div class="lbl" style="margin-bottom:12px;text-align:center">Bureau — aperçu (reflète les mêmes données)</div>
+    <div data-screen-label="Sereno — desktop" style="width:860px;display:grid;grid-template-columns:200px 1fr;background:#FFFFFF;border-radius:28px;overflow:hidden;box-shadow:0 24px 56px rgba(20,20,22,.14)">
+      <div style="background:#14151A;color:#F7F6F3;padding:26px 18px;display:flex;flex-direction:column;gap:28px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <div style="width:28px;height:28px;flex:none;border-radius:8px;background:linear-gradient(155deg,#FF4D6D,#FF7A56);display:flex;align-items:center;justify-content:center;font:800 13px 'Sora',sans-serif;color:#fff">S</div>
+          <span style="font:800 16px 'Sora',sans-serif;letter-spacing:-0.02em">Sereno</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#FF4D6D;font:600 13.5px 'IBM Plex Sans',sans-serif">Tableau de bord</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:#9A9DA6;font:500 13.5px 'IBM Plex Sans',sans-serif">Transactions</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:#9A9DA6;font:500 13.5px 'IBM Plex Sans',sans-serif">Budgets</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;color:#9A9DA6;font:500 13.5px 'IBM Plex Sans',sans-serif">Statistiques</div>
+        </div>
+      </div>
+      <div style="padding:30px 34px;display:flex;flex-direction:column;gap:22px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div style="font:800 24px/1.1 'Sora',sans-serif;color:#14151A;letter-spacing:-0.02em">Bonsoir, Marie</div>
+          <a style="display:flex;align-items:center;gap:8px;padding:11px 18px;border-radius:12px;background:#FF4D6D;color:#fff;font:700 13.5px 'IBM Plex Sans',sans-serif;text-decoration:none">+ Ajouter</a>
+        </div>
+        <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px">
+          <div style="padding:24px;border-radius:20px;background:linear-gradient(155deg,#FF4D6D 0%,#FF7A56 100%);color:#fff;display:flex;flex-direction:column;gap:6px">
+            <span class="lbl" style="color:rgba(255,255,255,.75)">Solde disponible</span>
+            <span class="amt" style="font:800 42px/1 'Sora',sans-serif;letter-spacing:-0.02em;white-space:nowrap">{{ balanceLabel }}</span>
+          </div>
+          <div style="padding:20px;border-radius:20px;background:#F7F6F3;display:flex;flex-direction:column;gap:10px">
+            <span class="lbl">Répartition</span>
+            <div style="display:flex;height:10px;border-radius:999px;overflow:hidden">
+              <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="4">
+                <div style="width:{{ cat.pct }}%;background:{{ cat.color }}"></div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ recentTx }}" as="tx" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #E7E5DF">
+              <div style="width:22px;height:22px;flex:none;background-image:url('{{ tx.iconUrl }}');background-size:contain;background-repeat:no-repeat;background-position:center"></div>
+              <span style="flex:1;font:600 13.5px 'IBM Plex Sans',sans-serif;color:#14151A">{{ tx.title }}</span>
+              <span class="amt" style="font-weight:700;font-size:14px;color:{{ tx.amountColor }}">{{ tx.amountLabel }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    page: 'onb-welcome',
+    stack: ['onb-welcome'],
+    modal: null,
+    paywallReason: 'limit',
+    txFilter: 'all',
+    txType: 'expense',
+    txAmount: '0',
+    onbIncome: '0',
+    onbAdded: [],
+    onbExpenses: {},
+    selectedCategoryId: 'logement',
+    selectedAccountId: 'courant',
+    markerColor: '#E7E5DF',
+    guestCount: 18,
+    guestLimit: 20,
+    selectedDay: 12,
+    editingTxId: null,
+    categoriesBase: [
+      { id: 'logement', name: 'Logement', color: '#3B82F6', colorSoft: '#EAF1FF', emoji: '🏠', spent: 0 },
+      { id: 'alimentation', name: 'Alimentation', color: '#10B981', colorSoft: '#E6F8EF', emoji: '🛒', spent: 0 },
+      { id: 'loisirs', name: 'Loisirs', color: '#8B5CF6', colorSoft: '#F1EBFC', emoji: '🎬', spent: 62 },
+      { id: 'abonnements', name: 'Abonnements', color: '#F59E0B', colorSoft: '#FFF6E5', emoji: '📱', spent: 0 },
+      { id: 'transport', name: 'Transport', color: '#06B6D4', colorSoft: '#E6FBFD', emoji: '🚗', spent: 0 },
+      { id: 'sante', name: 'Santé', color: '#EC4899', colorSoft: '#FDEAF3', emoji: '💊', spent: 24 },
+      { id: 'autre', name: 'Autre', color: '#6B7280', colorSoft: '#F1F1F2', emoji: '🧾', spent: 0 },
+    ],
+    accounts: [
+      { id: 'courant', name: 'Compte courant', type: 'Compte principal', balance: 1125 },
+      { id: 'epargne', name: "Livret épargne", type: 'Épargne', balance: 3200 },
+    ],
+    baseTransactions: [
+      { id: 3, title: 'Cinéma', meta: 'Loisirs', amount: -18.5, emoji: '🎬', badgeBg: '#F1EBFC', date: '6 juil.' },
+      { id: 5, title: 'Netflix', meta: 'Abonnements', amount: -13.49, emoji: '📱', badgeBg: '#FFF6E5', date: '8 juil.' },
+      { id: 6, title: 'Essence', meta: 'Transport', amount: -52, emoji: '🚗', badgeBg: '#E6FBFD', date: '9 juil.' },
+    ],
+    budgets: [
+      { name: 'Logement', color: '#3B82F6', spent: 500, limit: 520 },
+      { name: 'Alimentation', color: '#10B981', spent: 140, limit: 300 },
+      { name: 'Loisirs', color: '#8B5CF6', spent: 62, limit: 52 },
+      { name: 'Abonnements', color: '#F59E0B', spent: 75, limit: 80 },
+    ],
+    recurring: [
+      { name: 'Loyer', amount: 500, freq: 'Le 1er du mois', emoji: '🏠' },
+      { name: 'Netflix', amount: 13.49, freq: 'Le 8 du mois', emoji: '📱' },
+      { name: 'Salle de sport', amount: 29.9, freq: 'Le 5 du mois', emoji: '🏋️' },
+    ],
+    installments: [
+      { name: 'iPhone 15', total: 960, paid: 320, months: 8, paidMonths: 3 },
+      { name: 'Canapé', total: 1200, paid: 600, months: 12, paidMonths: 6 },
+    ],
+    templates: [
+      { name: 'Café', amount: 4.5, emoji: '☕' },
+      { name: 'Essence', amount: 60, emoji: '🚗' },
+      { name: 'Courses', amount: 70, emoji: '🛒' },
+    ],
+  };
+
+  emoji3d(e) {
+    return 'https://cdn.jsdelivr.net/gh/shuding/fluentui-emoji-unicode/assets/' + encodeURIComponent(e) + '_3d.png';
+  }
+
+  fmt(n) {
+    const s = Math.abs(n).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return s + '\u00A0€';
+  }
+
+  currentPage() {
+    return this.state.stack[this.state.stack.length - 1];
+  }
+
+  setTab(page) {
+    this.setState({ stack: [page] });
+  }
+
+  goTo(page) {
+    this.setState((s) => ({ stack: [...s.stack, page] }));
+  }
+
+  goBack() {
+    this.setState((s) => ({ stack: s.stack.length > 1 ? s.stack.slice(0, -1) : s.stack }));
+  }
+
+  onbNext() {
+    const p = this.currentPage();
+    const order = ['onb-welcome', 'onb-income', 'onb-expenses', 'onb-ready'];
+    const i = order.indexOf(p);
+    if (i >= 0 && i < order.length - 1) this.setState({ stack: [order[i + 1]] });
+  }
+
+  onbBack() {
+    const order = ['onb-welcome', 'onb-income', 'onb-expenses', 'onb-ready'];
+    const i = order.indexOf(this.currentPage());
+    if (i > 0) this.setState({ stack: [order[i - 1]] });
+  }
+
+  onbFinish() {
+    this.setState({ stack: ['dashboard'] });
+  }
+
+  goToAuth() {
+    this.setState({ stack: ['auth'] });
+  }
+
+  openModal(name, reason) {
+    this.setState({ modal: name, paywallReason: reason || this.state.paywallReason });
+  }
+
+  closeModal() {
+    this.setState({ modal: null });
+  }
+
+  stop() {}
+
+  tapAdd() {
+    if (this.state.guestCount >= this.state.guestLimit) {
+      this.openModal('paywall', 'limit');
+      return;
+    }
+    this.setState({ editingTxId: null, txType: 'expense', txAmount: '0' });
+    this.goTo('tx-edit');
+  }
+
+  openTx(id) {
+    this.setState({ editingTxId: id });
+    this.goTo('tx-edit');
+  }
+
+  trySave() {
+    this.setState((s) => ({ guestCount: s.guestCount + 1 }));
+    this.goBack();
+  }
+
+  confirmDelete() {
+    this.setState({ modal: null });
+    this.goBack();
+  }
+
+  setTxType(t) {
+    this.setState({ txType: t });
+  }
+
+  pressKey(k) {
+    this.setState((s) => {
+      if (k === '⌫') return { txAmount: s.txAmount.length > 1 ? s.txAmount.slice(0, -1) : '0' };
+      if (s.txAmount === '0') return { txAmount: k };
+      return { txAmount: s.txAmount + k };
+    });
+  }
+
+  pressOnbKey(k) {
+    this.setState((s) => {
+      if (k === '⌫') return { onbIncome: s.onbIncome.length > 1 ? s.onbIncome.slice(0, -1) : '0' };
+      if (s.onbIncome === '0') return { onbIncome: k };
+      return { onbIncome: s.onbIncome + k };
+    });
+  }
+
+  addOnbCategory(catId) {
+    this.setState((s) => (s.onbAdded.includes(catId) ? s : { onbAdded: [...s.onbAdded, catId] }));
+  }
+
+  removeOnbCategory(catId) {
+    this.setState((s) => {
+      const onbExpenses = { ...s.onbExpenses };
+      delete onbExpenses[catId];
+      return { onbAdded: s.onbAdded.filter((id) => id !== catId), onbExpenses };
+    });
+  }
+
+  setOnbAmount(catId, raw) {
+    const cleaned = raw.replace(/[^0-9,.]/g, '');
+    this.setState((s) => ({ onbExpenses: { ...s.onbExpenses, [catId]: cleaned } }));
+  }
+
+  pickCategory(id) {
+    this.setState({ selectedCategoryId: id, modal: null });
+  }
+
+  pickAccount(id) {
+    this.setState({ selectedAccountId: id, modal: null });
+  }
+
+  pickMarker(hex) {
+    this.setState({ markerColor: hex, modal: null });
+  }
+
+  setFilter(f) {
+    this.setState({ txFilter: f });
+  }
+
+  selectDay(n) {
+    this.setState({ selectedDay: n });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const page = this.currentPage();
+    const fmt = this.fmt.bind(this);
+    const emo = this.emoji3d.bind(this);
+
+    const parseAmt = (v) => parseFloat(String(v || '0').replace(',', '.')) || 0;
+    const categoriesRaw = s.categoriesBase.map((c) => {
+      const added = s.onbAdded.includes(c.id);
+      const onbVal = parseAmt(s.onbExpenses[c.id]);
+      return { ...c, spent: added && onbVal > 0 ? onbVal : added ? 0 : c.spent };
+    });
+    const spentCategoriesRaw = categoriesRaw.filter((c) => c.spent > 0);
+    const totalSpentRaw = spentCategoriesRaw.reduce((sum, c) => sum + c.spent, 0);
+    const totalSpent = totalSpentRaw || 1;
+    const categoriesWithPct = spentCategoriesRaw.map((c) => ({
+      ...c,
+      pct: Math.round((c.spent / totalSpent) * 100),
+      spentLabel: fmt(c.spent),
+      iconUrl: emo(c.emoji),
+      onPick: () => this.pickCategory(c.id),
+    }));
+    // "categories" = breakdown display (only categories with real spend); "allCategories" = full roster for pickers.
+    const categories = categoriesWithPct;
+
+    // Pie chart geometry for the dashboard's category breakdown (donut + leader-line callouts).
+    let cum = 0;
+    const pieSlices = categories.map((c) => {
+      const start = cum;
+      cum += c.pct;
+      return { ...c, start, end: cum };
+    });
+    if (pieSlices.length) pieSlices[pieSlices.length - 1].end = 100;
+    const pcx = 150, pcy = 150;
+    const pieCategories = pieSlices.map((c) => {
+      const mid = (c.start + c.end) / 2;
+      const rad = (mid / 100) * 2 * Math.PI;
+      const x1 = pcx + 90 * Math.sin(rad);
+      const y1 = pcy - 90 * Math.cos(rad);
+      const x2 = pcx + 105 * Math.sin(rad);
+      const y2 = pcy - 105 * Math.cos(rad);
+      const xText = pcx + 115 * Math.sin(rad);
+      const yText = pcy - 115 * Math.cos(rad);
+      return { ...c, x1, y1, x2, y2, xText, yText, align: Math.sin(rad) >= 0 ? 'left' : 'right' };
+    });
+    const pieGradient = pieSlices.length
+      ? 'conic-gradient(' + pieSlices.map((c) => `${c.color} ${c.start}% ${c.end}%`).join(', ') + ')'
+      : '#E7E5DF';
+    const pieTotalLabel = fmt(totalSpentRaw);
+    const allCategories = categoriesRaw.map((c) => ({
+      ...c,
+      spentLabel: fmt(c.spent),
+      iconUrl: emo(c.emoji),
+      onPick: () => this.pickCategory(c.id),
+    }));
+
+    const selectedCategory = categoriesRaw.find((c) => c.id === s.selectedCategoryId) || categoriesRaw[0];
+    const selectedAccount = s.accounts.find((a) => a.id === s.selectedAccountId) || s.accounts[0];
+
+    const accounts = s.accounts.map((a) => ({
+      ...a,
+      balanceLabel: fmt(a.balance),
+      onPick: () => this.pickAccount(a.id),
+    }));
+
+    const incomeVal = parseFloat((s.onbIncome || '0').replace(',', '.')) || 0;
+    const dynamicTx = [];
+    if (incomeVal > 0) {
+      dynamicTx.push({ id: 100, title: 'Revenu mensuel', meta: 'Salaire', amount: incomeVal, emoji: '💼', badgeBg: '#E6F8EF', date: '1 juil.' });
+    }
+    s.onbAdded.forEach((id, i) => {
+      const val = parseAmt(s.onbExpenses[id]);
+      if (val > 0) {
+        const cat = s.categoriesBase.find((c) => c.id === id);
+        dynamicTx.push({ id: 200 + i, title: cat.name, meta: cat.name, amount: -val, emoji: cat.emoji, badgeBg: cat.colorSoft, date: '2 juil.' });
+      }
+    });
+    const allTx = [...dynamicTx, ...s.baseTransactions];
+
+    const txWithLabels = allTx.map((tx) => ({
+      ...tx,
+      amountLabel: (tx.amount >= 0 ? '+' : '\u2212') + fmt(tx.amount),
+      amountColor: tx.amount >= 0 ? '#0E9F5C' : '#14151A',
+      iconUrl: emo(tx.emoji),
+      onOpen: () => this.openTx(tx.id),
+    }));
+
+    const recentTx = txWithLabels.slice(0, 3);
+
+    const totalIncome = incomeVal || 1625;
+    const totalExpense = categoriesRaw.reduce((sum, c) => sum + c.spent, 0);
+    const balance = totalIncome - totalExpense;
+
+    const filters = [
+      { key: 'all', label: 'Tous' },
+      { key: 'expense', label: 'Dépenses' },
+      { key: 'income', label: 'Revenus' },
+    ].map((f) => ({
+      ...f,
+      onSelect: () => this.setFilter(f.key),
+      bg: s.txFilter === f.key ? '#14151A' : '#F7F6F3',
+      color: s.txFilter === f.key ? '#fff' : '#6B6E76',
+    }));
+
+    const filteredTx = txWithLabels.filter((tx) => {
+      if (s.txFilter === 'expense') return tx.amount < 0;
+      if (s.txFilter === 'income') return tx.amount > 0;
+      return true;
+    });
+
+    const txTypes = ['expense', 'income', 'transfer'].map((t) => ({
+      key: t,
+      label: t === 'expense' ? 'Dépense' : t === 'income' ? 'Revenu' : 'Virement',
+      onSelect: () => this.setTxType(t),
+      bg: s.txType === t ? '#FF4D6D' : 'transparent',
+      color: s.txType === t ? '#fff' : '#6B6E76',
+    }));
+
+    const keypad = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', '⌫'].map((k) => ({
+      label: k,
+      onPress: () => this.pressKey(k),
+    }));
+
+    const onbKeypad = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', '⌫'].map((k) => ({
+      label: k,
+      onPress: () => this.pressOnbKey(k),
+    }));
+
+    const onbOrder = ['onb-welcome', 'onb-income', 'onb-expenses', 'onb-ready'];
+    const onbIdx = onbOrder.indexOf(page);
+    const onbDots = [0, 1, 2].map((i) => ({ bg: i <= onbIdx - 1 ? '#FF4D6D' : '#E7E5DF' }));
+
+    const onbAddedRows = s.onbAdded.map((id) => {
+      const cat = s.categoriesBase.find((c) => c.id === id);
+      return {
+        id,
+        name: cat.name,
+        iconUrl: emo(cat.emoji),
+        value: s.onbExpenses[id] || '',
+        onInput: (e) => this.setOnbAmount(id, e.target.value),
+        onRemove: () => this.removeOnbCategory(id),
+      };
+    });
+    const onbAvailableChips = s.categoriesBase
+      .filter((c) => !s.onbAdded.includes(c.id))
+      .map((c) => ({ name: c.name, iconUrl: emo(c.emoji), onAdd: () => this.addOnbCategory(c.id) }));
+
+    const budgets = s.budgets.map((b) => {
+      const over = b.spent > b.limit;
+      const pct = Math.min(100, Math.round((b.spent / b.limit) * 100));
+      return {
+        ...b,
+        spentLabel: fmt(b.spent),
+        limitLabel: fmt(b.limit),
+        pct,
+        fillColor: over ? '#FF4D6D' : b.color,
+        textColor: over ? '#FF4D6D' : '#14151A',
+      };
+    });
+
+    const recurring = s.recurring.map((r) => ({ ...r, amountLabel: fmt(r.amount), iconUrl: emo(r.emoji) }));
+    const installments = s.installments.map((p) => ({
+      ...p,
+      pct: Math.round((p.paid / p.total) * 100),
+      paidLabel: fmt(p.paid),
+      totalLabel: fmt(p.total),
+    }));
+    const templates = s.templates.map((t) => ({ ...t, amountLabel: fmt(t.amount), iconUrl: emo(t.emoji) }));
+
+    const markerColors = ['#E7E5DF', '#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#FF4D6D'].map((hex) => ({
+      hex,
+      ring: s.markerColor === hex ? '#14151A' : '#fff',
+      onPick: () => this.pickMarker(hex),
+    }));
+
+    const calendarDays = Array.from({ length: 30 }, (_, i) => {
+      const n = i + 1;
+      const hasSpend = [3, 5, 6, 8, 9, 12, 18, 22].includes(n);
+      const selected = n === s.selectedDay;
+      return {
+        n,
+        hasSpend,
+        onSelect: () => this.selectDay(n),
+        bg: selected ? '#14151A' : '#F7F6F3',
+        color: selected ? '#fff' : '#14151A',
+      };
+    });
+
+    const selectedDayTx = s.selectedDay === 12 ? [] : txWithLabels.slice(0, 1);
+
+    const monthBars = [
+      { label: 'Fév', h: 55 }, { label: 'Mar', h: 70 }, { label: 'Avr', h: 40 },
+      { label: 'Mai', h: 85 }, { label: 'Juin', h: 60 }, { label: 'Juil', h: 45 },
+    ];
+
+    const settingsRows = ['Profil', 'Notifications', 'Apparence', 'Sécurité', 'Aide'].map((label) => ({ label, onOpen: () => {} }));
+
+    const menuRows = [
+      { emoji: '💳', label: 'Comptes', page: 'accounts' },
+      { emoji: '🏷️', label: 'Catégories', page: 'categories' },
+      { emoji: '🔁', label: 'Récurrences', page: 'recurring' },
+      { emoji: '📆', label: 'Échéances', page: 'installments' },
+      { emoji: '⚡', label: 'Modèles', page: 'templates' },
+      { emoji: '🗓️', label: 'Calendrier', page: 'calendar' },
+      { emoji: '⚙️', label: 'Réglages', page: 'settings' },
+    ].map((m) => ({ ...m, iconUrl: emo(m.emoji), onOpen: () => this.goTo(m.page) }));
+
+    const tabDefs = [
+      { key: 'dashboard', emoji: '🏠', label: 'Accueil' },
+      { key: 'transactions', emoji: '📋', label: 'Historique' },
+      { key: 'budgets', emoji: '🎯', label: 'Budgets' },
+      { key: 'statistics', emoji: '📊', label: 'Stats' },
+      { key: 'menu', emoji: '✨', label: 'Plus' },
+    ];
+    const tabs = tabDefs.map((t) => {
+      const active = page === t.key;
+      return {
+        ...t,
+        iconUrl: emo(t.emoji),
+        onSelect: () => this.setTab(t.key),
+        active,
+        pillBg: active ? '#FFEDEF' : 'transparent',
+        textColor: active ? '#FF4D6D' : '#9A9DA6',
+        iconFilter: active ? '' : 'opacity:.55',
+      };
+    });
+
+    const paywallCopy = {
+      limit: { emoji: '🌤️', title: 'Tu as atteint la limite du mode invité', body: 'Crée un compte gratuit pour continuer à noter tes dépenses — tes données locales seront reprises automatiquement.' },
+      cloud: { emoji: '☁️', title: 'Fonctionnalité liée à un compte', body: 'Les comptes multiples, catégories personnalisées et récurrences nécessitent un compte gratuit synchronisé.' },
+      ai: { emoji: '✨', title: 'Scan de reçu par IA', body: 'La lecture automatique de tes reçus est réservée aux comptes connectés.' },
+    }[s.paywallReason] || {};
+
+    const tabPages = ['dashboard', 'transactions', 'budgets', 'statistics', 'menu'];
+    const showAppShell = !['onb-welcome', 'onb-income', 'onb-expenses', 'onb-ready', 'auth'].includes(page);
+
+    return {
+      isOnbWelcome: page === 'onb-welcome',
+      isOnbIncome: page === 'onb-income',
+      isOnbExpenses: page === 'onb-expenses',
+      isOnbReady: page === 'onb-ready',
+      isAuth: page === 'auth',
+      onbNext: () => this.onbNext(),
+      onbBack: () => this.onbBack(),
+      onbFinish: () => this.onbFinish(),
+      goToAuth: () => this.goToAuth(),
+      onbDots,
+      onbIncome: s.onbIncome,
+      onbKeypad,
+      onbAddedRows,
+      onbAvailableChips,
+      onbIncomeLabel: fmt(incomeVal || 1625),
+      onbExpenseLabel: fmt(totalExpense),
+
+      showAppShell,
+      showTabBar: showAppShell && tabPages.includes(page) && !s.modal,
+      showBackHeader: showAppShell && !tabPages.includes(page),
+      showFab: showAppShell && (page === 'dashboard' || page === 'transactions'),
+      fabBottom: 78,
+      headerTitle: ({
+        'tx-edit': s.editingTxId ? 'Modifier' : 'Ajouter',
+        'transfer-edit': 'Virement',
+        accounts: 'Comptes',
+        categories: 'Catégories',
+        recurring: 'Récurrences',
+        installments: 'Échéances',
+        templates: 'Modèles',
+        calendar: 'Calendrier',
+        settings: 'Réglages',
+      })[page] || '',
+
+      isDashboard: page === 'dashboard',
+      isTransactions: page === 'transactions',
+      isTxEdit: page === 'tx-edit',
+      isTransferEdit: page === 'transfer-edit',
+      isBudgets: page === 'budgets',
+      isAccounts: page === 'accounts',
+      isCategories: page === 'categories',
+      isRecurring: page === 'recurring',
+      isInstallments: page === 'installments',
+      isTemplates: page === 'templates',
+      isCalendar: page === 'calendar',
+      isStatistics: page === 'statistics',
+      isSettings: page === 'settings',
+      isMenu: page === 'menu',
+
+      goBack: () => this.goBack(),
+      goSettings: () => this.goTo('settings'),
+      goBudgets: () => this.setTab('budgets'),
+      goStatistics: () => this.setTab('statistics'),
+      goTransactions: () => this.setTab('transactions'),
+      tapAdd: () => this.tapAdd(),
+      openCloudPaywall: () => this.openModal('paywall', 'cloud'),
+      openAiPaywall: () => this.openModal('paywall', 'ai'),
+
+      balanceLabel: (balance < 0 ? '\u2212' : '') + fmt(balance),
+      balanceTrend: totalIncome > 0 ? '+' + Math.round((balance / totalIncome) * 100) + '\u00A0% ce mois-ci' : '',
+
+      categories,
+      allCategories,
+      topCategories: [...categories].sort((a, b) => b.spent - a.spent).slice(0, 3),
+      pieCategories,
+      pieGradient,
+      pieTotalLabel,
+      accounts,
+      recentTx,
+      filters,
+      filteredTx,
+      txTypes,
+      keypad,
+      txAmount: s.txAmount,
+      selectedCategoryIcon: emo(selectedCategory.emoji),
+      selectedCategoryName: selectedCategory.name,
+      selectedAccountName: selectedAccount.name,
+      markerColor: s.markerColor,
+      openCategoryModal: () => this.openModal('category'),
+      openAccountModal: () => this.openModal('account'),
+      openMarkerModal: () => this.openModal('marker'),
+      openReceiptModal: () => this.openModal('receipt'),
+      trySave: () => this.trySave(),
+      receiptIcon: emo('📎'),
+      cameraIcon: emo('📷'),
+      sparklesIcon: emo('✨'),
+
+      budgets,
+      recurring,
+      installments,
+      templates,
+      calendarDays,
+      selectedDayLabel: `Le ${s.selectedDay} juillet`,
+      selectedDayTx,
+      monthBars,
+      settingsRows,
+      menuRows,
+      tabs,
+
+      modalOpen: !!s.modal,
+      modalCategory: s.modal === 'category',
+      modalAccount: s.modal === 'account',
+      modalMarker: s.modal === 'marker',
+      modalReceipt: s.modal === 'receipt',
+      modalDelete: s.modal === 'delete',
+      modalShare: s.modal === 'share',
+      modalPaywall: s.modal === 'paywall',
+      markerColors,
+      closeModal: () => this.closeModal(),
+      confirmDelete: () => this.confirmDelete(),
+      stop: (e) => e && e.stopPropagation && e.stopPropagation(),
+      paywallIcon: emo(paywallCopy.emoji || '🌤️'),
+      paywallTitle: paywallCopy.title,
+      paywallBody: paywallCopy.body,
+    };
+  }
+}
+
+</script>
+</body>
+</html>

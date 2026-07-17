@@ -1,0 +1,58 @@
+<div class="page">
+  <h1 class="page-title">Objectif d'épargne</h1>
+  <p class="explain">Donne-toi un cap — un montant à atteindre, et ce que tu as déjà mis de côté.</p>
+
+  @if (goals.error()) {
+    <p class="notice">{{ goals.error() }}</p>
+  }
+
+  <form class="card form" (ngSubmit)="save()">
+    @if (hint()) {
+      <p class="notice">{{ hint() }}</p>
+    }
+    <div class="field">
+      <label for="name">Nom</label>
+      <input
+        id="name"
+        name="name"
+        type="text"
+        class="input"
+        placeholder="Vacances"
+        [ngModel]="name()"
+        (ngModelChange)="name.set($event)"
+      />
+    </div>
+    <div class="field">
+      <label for="target">Montant cible</label>
+      <input
+        id="target"
+        name="target"
+        type="text"
+        inputmode="decimal"
+        class="input amount"
+        placeholder="1 500"
+        [ngModel]="targetText()"
+        (ngModelChange)="targetText.set($event)"
+      />
+    </div>
+    <div class="field">
+      <label for="current">Déjà épargné</label>
+      <input
+        id="current"
+        name="current"
+        type="text"
+        inputmode="decimal"
+        class="input amount"
+        placeholder="0"
+        [ngModel]="currentText()"
+        (ngModelChange)="currentText.set($event)"
+      />
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </div>
+    @if (goals.items().length > 0) {
+      <button type="button" class="delete" (click)="remove()">Supprimer cet objectif</button>
+    }
+  </form>
+</div>

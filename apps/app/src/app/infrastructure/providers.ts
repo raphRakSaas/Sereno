@@ -6,6 +6,7 @@ import {
   CATEGORY_REPOSITORY,
   RECURRING_RULE_REPOSITORY,
   RECEIPT_REPOSITORY,
+  SAVINGS_GOAL_REPOSITORY,
   TRANSACTION_REPOSITORY,
   TRANSACTION_TEMPLATE_REPOSITORY,
 } from '../domain/ports/tokens';
@@ -16,6 +17,7 @@ import {
   SwitchingCategoryRepository,
   SwitchingRecurringRuleRepository,
   SwitchingReceiptRepository,
+  SwitchingSavingsGoalRepository,
   SwitchingTransactionRepository,
   SwitchingTransactionTemplateRepository,
 } from './switching/switching.repositories';
@@ -32,6 +34,7 @@ export function provideInfrastructure(): Provider[] {
     { provide: BUDGET_REPOSITORY, useExisting: SwitchingBudgetRepository },
     { provide: RECURRING_RULE_REPOSITORY, useExisting: SwitchingRecurringRuleRepository },
     { provide: RECEIPT_REPOSITORY, useExisting: SwitchingReceiptRepository },
+    { provide: SAVINGS_GOAL_REPOSITORY, useExisting: SwitchingSavingsGoalRepository },
     { provide: AUTH_GATEWAY, useExisting: SupabaseAuthGateway },
   ];
 }

@@ -1,0 +1,12 @@
+<div class="page menu-page">
+  <h1 class="page-title">Plus</h1>
+  <div class="rows">
+    @for (row of rows; track row.route) {
+      <a class="row" [routerLink]="row.route">
+        <app-icon [name]="row.icon" [size]="22" />
+        <span class="label">{{ row.label }}</span>
+        <app-icon name="chevron-right" [size]="16" />
+      </a>
+    }
+  </div>
+</div>

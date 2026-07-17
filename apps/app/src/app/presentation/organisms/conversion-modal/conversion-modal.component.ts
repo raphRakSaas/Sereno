@@ -16,7 +16,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       <div class="backdrop" (click)="conversion.dismiss()"></div>
       <div class="sheet" role="dialog" aria-modal="true" [attr.aria-label]="title()">
         <span class="mark">
-          <app-icon name="cloud" [size]="26" />
+          <app-icon [name]="conversion.reason() === 'ai' ? 'sparkle' : 'cloud'" [size]="26" />
         </span>
         <h2>{{ title() }}</h2>
         <p>{{ body() }}</p>
@@ -42,9 +42,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       transform: translateX(-50%);
       bottom: 0;
       width: min(100%, 480px);
-      background: var(--surface);
-      border: 1px solid var(--line);
-      border-radius: 16px 16px 0 0;
+      background: var(--paper);
+      border-radius: 24px 24px 0 0;
       padding: var(--space-6) var(--space-5) calc(var(--space-5) + var(--safe-bottom));
       z-index: 61;
       display: flex;
@@ -129,6 +128,8 @@ export class ConversionModalComponent {
         return 'Deux semaines déjà.';
       case 'feature':
         return 'Encore un pas.';
+      case 'ai':
+        return 'Scan de reçu par IA.';
     }
   });
 
@@ -140,6 +141,8 @@ export class ConversionModalComponent {
         return 'Tu tiens tes comptes ici depuis deux semaines. Crée un compte gratuit pour synchroniser tes données et ne rien perdre.';
       case 'feature':
         return `Crée un compte gratuit pour débloquer ${this.conversion.featureName() || 'cette fonctionnalité'} et synchroniser tes données.`;
+      case 'ai':
+        return 'La lecture automatique de tes reçus (montant, date, commerçant) est réservée aux comptes connectés. Crée un compte gratuit pour l’activer.';
     }
   });
 

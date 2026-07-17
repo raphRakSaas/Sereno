@@ -27,7 +27,7 @@ import { AmountComponent } from '../../atoms/amount/amount.component';
 import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { BarChartComponent } from '../../molecules/bar-chart/bar-chart.component';
-import { DonutChartComponent } from '../../molecules/donut-chart/donut-chart.component';
+import { CategoryDonutChartComponent } from '../../molecules/category-donut-chart/category-donut-chart.component';
 import { LineChartComponent } from '../../molecules/line-chart/line-chart.component';
 import { MonthHeatmapComponent } from '../../molecules/month-heatmap/month-heatmap.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
@@ -71,7 +71,7 @@ interface BudgetStatLine {
     BarChartComponent,
     CategoryIconComponent,
     DatePipe,
-    DonutChartComponent,
+    CategoryDonutChartComponent,
     IconComponent,
     LineChartComponent,
     MonthHeatmapComponent,

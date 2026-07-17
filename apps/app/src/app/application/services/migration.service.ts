@@ -6,6 +6,7 @@ import { AccountsStore } from '../stores/accounts.store';
 import { BudgetsStore } from '../stores/budgets.store';
 import { CategoriesStore } from '../stores/categories.store';
 import { RecurringStore } from '../stores/recurring.store';
+import { SavingsGoalsStore } from '../stores/savings-goals.store';
 import { TransactionTemplatesStore } from '../stores/transaction-templates.store';
 import { TransactionsStore } from '../stores/transactions.store';
 import { AppModeService } from './app-mode.service';
@@ -36,6 +37,7 @@ export class MigrationService {
   private readonly budgets = inject(BudgetsStore);
   private readonly recurring = inject(RecurringStore);
   private readonly templates = inject(TransactionTemplatesStore);
+  private readonly savingsGoals = inject(SavingsGoalsStore);
 
   readonly phase = signal<MigrationPhase>('idle');
   readonly error = signal<string | null>(null);
@@ -111,15 +113,23 @@ export class MigrationService {
     const userId = await this.supabase.requireUserId();
     const db = this.dexie.db;
 
-    const [localAccounts, localCategories, localTransactions, localBudgets, localRules, localTemplates] =
-      await Promise.all([
-        db.accounts.toArray(),
-        db.categories.toArray(),
-        db.transactions.toArray(),
-        db.budgets.toArray(),
-        db.recurringRules.toArray(),
-        db.transactionTemplates.toArray(),
-      ]);
+    const [
+      localAccounts,
+      localCategories,
+      localTransactions,
+      localBudgets,
+      localRules,
+      localTemplates,
+      localGoals,
+    ] = await Promise.all([
+      db.accounts.toArray(),
+      db.categories.toArray(),
+      db.transactions.toArray(),
+      db.budgets.toArray(),
+      db.recurringRules.toArray(),
+      db.transactionTemplates.toArray(),
+      db.savingsGoals.toArray(),
+    ]);
 
     // Nouveaux UUID générés côté client : on connaît chaque ligne insérée,
     // ce qui permet un rollback exact en cas d'échec.
@@ -229,6 +239,17 @@ export class MigrationService {
           created_at: template.createdAt,
         })),
       );
+      await insertAll(
+        'savings_goals',
+        localGoals.map((goal) => ({
+          id: crypto.randomUUID(),
+          user_id: userId,
+          name: goal.name,
+          target_amount: goal.targetAmount,
+          current_amount: goal.currentAmount,
+          created_at: goal.createdAt,
+        })),
+      );
     } catch (cause) {
       // Rollback : suppression en ordre inverse de tout ce qui a été inséré.
       for (const step of inserted) {
@@ -244,6 +265,7 @@ export class MigrationService {
       this.categories.load(),
       this.transactions.load(),
       this.templates.load(),
+      this.savingsGoals.load(),
       this.budgets.loaded() ? this.budgets.load() : Promise.resolve(),
       this.recurring.loaded() ? this.recurring.load() : Promise.resolve(),
     ]);

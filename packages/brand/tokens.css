@@ -1,82 +1,82 @@
 /* Sereno — tokens de marque partagés.
    Copie de référence des custom properties de apps/app/src/styles.scss :
    l'app reste la source canonique ; si elle change, répercuter ici.
-   Règles d'usage (docs/DESIGN.md) : aplats nets, filets 1px, zéro dégradé,
-   zéro ombre portée ; le dépassement/l'alerte est ambre, jamais rouge ;
-   --clay = un seul emploi fort par écran. */
+   Règles d'usage (docs/DESIGN.md) : accent unique corail (dégradé sur les
+   grandes surfaces, à plat sur les CTA) ; la carte a son propre aplat
+   (--surface), distinct du fond de page (--paper) ; --clay/--clay-soft sont
+   des alias historiques de --sage/--sage-pale, conservés pour ne pas casser
+   le site (gouvernance à un seul accent désormais, plus de second accent
+   chaud distinct). */
 
 :root {
   /* Encres */
-  --ink: #1e2a24;
-  --ink-soft: #566159;
-  --ink-faint: #77837a;
+  --ink: #14151a;
+  --ink-soft: #6b6e76;
+  --ink-faint: #9a9da6;
 
-  /* Surfaces — un seul fond, blanc pur */
+  /* Surfaces — la carte a son propre aplat, distinct du fond de page blanc */
   --paper: #ffffff;
-  --surface: #ffffff;
-  --sage-pale: #f7ddd3;
+  --surface: #f7f6f3;
+  --sage-pale: #ffedef;
 
-  /* Accents — corail vif comme couleur primaire de marque */
-  --sage: #d14328;
-  --sage-deep: #a8331e;
-  --mist: #7fa0ae;
-  --mist-deep: #547485;
-  --sand: #c6b792;
-  --amber: #a97c2f;
-  --amber-pale: #f0e7d4;
+  /* Accents — corail vif comme couleur unique de marque */
+  --sage: #ff4d6d;
+  --sage-deep: #e04460;
+  --mist: #0e9f5c;
+  --mist-deep: #0b7f49;
+  --sand: #9a9da6;
+  --amber: #c6862f;
+  --amber-pale: #fff4e9;
 
-  /* Accent chaud signature */
-  --clay: #b4603a;
-  --clay-soft: #f3e4db;
+  /* Alias historiques — plus de second accent chaud distinct, voir note ci-dessus */
+  --clay: var(--sage);
+  --clay-soft: var(--sage-pale);
 
   /* Structure */
-  --line: #d8ded1;
-  --radius: 10px;
+  --line: #e7e5df;
+  --radius: 16px;
 
   /* Typo — charger les fonts côté consommateur :
-     @fontsource-variable/fraunces + @fontsource/ibm-plex-sans 400/500/600 */
-  --font-display: 'Fraunces Variable', georgia, serif;
+     @fontsource-variable/sora + @fontsource/ibm-plex-sans 400/500/600 */
+  --font-display: 'Sora Variable', 'Sora', system-ui, sans-serif;
   --font-text: 'IBM Plex Sans', system-ui, sans-serif;
 }
 
-/* Mode sombre — mêmes valeurs que l'app : fond noir pur, accents corail
-   éclaircis pour rester lisibles la nuit. */
+/* Mode sombre — mêmes valeurs que l'app : fond noir pur, la carte reste un
+   aplat légèrement plus clair que le fond, accents corail éclaircis pour
+   rester lisibles la nuit. */
 :root[data-theme='dark'] {
-  --ink: #ecefea;
-  --ink-soft: #a2aba3;
-  --ink-faint: #79827b;
+  --ink: #f2f1ed;
+  --ink-soft: #a7aab2;
+  --ink-faint: #7d8088;
   --paper: #000000;
-  --surface: #000000;
-  --sage-pale: #3a1712;
-  --sage: #ff7a5c;
-  --sage-deep: #ffa08a;
-  --mist: #7fa2b2;
-  --mist-deep: #a2c1d0;
-  --sand: #b7a57f;
-  --amber: #cda255;
-  --amber-pale: #241e14;
-  --clay: #cd8258;
-  --clay-soft: #2a2019;
-  --line: #2a2e2a;
+  --surface: #17181d;
+  --sage-pale: #2e1720;
+  --sage: #ff6b85;
+  --sage-deep: #e8607a;
+  --mist: #33c481;
+  --mist-deep: #33c481;
+  --sand: #9aa0a6;
+  --amber: #e8a93c;
+  --amber-pale: #2c2213;
+  --line: #26272c;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --ink: #ecefea;
-    --ink-soft: #a2aba3;
-    --ink-faint: #79827b;
+    --ink: #f2f1ed;
+    --ink-soft: #a7aab2;
+    --ink-faint: #7d8088;
     --paper: #000000;
-    --surface: #000000;
-    --sage-pale: #3a1712;
-    --sage: #ff7a5c;
-    --sage-deep: #ffa08a;
-    --mist: #7fa2b2;
-    --mist-deep: #a2c1d0;
-    --sand: #b7a57f;
-    --amber: #cda255;
-    --amber-pale: #241e14;
-    --clay: #cd8258;
-    --clay-soft: #2a2019;
-    --line: #2a2e2a;
+    --surface: #17181d;
+    --sage-pale: #2e1720;
+    --sage: #ff6b85;
+    --sage-deep: #e8607a;
+    --mist: #33c481;
+    --mist-deep: #33c481;
+    --sand: #9aa0a6;
+    --amber: #e8a93c;
+    --amber-pale: #2c2213;
+    --line: #26272c;
   }
 }

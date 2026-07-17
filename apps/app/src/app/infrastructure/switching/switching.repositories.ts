@@ -4,6 +4,7 @@ import { NewAccount } from '../../domain/models/account.model';
 import { NewBudget } from '../../domain/models/budget.model';
 import { NewCategory } from '../../domain/models/category.model';
 import { NewRecurringRule } from '../../domain/models/recurring-rule.model';
+import { NewSavingsGoal } from '../../domain/models/savings-goal.model';
 import { NewTransaction } from '../../domain/models/transaction.model';
 import { NewTransactionTemplate } from '../../domain/models/transaction-template.model';
 import { AccountRepository } from '../../domain/ports/account.repository';
@@ -11,6 +12,7 @@ import { BudgetRepository } from '../../domain/ports/budget.repository';
 import { CategoryRepository } from '../../domain/ports/category.repository';
 import { RecurringRuleRepository } from '../../domain/ports/recurring-rule.repository';
 import { ReceiptRepository } from '../../domain/ports/receipt.repository';
+import { SavingsGoalRepository } from '../../domain/ports/savings-goal.repository';
 import { TransactionTemplateRepository } from '../../domain/ports/transaction-template.repository';
 import { TransactionFilter, TransactionRepository } from '../../domain/ports/transaction.repository';
 import { DexieAccountRepository } from '../dexie/dexie-account.repository';
@@ -18,6 +20,7 @@ import { DexieBudgetRepository } from '../dexie/dexie-budget.repository';
 import { DexieCategoryRepository } from '../dexie/dexie-category.repository';
 import { DexieRecurringRuleRepository } from '../dexie/dexie-recurring-rule.repository';
 import { DexieReceiptRepository } from '../dexie/dexie-receipt.repository';
+import { DexieSavingsGoalRepository } from '../dexie/dexie-savings-goal.repository';
 import { DexieTransactionRepository } from '../dexie/dexie-transaction.repository';
 import { DexieTransactionTemplateRepository } from '../dexie/dexie-transaction-template.repository';
 import { SupabaseAccountRepository } from '../supabase/supabase-account.repository';
@@ -25,6 +28,7 @@ import { SupabaseBudgetRepository } from '../supabase/supabase-budget.repository
 import { SupabaseCategoryRepository } from '../supabase/supabase-category.repository';
 import { SupabaseRecurringRuleRepository } from '../supabase/supabase-recurring-rule.repository';
 import { SupabaseReceiptRepository } from '../supabase/supabase-receipt.repository';
+import { SupabaseSavingsGoalRepository } from '../supabase/supabase-savings-goal.repository';
 import { SupabaseTransactionRepository } from '../supabase/supabase-transaction.repository';
 import { SupabaseTransactionTemplateRepository } from '../supabase/supabase-transaction-template.repository';
 
@@ -151,5 +155,21 @@ export class SwitchingTransactionTemplateRepository implements TransactionTempla
   list = () => this.active.list();
   create = (input: NewTransactionTemplate) => this.active.create(input);
   update = (id: string, patch: Partial<NewTransactionTemplate>) => this.active.update(id, patch);
+  remove = (id: string) => this.active.remove(id);
+}
+
+@Injectable({ providedIn: 'root' })
+export class SwitchingSavingsGoalRepository implements SavingsGoalRepository {
+  private readonly mode = inject(AppModeService);
+  private readonly dexie = inject(DexieSavingsGoalRepository);
+  private readonly supabase = inject(SupabaseSavingsGoalRepository);
+
+  private get active(): SavingsGoalRepository {
+    return this.mode.isCloud() ? this.supabase : this.dexie;
+  }
+
+  list = () => this.active.list();
+  create = (input: NewSavingsGoal) => this.active.create(input);
+  update = (id: string, patch: Partial<NewSavingsGoal>) => this.active.update(id, patch);
   remove = (id: string) => this.active.remove(id);
 }

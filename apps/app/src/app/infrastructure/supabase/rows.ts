@@ -3,6 +3,7 @@ import { Budget, BudgetPeriodType, GLOBAL_BUDGET_CATEGORY_ID, periodBoundsForMon
 import { Category, CategoryKind } from '../../domain/models/category.model';
 import { Frequency, RecurringRule } from '../../domain/models/recurring-rule.model';
 import { Receipt, ReceiptExtractedData, ReceiptStatus } from '../../domain/models/receipt.model';
+import { SavingsGoal } from '../../domain/models/savings-goal.model';
 import { Transaction, TransactionStatus, TransactionType } from '../../domain/models/transaction.model';
 import { TransactionTemplate } from '../../domain/models/transaction-template.model';
 
@@ -97,6 +98,15 @@ export interface TransactionTemplateRow {
   note: string | null;
   is_pinned: boolean;
   sort_order: number;
+  created_at: string;
+}
+
+export interface SavingsGoalRow {
+  id: string;
+  user_id: string;
+  name: string;
+  target_amount: number | string;
+  current_amount: number | string;
   created_at: string;
 }
 
@@ -220,6 +230,16 @@ export function toTransactionTemplate(row: TransactionTemplateRow): TransactionT
     note: row.note,
     isPinned: row.is_pinned,
     sortOrder: row.sort_order,
+    createdAt: row.created_at,
+  };
+}
+
+export function toSavingsGoal(row: SavingsGoalRow): SavingsGoal {
+  return {
+    id: row.id,
+    name: row.name,
+    targetAmount: num(row.target_amount),
+    currentAmount: num(row.current_amount),
     createdAt: row.created_at,
   };
 }

@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "@fontsource-variable/fraunces": "^5.2.9",
+    "@fontsource-variable/sora": "^5.2.8",
     "@fontsource/ibm-plex-sans": "^5.2.8",
     "@sereno/brand": "*",
     "astro": "^7.0.6"

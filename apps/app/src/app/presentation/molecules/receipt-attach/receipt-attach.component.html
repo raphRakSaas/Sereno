@@ -45,6 +45,10 @@
         Importer
       </button>
     </div>
+    <button type="button" class="attach-btn ai" [disabled]="disabled()" (click)="scanWithAi(galleryInput)">
+      <app-icon name="sparkle" [size]="18" />
+      Scanner automatiquement (IA)
+    </button>
   }
 
   @if (showSuggestions(activeReceipt())) {

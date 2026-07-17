@@ -2,6 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
+/* Barre d'onglets docked (5 pages racines) — pas de bouton "+" ici, l'ajout
+   passe uniquement par le FAB flottant (app-fab), pour éviter de dupliquer
+   l'action. Voir docs/DESIGN.md. */
 @Component({
   selector: 'app-bottom-nav',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -9,23 +12,24 @@ import { IconComponent } from '../../atoms/icon/icon.component';
   template: `
     <nav aria-label="Navigation principale">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-        <app-icon name="home" />
+        <span class="pill"><app-icon name="home" [size]="21" /></span>
         <span>Accueil</span>
       </a>
+      <a routerLink="/transactions" routerLinkActive="active">
+        <span class="pill"><app-icon name="list" [size]="21" /></span>
+        <span>Historique</span>
+      </a>
+      <a routerLink="/budgets" routerLinkActive="active">
+        <span class="pill"><app-icon name="target" [size]="21" /></span>
+        <span>Budgets</span>
+      </a>
       <a routerLink="/statistiques" routerLinkActive="active">
-        <app-icon name="pie" />
-        <span>Statistiques</span>
+        <span class="pill"><app-icon name="pie" [size]="21" /></span>
+        <span>Stats</span>
       </a>
-      <a routerLink="/transactions/nouvelle" class="add" aria-label="Ajouter une transaction">
-        <app-icon name="plus" [size]="26" />
-      </a>
-      <a routerLink="/calendrier" routerLinkActive="active">
-        <app-icon name="calendar" />
-        <span>Calendrier</span>
-      </a>
-      <a routerLink="/reglages" routerLinkActive="active">
-        <app-icon name="sliders" />
-        <span>Réglages</span>
+      <a routerLink="/menu" routerLinkActive="active">
+        <span class="pill"><app-icon name="sparkle" [size]="21" /></span>
+        <span>Plus</span>
       </a>
     </nav>
   `,
@@ -37,54 +41,38 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       z-index: 30;
     }
     nav {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto 1fr 1fr;
-      align-items: end;
-      background: var(--surface);
+      display: flex;
+      align-items: stretch;
+      gap: 2px;
+      background: var(--paper);
       border-top: 1px solid var(--line);
-      padding: 10px 12px calc(10px + var(--safe-bottom));
+      padding: 8px 6px calc(10px + var(--safe-bottom));
     }
     a {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
-      padding: 6px 0 4px;
+      justify-content: center;
+      gap: 4px;
+      padding: 6px 0;
+      border-radius: 12px;
       color: var(--ink-faint);
       text-decoration: none;
       font-size: 11px;
-      font-weight: 500;
-      border-radius: var(--radius);
+      font-weight: 700;
     }
-    a:not(.add) app-icon {
+    .pill {
       display: grid;
       place-items: center;
-      width: 46px;
-      height: 26px;
-      border-radius: 999px;
+      opacity: 0.55;
     }
-    /* L'onglet actif porte la pastille bleue : seul repère de couleur de la
-       nav, « où je suis ». Le bouton + reste noir/blanc, comme dans la
-       sidebar — c'est l'action, pas la position. */
     a.active {
-      color: var(--ink);
-    }
-    a.active app-icon {
-      background: var(--accent-pale);
       color: var(--accent);
+      background: var(--accent-pale);
     }
-    .add {
-      width: 56px;
-      height: 56px;
-      margin: -18px 12px 0;
-      border-radius: 999px;
-      background: var(--ink);
-      color: var(--paper);
-      justify-content: center;
-      border: 3px solid var(--paper);
-    }
-    .add:active {
-      opacity: 0.85;
+    a.active .pill {
+      opacity: 1;
     }
   `,
 })

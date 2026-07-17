@@ -58,8 +58,8 @@
 
     @if (expenseSlices().length > 0) {
       <section class="card block-card">
-        <h2>Répartition des dépenses</h2>
-        <app-donut-chart [slices]="expenseSlices()" centerLabel="Total" />
+        <h2>Répartition par catégorie</h2>
+        <app-category-donut-chart [slices]="expenseSlices()" />
       </section>
     }
 
@@ -153,7 +153,7 @@
                   class="budget-fill"
                   [class.over]="line.isOver"
                   [style.width.%]="line.fillPercent"
-                  [style.background]="line.isOver ? 'var(--amber)' : line.color"
+                  [style.background]="line.isOver ? 'var(--accent)' : line.color"
                 ></div>
               </div>
             </li>

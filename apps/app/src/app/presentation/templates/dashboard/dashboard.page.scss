@@ -1,11 +1,11 @@
-/* Dashboard — bento sur bureau, colonne unique en mobile. Noir/blanc + accent
-   bleu unique ; le strata (répartition des dépenses) reste la pièce centrale
-   signature de Sereno. Aplats nets, ombre douce en clair, filet en sombre. */
+/* Dashboard — voir docs/DESIGN.md. Hero corail (dégradé signature), carte
+   budget en aplat cliquable (pas de + ici, le FAB s'en charge), bannière de
+   dépassement distincte, Top catégories (le donut complet vit sur Statistiques). */
 
 .dash {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   padding: 0 var(--space-4) var(--space-6);
 }
 
@@ -15,30 +15,45 @@
   padding: var(--space-4) var(--space-4) 0;
   margin: 0 calc(-1 * var(--space-4));
   border-radius: 0;
-  border-left: none;
-  border-right: none;
+  border: none;
   box-shadow: none;
+  background: none;
+}
+
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: var(--safe-top) 0 var(--space-4);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .hero-top {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--safe-top) 0 var(--space-3);
+  margin-bottom: var(--space-4);
 }
 
 .hero-intro {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 2px;
   min-width: 0;
 }
 
 .greeting {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--ink);
@@ -46,49 +61,52 @@
 
 .avatar {
   flex: none;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
+  background: var(--ink);
   display: grid;
   place-items: center;
-  color: var(--ink-faint);
+  color: var(--paper);
   text-decoration: none;
-}
-
-.hero-main {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-4);
-  padding-bottom: var(--space-5);
 }
 
 .hero-balance {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 0;
+  padding: var(--space-6) var(--space-4);
+  margin: 0 calc(-1 * var(--space-4)) var(--space-4);
+  border-radius: var(--radius-hero) var(--radius-hero) 0 0;
+  background: var(--accent-gradient);
+  color: var(--on-accent);
 }
 
 .balance-label {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 700;
-  color: var(--ink-faint);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--on-accent) 75%, transparent);
 }
 
-/* Solde négatif : ambre douce, jamais rouge — on constate, on n'alarme pas. */
-.balance-value.negative { color: var(--amber); }
+.balance-value {
+  font-size: 46px;
+  white-space: nowrap;
+}
+
+/* Solde négatif : reste lisible sur le dégradé, pas d'ambre ici (fond déjà chaud). */
+.balance-value.negative {
+  color: var(--on-accent);
+}
 
 .balance-trend {
   margin: 0;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
+  /* Jaune pâle sur le dégradé corail — traitement propre au hero, pas un token réutilisé ailleurs. */
+  color: #ffe9c7;
 }
-
-.balance-trend.positive { color: var(--mist-deep); }
-.balance-trend.negative { color: var(--amber); }
 
 /* Onboarding incomplet : invitation à saisir le revenu, pas un nombre négatif. */
 .balance-prompt {
@@ -102,23 +120,28 @@
 .balance-cta {
   margin-top: 12px;
   width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
 }
 
-.hero-illustration {
-  flex: none;
-  width: 96px;
-  height: 96px;
-}
-
-/* ── Carte budget (intégrée dans le hero) ─────────────────────── */
+/* ── Carte budget (chevauche le bas du hero) ──────────────────── */
 
 .budget-card {
+  display: block;
   padding: var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--surface);
-  border: 1px solid var(--line);
-  box-shadow: var(--shadow);
-  margin-bottom: var(--space-5);
+  color: var(--ink);
+  text-decoration: none;
+  margin-bottom: var(--space-4);
 }
 
 .budget-card-top {
@@ -126,36 +149,32 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
-  margin-bottom: var(--space-3);
+  margin-bottom: 10px;
 }
 
 .budget-card-heading {
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--ink-faint);
-  text-decoration: none;
-}
-
-.budget-card-heading h2 { color: var(--ink); }
-
-.budget-card-top h2 {
-  margin: 0;
-  font-size: 15px;
-  white-space: nowrap;
 }
 
 .budget-numbers {
   margin: 0;
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
   justify-content: flex-end;
 }
 
 .budget-limit {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--ink-faint);
   display: inline-flex;
   align-items: baseline;
@@ -165,135 +184,187 @@
 .budget-track {
   height: 8px;
   border-radius: 999px;
-  background: var(--surface-2);
+  background: var(--line);
   overflow: hidden;
 }
 
 .budget-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--accent);
+  background: var(--ink);
   transition: width 0.3s ease;
 }
 
-.budget-track.near:not(.over) .budget-fill { background: var(--sand); }
-.budget-track.over .budget-fill           { background: var(--amber); }
-
 .budget-footer {
-  margin: 10px 0 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  font-size: 13px;
-  font-weight: 700;
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 600;
   color: var(--ink-soft);
 }
 
-.btn-add {
-  display: inline-flex;
+/* ── Bannière de dépassement — distincte de la carte budget ───── */
+
+.overrun-banner {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 7px 13px;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  background: var(--surface-2);
-  color: var(--ink);
-  font-size: 13px;
-  font-weight: 700;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  background: var(--overrun-bg);
   text-decoration: none;
 }
 
-/* ── Répartition des dépenses (strata) ────────────────────────── */
+.overrun-badge {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-badge);
+  background: var(--overrun-badge);
+  display: grid;
+  place-items: center;
+  color: var(--overrun-text);
+}
 
-.overview {
+.overrun-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.overrun-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.overrun-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--overrun-text);
+}
+
+.overrun-amount {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ── Objectif d'épargne ────────────────────────────────────────── */
+
+.goal-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: var(--radius-lg);
+  background: var(--amber-pale);
+  text-decoration: none;
+}
+
+.goal-badge {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-badge);
+  background: var(--goal-badge);
+  display: grid;
+  place-items: center;
+  color: var(--goal-text);
+}
+
+.goal-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.goal-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--goal-text);
+}
+
+.goal-track {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--goal-badge);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.goal-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--amber);
+}
+
+.goal-numbers {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--goal-text);
+}
+
+.goal-target {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  color: color-mix(in srgb, var(--goal-text) 65%, transparent);
+}
+
+/* ── Top catégories ────────────────────────────────────────────── */
+
+.top-categories {
   padding: var(--space-4);
 }
 
-.overview-head {
-  margin-bottom: var(--space-4);
-}
-
-.overview-head h2 {
-  margin: 0 0 4px;
-  font-size: 16px;
-}
-
-.overview-head p {
-  margin: 0;
-  font-size: 13.5px;
-  color: var(--ink-soft);
-  line-height: 1.45;
-}
-
-.strata-slot {
-  min-height: 224px;
-}
-
-.strata-slot.skeleton {
-  border-radius: var(--radius);
-}
-
-.strata-empty {
+.top-categories-list {
   display: flex;
   flex-direction: column;
+  gap: 13px;
+}
+
+.top-category-head {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: var(--space-3);
-  min-height: 224px;
-  text-align: center;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
 }
 
-.strata-empty p {
+.top-category-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.top-category-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+.empty-hint {
   margin: 0;
   font-size: 13.5px;
   color: var(--ink-soft);
-  max-width: 26ch;
 }
-
-.overview-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
-  margin-top: var(--space-4);
-}
-
-.overview-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: var(--space-3);
-  border-radius: 12px;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-}
-
-.overview-stat .dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 3px;
-}
-
-.overview-stat .label {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--ink-faint);
-}
-
-.overview-stat.income .dot  { background: var(--mist-deep); }
-.overview-stat.expense .dot { background: var(--ink); }
-.overview-stat.surplus .dot { background: var(--accent); }
-
-/* Solde négatif : point et montant en ambre, cohérent avec le hero. */
-.overview-stat.surplus.negative .dot { background: var(--amber); }
-.overview-stat.surplus.negative app-amount { color: var(--amber); }
 
 /* ── Sections inférieures ─────────────────────────────────────── */
 
 .dash-lower {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
 .section-head {
@@ -304,10 +375,14 @@
   margin-bottom: var(--space-3);
 }
 
-.section-head h2 { margin: 0; font-size: 16px; }
+.section-head h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 14px;
+}
 
 .see-all {
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 700;
   color: var(--accent);
   text-decoration: none;
@@ -382,21 +457,17 @@
     margin: 0;
     padding: var(--space-5);
     border-radius: var(--radius-lg);
-    border: 1px solid var(--line);
-    box-shadow: var(--shadow);
+    background: var(--surface);
   }
 
-  .hero-top {
-    padding-top: 0;
+  .hero-balance {
+    margin: 0 calc(-1 * var(--space-5)) var(--space-4);
+    border-radius: 0;
+    padding: var(--space-5);
   }
 
   .greeting {
-    font-size: 24px;
-  }
-
-  .hero-illustration {
-    width: 116px;
-    height: 116px;
+    font-size: 22px;
   }
 
   .reminder-scroll app-expense-tile {
@@ -410,7 +481,7 @@
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    gap: var(--space-5);
+    gap: var(--space-4);
     align-items: start;
   }
 
@@ -418,7 +489,8 @@
     grid-column: 1 / -1;
   }
 
-  .overview {
+  .overrun-banner,
+  .top-categories {
     grid-column: 1 / -1;
   }
 
@@ -426,7 +498,7 @@
     grid-column: 1 / -1;
     display: grid;
     grid-template-columns: 7fr 5fr;
-    gap: var(--space-5);
+    gap: var(--space-4);
     align-items: start;
   }
 

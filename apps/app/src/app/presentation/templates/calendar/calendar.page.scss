@@ -121,9 +121,12 @@
   border-color: var(--accent);
 }
 
+/* Jour sélectionné : fond noir plein, comme dans le handoff — priorité sur
+   la teinte de chaleur (le fond noir gagne toujours sur l'intensité). */
 .day.selected {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
 }
 
 .num {

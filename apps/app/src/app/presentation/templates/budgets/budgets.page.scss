@@ -88,8 +88,8 @@
   font-size: 13px;
 }
 
-/* Jauge plate : sauge tant que ça va, ambre une fois la limite passée.
-   Jamais de rouge. */
+/* Jauge plate : neutre tant que ça va, corail une fois la limite passée
+   (voir docs/DESIGN.md — le dépassement n'est plus ambre dans cette direction). */
 .track {
   height: 8px;
   border-radius: 999px;
@@ -105,7 +105,7 @@
 }
 
 .budget.over .fill {
-  background: var(--amber);
+  background: var(--accent);
 }
 
 .budget.near:not(.over) .fill {
@@ -113,7 +113,7 @@
 }
 
 .budget.near:not(.over) {
-  background: var(--amber-pale);
+  background: var(--overrun-bg);
 }
 
 .status {
@@ -123,16 +123,16 @@
 }
 
 .budget.over .status {
-  color: var(--amber);
+  color: var(--overrun-text);
   font-weight: 500;
 }
 
 .budget.projected:not(.over) {
-  background: var(--amber-pale);
+  background: var(--overrun-bg);
 }
 
 .budget.projected:not(.over) .status {
-  color: var(--amber);
+  color: var(--overrun-text);
   font-weight: 500;
 }
 

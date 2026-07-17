@@ -1,22 +1,4 @@
 <div class="page">
-  <div class="head">
-    <button type="button" class="icon-btn" (click)="close()" aria-label="Fermer">
-      <app-icon name="close" />
-    </button>
-    <h1 class="page-title">{{ editedId() ? 'Modifier le virement' : 'Transfert' }}</h1>
-    @if (editedId()) {
-      <button type="button" class="icon-btn danger" (click)="remove()">
-        @if (confirmingDelete()) {
-          <span class="confirm-label">Confirmer ?</span>
-        } @else {
-          <app-icon name="trash" />
-        }
-      </button>
-    } @else {
-      <span class="spacer"></span>
-    }
-  </div>
-
   <p class="explain">Un virement déplace de l'argent entre tes comptes — ce n'est ni une dépense ni un revenu.</p>
 
   <form (ngSubmit)="save()">
@@ -26,7 +8,7 @@
         id="amount"
         name="amount"
         type="text"
-        inputmode="decimal"
+        inputmode="none"
         autocomplete="off"
         placeholder="0"
         [ngModel]="amountText()"
@@ -40,34 +22,18 @@
       <p class="notice">{{ hint() }}</p>
     }
 
-    <div class="field">
-      <label for="from-account">Depuis</label>
-      <select
-        id="from-account"
-        class="input"
-        [ngModel]="fromAccountId()"
-        (ngModelChange)="setFromAccount($event)"
-        name="fromAccount"
-      >
-        @for (account of accounts.items(); track account.id) {
-          <option [value]="account.id">{{ account.name }}</option>
-        }
-      </select>
-    </div>
+    <app-numeric-keypad [value]="amountText()" (valueChange)="amountText.set($event)" />
 
-    <div class="field">
-      <label for="to-account">Vers</label>
-      <select
-        id="to-account"
-        class="input"
-        [ngModel]="toAccountId()"
-        (ngModelChange)="toAccountId.set($event)"
-        name="toAccount"
-      >
-        @for (account of destinationOptions(); track account.id) {
-          <option [value]="account.id">{{ account.name }}</option>
-        }
-      </select>
+    <div class="accounts">
+      <button type="button" class="account-card" (click)="modal.set('from')">
+        <span class="fine">Depuis</span>
+        <span class="account-name">{{ accountName(fromAccountId()) }}</span>
+      </button>
+      <span class="arrow" aria-hidden="true">↓</span>
+      <button type="button" class="account-card" (click)="modal.set('to')">
+        <span class="fine">Vers</span>
+        <span class="account-name">{{ accountName(toAccountId()) }}</span>
+      </button>
     </div>
 
     <div class="field">
@@ -95,19 +61,36 @@
       />
     </div>
 
-    <div class="field">
-      <label>Marqueur <span class="fine">(optionnel)</span></label>
-      <app-marker-color-picker
-        [selectedColor]="markerColor()"
-        (colorSelected)="markerColor.set($event)"
-      />
-    </div>
+    <button type="button" class="row" (click)="modal.set('marker')">
+      <span class="row-main">
+        <span class="marker-dot" [style.--marker]="markerColor() ?? 'var(--line)'"></span>
+        Marqueur <span class="fine">(optionnel)</span>
+      </span>
+      <app-icon name="chevron-right" [size]="16" />
+    </button>
 
-    <div class="actions">
-      <button type="submit" class="btn btn-primary" [disabled]="saving()">
-        {{ editedId() ? 'Enregistrer' : 'Transférer' }}
+    <button type="submit" class="btn btn-primary btn-block" [disabled]="saving()">
+      {{ editedId() ? 'Enregistrer' : 'Confirmer le virement' }}
+    </button>
+    @if (editedId()) {
+      <button type="button" class="delete" (click)="remove()">
+        {{ confirmingDelete() ? 'Confirmer la suppression ?' : 'Supprimer ce virement' }}
       </button>
-      <button type="button" class="btn btn-ghost" (click)="close()">Annuler</button>
-    </div>
+    }
   </form>
+
+  <app-bottom-sheet [open]="modal() === 'from'" label="Choisir le compte source" (closed)="modal.set(null)">
+    <h2 class="modal-title">Depuis quel compte ?</h2>
+    <app-account-picker [accounts]="fromOptions()" [selectedId]="fromAccountId()" (select)="setFromAccount($event)" />
+  </app-bottom-sheet>
+
+  <app-bottom-sheet [open]="modal() === 'to'" label="Choisir le compte destination" (closed)="modal.set(null)">
+    <h2 class="modal-title">Vers quel compte ?</h2>
+    <app-account-picker [accounts]="toOptions()" [selectedId]="toAccountId()" (select)="setToAccount($event)" />
+  </app-bottom-sheet>
+
+  <app-bottom-sheet [open]="modal() === 'marker'" label="Couleur du marqueur" (closed)="modal.set(null)">
+    <h2 class="modal-title">Couleur du marqueur</h2>
+    <app-marker-color-picker [selectedColor]="markerColor()" (colorSelected)="selectMarkerColor($event)" />
+  </app-bottom-sheet>
 </div>

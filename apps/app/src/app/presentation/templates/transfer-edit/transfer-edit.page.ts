@@ -15,9 +15,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastService } from '../../../application/services/toast.service';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
+import { balanceForAccount } from '../../../domain/utils/account-balance.util';
 import { toIsoDate } from '../../../domain/utils/period.utils';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { AccountOption, AccountPickerComponent } from '../../molecules/account-picker/account-picker.component';
 import { MarkerColorPickerComponent } from '../../molecules/marker-color-picker/marker-color-picker.component';
+import { NumericKeypadComponent } from '../../molecules/numeric-keypad/numeric-keypad.component';
+import { BottomSheetComponent } from '../../organisms/bottom-sheet/bottom-sheet.component';
+
+type TransferModal = 'from' | 'to' | 'marker' | null;
 
 function parseAmount(text: string): number | null {
   const amountValue = Number.parseFloat(text.replace(/\s/g, '').replace(',', '.'));
@@ -30,7 +36,14 @@ function parseAmount(text: string): number | null {
 @Component({
   selector: 'app-transfer-edit-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, IconComponent, MarkerColorPickerComponent],
+  imports: [
+    AccountPickerComponent,
+    BottomSheetComponent,
+    FormsModule,
+    IconComponent,
+    MarkerColorPickerComponent,
+    NumericKeypadComponent,
+  ],
   templateUrl: './transfer-edit.page.html',
   styleUrl: './transfer-edit.page.scss',
 })
@@ -56,11 +69,28 @@ export class TransferEditPage {
   protected readonly hint = signal('');
   protected readonly confirmingDelete = signal(false);
   protected readonly saving = signal(false);
+  protected readonly modal = signal<TransferModal>(null);
 
   protected readonly destinationOptions = computed(() => {
     const sourceId = this.fromAccountId();
     return this.accounts.items().filter((account) => account.id !== sourceId);
   });
+
+  protected readonly fromOptions = computed((): AccountOption[] =>
+    this.accounts.items().map((account) => ({
+      id: account.id,
+      name: account.name,
+      balance: balanceForAccount(account, this.transactions.items()),
+    })),
+  );
+
+  protected readonly toOptions = computed((): AccountOption[] =>
+    this.destinationOptions().map((account) => ({
+      id: account.id,
+      name: account.name,
+      balance: balanceForAccount(account, this.transactions.items()),
+    })),
+  );
 
   private populated = false;
 
@@ -109,6 +139,17 @@ export class TransferEditPage {
     if (this.toAccountId() === accountId) {
       this.toAccountId.set(this.destinationOptions()[0]?.id ?? null);
     }
+    this.modal.set(null);
+  }
+
+  protected setToAccount(accountId: string): void {
+    this.toAccountId.set(accountId);
+    this.modal.set(null);
+  }
+
+  protected selectMarkerColor(color: string | null): void {
+    this.markerColor.set(color);
+    this.modal.set(null);
   }
 
   protected async save(): Promise<void> {

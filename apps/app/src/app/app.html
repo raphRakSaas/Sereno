@@ -3,10 +3,16 @@
     <app-side-nav class="side-nav" />
   }
   <main>
+    @if (!hideShell() && !isRootTab()) {
+      <app-back-header [title]="headerTitle()" />
+    }
     <router-outlet />
   </main>
-  @if (!hideShell()) {
+  @if (!hideShell() && isRootTab()) {
     <app-bottom-nav class="bottom-nav" />
+  }
+  @if (!hideShell() && showFab()) {
+    <app-fab />
   }
 </div>
 

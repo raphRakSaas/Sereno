@@ -6,6 +6,29 @@
   flex-wrap: wrap;
 }
 
+.type-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: var(--space-3) 0;
+}
+
+.type-pills button {
+  padding: 9px 16px;
+  border: none;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.type-pills button.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+
 .toolbar {
   display: flex;
   align-items: center;

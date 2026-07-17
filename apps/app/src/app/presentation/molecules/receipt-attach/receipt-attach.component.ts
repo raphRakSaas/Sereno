@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { AppModeService } from '../../../application/services/app-mode.service';
+import { ConversionService } from '../../../application/services/conversion.service';
 import { ReceiptsStore } from '../../../application/stores/receipts.store';
 import { Receipt, ReceiptExtractedData } from '../../../domain/models/receipt.model';
 import { validateReceiptFile } from '../../../domain/utils/receipt-file.util';
@@ -30,6 +31,7 @@ export interface ReceiptSuggestionApply {
 export class ReceiptAttachComponent {
   protected readonly receipts = inject(ReceiptsStore);
   private readonly mode = inject(AppModeService);
+  private readonly conversion = inject(ConversionService);
 
   readonly transactionId = input<string | null>(null);
   readonly disabled = input(false);
@@ -93,6 +95,17 @@ export class ReceiptAttachComponent {
   }
 
   protected openGalleryInput(galleryInput: HTMLInputElement): void {
+    galleryInput.click();
+  }
+
+  /** L'analyse automatique (montant/date/commerçant) tourne déjà à l'upload
+      en mode connecté (voir showSuggestions) — ce bouton ouvre juste le
+      sélecteur de fichier, ou le paywall IA si invité. */
+  protected scanWithAi(galleryInput: HTMLInputElement): void {
+    if (!this.isCloud()) {
+      this.conversion.requestAiScan();
+      return;
+    }
     galleryInput.click();
   }
 

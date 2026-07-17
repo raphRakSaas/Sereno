@@ -7,6 +7,7 @@ import { AccountsStore } from '../stores/accounts.store';
 import { BudgetsStore } from '../stores/budgets.store';
 import { CategoriesStore } from '../stores/categories.store';
 import { RecurringStore } from '../stores/recurring.store';
+import { SavingsGoalsStore } from '../stores/savings-goals.store';
 import { TransactionTemplatesStore } from '../stores/transaction-templates.store';
 import { TransactionsStore } from '../stores/transactions.store';
 import { AppModeService } from './app-mode.service';
@@ -48,6 +49,7 @@ function createFakeDexie(data: {
   budgets?: Record<string, unknown>[];
   recurringRules?: Record<string, unknown>[];
   transactionTemplates?: Record<string, unknown>[];
+  savingsGoals?: Record<string, unknown>[];
 }) {
   const table = (rows: Record<string, unknown>[] = []) => ({
     toArray: () => Promise.resolve(rows),
@@ -61,6 +63,7 @@ function createFakeDexie(data: {
       budgets: table(data.budgets),
       recurringRules: table(data.recurringRules),
       transactionTemplates: table(data.transactionTemplates),
+      savingsGoals: table(data.savingsGoals),
     },
     ensureSeeded: vi.fn().mockResolvedValue(undefined),
     clearAllData: vi.fn().mockResolvedValue(undefined),
@@ -110,6 +113,7 @@ describe('MigrationService — rollback de migrateLocalData', () => {
         { provide: BudgetsStore, useValue: { load: vi.fn(), loaded: () => false } },
         { provide: RecurringStore, useValue: { load: vi.fn(), loaded: () => false } },
         { provide: TransactionTemplatesStore, useValue: { load: vi.fn() } },
+        { provide: SavingsGoalsStore, useValue: { load: vi.fn(), loaded: () => false } },
       ],
     });
 
@@ -155,6 +159,7 @@ describe('MigrationService — rollback de migrateLocalData', () => {
         { provide: BudgetsStore, useValue: {} },
         { provide: RecurringStore, useValue: {} },
         { provide: TransactionTemplatesStore, useValue: {} },
+        { provide: SavingsGoalsStore, useValue: {} },
       ],
     });
 

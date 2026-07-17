@@ -6,10 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Sereno — a personal budgeting PWA. The product thesis: financial anxiety comes
 from not knowing where money goes, so the app answers with calm clarity, never
-alarm. This shapes real code decisions: budget overrun UI uses amber, never
-red; copy states facts plainly ("Dépassé de 50 € — ça arrive") instead of
-warning/alerting; the guest-mode-to-account upsell is an invitation, never a
-hard paywall or a "you've hit your limit" message.
+alarm. This shapes real code decisions: copy states facts plainly ("Dépassé de
+50 € — ça arrive") instead of warning/alerting; the guest-mode-to-account
+upsell is an invitation, never a hard paywall or a "you've hit your limit"
+message. Since the July 2026 coral redesign (see `design_handoff_sereno_redesign/`
+and `docs/DESIGN.md`), budget overrun UI uses a dedicated coral/rose tone
+(`--overrun-*`) and amber (`--amber`) is reserved for the savings-goal
+feature — a deliberate departure from the older "amber, never red" rule; the
+calm-voice principle still applies to copy, just not to this specific color
+mapping anymore.
 
 Works fully offline/local with zero configuration (guest mode via IndexedDB);
 an optional free account adds Supabase sync, multi-account, custom categories,
@@ -150,20 +155,33 @@ documents the two variables.
 
 ### Design system
 
-`docs/DESIGN.md` is the source of truth for palette, typography, and the
-signature "strata" visualization (spending breakdown as sediment layers,
-`presentation/organisms/strata-chart/`, largest expense = base layer). Key
-constraints worth preserving when touching UI:
+`docs/DESIGN.md` is the source of truth for palette, typography, and radii —
+mid-migration to a coral redesign (see `design_handoff_sereno_redesign/`):
+tokens, dashboard, transactions/transfer edit, the secondary list screens,
+calendar, and statistics are done; onboarding, settings, and the remaining
+bottom-sheet modals are still pending. The "strata" visualization (spending
+breakdown as sediment layers) has been retired — `app-strata-chart` is
+deleted; the donut+callout chart (`app-category-donut-chart`) is now the
+sole signature dataviz, on the Statistiques page. See `docs/DESIGN.md`
+§Dataviz. Key constraints worth preserving when touching UI:
 
-- Flat color fills only — no gradients, no drop shadows, no glassmorphism.
+- The new direction uses one signature gradient (`--accent-gradient`, coral)
+  on large surfaces (hero card, banners, logo) and a flat accent on CTAs/small
+  elements — this is a deliberate exception to the older "flat fills only, no
+  gradients/shadows" rule, which otherwise still holds (no drop shadows except
+  `--shadow-cta`/`--shadow-fab`, no glassmorphism).
 - Category palette is validated computationally (OKLCH lightness band, chroma
   floor, colorblind-safe pairwise separation, contrast) — if adding/changing
   category colors, revalidate rather than eyeballing (the dataviz skill's
-  `validate_palette.js` was used to generate the current set).
+  `validate_palette.js` was used to generate the previous set; the new
+  redesign's category colors have **not** been revalidated yet, see
+  `docs/DESIGN.md`).
 - Amounts use tabular numerals (`.amount` class / `AmountComponent`) — never
   plain text interpolation of currency values, since scanability of numbers
   is a core product requirement.
-- Budget overrun state is amber (`--amber`), never red.
+- Budget overrun state is coral/rose (`--overrun-*`), not amber — amber
+  (`--amber`) is now reserved for the savings-goal feature. See
+  `docs/DESIGN.md` §Gouvernance for why this reverses the older rule.
 
 ### PWA
 

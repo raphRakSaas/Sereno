@@ -57,7 +57,7 @@
                 class="day"
                 [class.today]="cell.isToday"
                 [class.selected]="cell.isSelected"
-                [style.background]="cell.intensity > 0 ? 'color-mix(in srgb, var(--accent-pale) ' + (cell.intensity * 100) + '%, transparent)' : null"
+                [style.background]="!cell.isSelected && cell.intensity > 0 ? 'color-mix(in srgb, var(--accent-pale) ' + (cell.intensity * 100) + '%, transparent)' : null"
                 (click)="selectDay(cell.date!)"
               >
                 <span class="num">{{ cell.date.slice(8, 10) }}</span>

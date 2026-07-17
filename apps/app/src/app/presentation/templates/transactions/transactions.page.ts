@@ -315,10 +315,6 @@ export class TransactionsPage {
     this.photoFilter.set(value);
   }
 
-  protected setTypeFromSelect(value: string): void {
-    this.setTypeFilter(value as TypeFilter);
-  }
-
   protected setSortFromSelect(value: string): void {
     this.preferences.setTransactionSort(value as TransactionSort);
   }

@@ -1,5 +1,5 @@
 import { Component, computed, inject, isDevMode, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { Data, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { filter } from 'rxjs';
 import { ConversionService } from './application/services/conversion.service';
@@ -8,20 +8,31 @@ import { PwaService } from './application/services/pwa.service';
 import { ToastService } from './application/services/toast.service';
 import { AccountsStore } from './application/stores/accounts.store';
 import { CategoriesStore } from './application/stores/categories.store';
+import { SavingsGoalsStore } from './application/stores/savings-goals.store';
 import { TransactionTemplatesStore } from './application/stores/transaction-templates.store';
 import { TransactionsStore } from './application/stores/transactions.store';
 import { PwaBannerComponent } from './presentation/molecules/pwa-banner/pwa-banner.component';
+import { BackHeaderComponent } from './presentation/organisms/back-header/back-header.component';
 import { BottomNavComponent } from './presentation/organisms/bottom-nav/bottom-nav.component';
 import { ConversionModalComponent } from './presentation/organisms/conversion-modal/conversion-modal.component';
+import { FabComponent } from './presentation/organisms/fab/fab.component';
 import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.component';
 
-/* Routes qui ne portent pas le châssis (sidebar/nav basse) — pages
-   plein écran à part entière, pas des vues du dashboard. */
-const FULLSCREEN_ROUTES = ['/bienvenue'];
+/* Routes qui ne portent pas le châssis (sidebar/nav basse/back-header) —
+   pages plein écran à part entière, pas des vues du dashboard. */
+const FULLSCREEN_ROUTES = ['/bienvenue', '/compte'];
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, BottomNavComponent, ConversionModalComponent, PwaBannerComponent, SideNavComponent],
+  imports: [
+    RouterOutlet,
+    BackHeaderComponent,
+    BottomNavComponent,
+    ConversionModalComponent,
+    FabComponent,
+    PwaBannerComponent,
+    SideNavComponent,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -37,12 +48,19 @@ export class App {
   private readonly categories = inject(CategoriesStore);
   private readonly transactions = inject(TransactionsStore);
   private readonly templates = inject(TransactionTemplatesStore);
+  private readonly savingsGoals = inject(SavingsGoalsStore);
 
   private readonly currentUrl = signal(this.router.url);
+  private readonly routeData = signal<Data>(this.deepestRouteData());
 
   protected readonly hideShell = computed(() =>
     FULLSCREEN_ROUTES.includes(this.currentUrl().split('?')[0]),
   );
+  /* Les 5 pages racines portent la tab bar ; tout le reste ("en pile") porte
+     le back-header à la place — jamais les deux, voir docs/DESIGN.md §Nav. */
+  protected readonly isRootTab = computed(() => !!this.routeData()['rootTab']);
+  protected readonly showFab = computed(() => !!this.routeData()['fab']);
+  protected readonly headerTitle = computed(() => (this.routeData()['headerTitle'] as string) ?? '');
 
   constructor() {
     // L'initializer (app.config) a déjà chargé les stores si une session
@@ -51,13 +69,17 @@ export class App {
     if (!this.categories.loaded()) void this.categories.load();
     if (!this.transactions.loaded()) void this.transactions.load();
     if (!this.templates.loaded()) void this.templates.load();
+    if (!this.savingsGoals.loaded()) void this.savingsGoals.load();
 
     // Déclencheur "14 jours d'utilisation" — vérifié à chaque démarrage.
     void this.conversion.checkQuotaTriggers();
 
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
-      .subscribe((event) => this.currentUrl.set(event.urlAfterRedirects));
+      .subscribe((event) => {
+        this.currentUrl.set(event.urlAfterRedirects);
+        this.routeData.set(this.deepestRouteData());
+      });
 
     this.shortcuts.init();
 
@@ -65,5 +87,11 @@ export class App {
     if (!isDevMode() && this.swUpdate?.isEnabled) {
       this.pwa.initUpdates(this.swUpdate);
     }
+  }
+
+  private deepestRouteData(): Data {
+    let route = this.router.routerState.snapshot.root;
+    while (route.firstChild) route = route.firstChild;
+    return route.data;
   }
 }

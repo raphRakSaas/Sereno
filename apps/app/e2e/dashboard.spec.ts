@@ -3,7 +3,7 @@ import { completeOnboarding, skipOnboarding } from './utils';
 
 test.describe('Tableau de bord', () => {
   test('P2 — un solde disponible positif s’affiche sans invitation revenu', async ({ page }) => {
-    await completeOnboarding(page, { income: '2000', expenseName: 'Loyer', expenseAmount: '800' });
+    await completeOnboarding(page, { income: '2000', expenseName: 'Logement', expenseAmount: '800' });
 
     await expect(page.locator('.balance-prompt')).toHaveCount(0);
     const balance = page.locator('.balance-value');
@@ -13,22 +13,21 @@ test.describe('Tableau de bord', () => {
     await expect(balance.locator('.sign')).toHaveCount(0);
   });
 
-  test('P2 — un solde négatif passe en ambre (classe negative) avec le signe « − »', async ({
+  test('P2 — un solde négatif reste lisible (classe negative) avec le signe « − », jamais en rouge vif', async ({
     page,
   }) => {
-    await completeOnboarding(page, { income: '500', expenseName: 'Loyer', expenseAmount: '800' });
+    await completeOnboarding(page, { income: '500', expenseName: 'Logement', expenseAmount: '800' });
 
     const balance = page.locator('.balance-value');
     await expect(balance).toBeVisible();
     await expect(balance).toHaveClass(/negative/);
     await expect(balance.locator('.sign')).toHaveText('−');
-    // La couleur résolue est bien l'ambre douce (jamais du rouge vif).
     const color = await balance.evaluate((el) => getComputedStyle(el).color);
     expect(color).not.toBe('rgb(255, 0, 0)');
   });
 
   test('P8 — la salutation correspond à l’un des créneaux horaires attendus', async ({ page }) => {
-    await completeOnboarding(page, { income: '2000', expenseName: 'Loyer', expenseAmount: '800' });
+    await completeOnboarding(page, { income: '2000', expenseName: 'Logement', expenseAmount: '800' });
     await expect(page.locator('.greeting')).toHaveText(
       /(Bonjour|Bon après-midi|Bonsoir|Bonne nuit)/,
     );
@@ -39,7 +38,7 @@ test.describe('Tableau de bord', () => {
     await page.goto('/');
     await expect(page.locator('.hero-card')).toBeVisible();
 
-    await page.locator('a.budget-card-heading').click();
+    await page.locator('a.budget-card').click();
     await expect(page).toHaveURL(/\/budgets$/);
     await expect(page.getByRole('heading', { name: /Budgets?/ }).first()).toBeVisible();
   });

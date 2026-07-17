@@ -1,57 +1,77 @@
 /* Sereno — feuille de style globale.
-   Noir/blanc purs + un seul accent fonctionnel (bleu). Aplats nets, pas de
-   dégradés : les surfaces se distinguent par la couleur, un filet 1px et une
-   ombre douce (nulle en sombre). Voir docs/DESIGN.md. */
+   Accent unique : corail (dégradé sur les grandes surfaces — hero, bannières —
+   à plat sur les CTA et petits éléments, jamais les deux à la fois sur un même
+   écran). Les cartes ont leur propre aplat (--surface), distinct du fond de
+   page (--paper) : ombre supprimée par défaut, réservée au corail (CTA/FAB).
+   Voir docs/DESIGN.md. */
 
-@use '@fontsource-variable/plus-jakarta-sans' as jakarta;
+@use '@fontsource-variable/sora' as sora;
+@use '@fontsource/ibm-plex-sans/400.css' as plex-400;
+@use '@fontsource/ibm-plex-sans/500.css' as plex-500;
+@use '@fontsource/ibm-plex-sans/600.css' as plex-600;
 
 :root {
-  /* Encres — noir pur en clair, blanc pur en sombre */
+  /* Encres — quasi-noir en clair, quasi-blanc en sombre */
   --theme-t: 0;
-  --ink: color-mix(in srgb, #0b0b0c calc((1 - var(--theme-t)) * 100%), #f5f5f6);
-  --ink-soft: color-mix(in srgb, #5b5b60 calc((1 - var(--theme-t)) * 100%), #a6a6ac);
-  --ink-faint: color-mix(in srgb, #8a8a90 calc((1 - var(--theme-t)) * 100%), #75767c);
+  --ink: color-mix(in srgb, #14151a calc((1 - var(--theme-t)) * 100%), #f2f1ed);
+  --ink-soft: color-mix(in srgb, #6b6e76 calc((1 - var(--theme-t)) * 100%), #a7aab2);
+  --ink-faint: color-mix(in srgb, #9a9da6 calc((1 - var(--theme-t)) * 100%), #7d8088);
 
-  /* Surfaces — fond unique qui s'assombrit en continu, jusqu'au noir pur */
+  /* Surfaces — la carte a son propre aplat (#F7F6F3), distinct du fond de page */
   --paper: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #000000);
-  --surface: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #121214);
-  --surface-2: color-mix(in srgb, #f6f6f7 calc((1 - var(--theme-t)) * 100%), #1a1a1d);
+  --surface: color-mix(in srgb, #f7f6f3 calc((1 - var(--theme-t)) * 100%), #17181d);
+  --surface-2: color-mix(in srgb, #efece6 calc((1 - var(--theme-t)) * 100%), #1e2027);
 
-  /* Accent fonctionnel unique : navigation active, liens, CTA, focus —
-     légèrement éclairci en sombre pour rester lisible sur le noir pur. */
-  --accent: color-mix(in srgb, #3a5cff calc((1 - var(--theme-t)) * 100%), #5b7cff);
-  --accent-deep: color-mix(in srgb, #2743d6 calc((1 - var(--theme-t)) * 100%), #7c97ff);
-  --accent-pale: color-mix(in srgb, #eef1ff calc((1 - var(--theme-t)) * 100%), #181d30);
+  /* Accent unique : corail vif. --accent/--accent-2 sont les deux arrêts du
+     dégradé signature ; --accent seul sert de à-plat (CTA, petits éléments). */
+  --accent: color-mix(in srgb, #ff4d6d calc((1 - var(--theme-t)) * 100%), #ff6b85);
+  --accent-2: color-mix(in srgb, #ff7a56 calc((1 - var(--theme-t)) * 100%), #ff9470);
+  --accent-gradient: linear-gradient(155deg, var(--accent) 0%, var(--accent-2) 100%);
+  --accent-deep: color-mix(in srgb, #e04460 calc((1 - var(--theme-t)) * 100%), #e8607a);
+  --accent-pale: color-mix(in srgb, #ffedef calc((1 - var(--theme-t)) * 100%), #2e1720);
   --on-accent: #ffffff;
 
-  /* Revenus / positif — le vert « profond » sert aussi de texte (soldes, tendances) :
-     en clair #0e7d4e atteint 4.5:1 (AA texte), en sombre #33c481 monte à 9.3:1. */
-  --mist: color-mix(in srgb, #17a76a calc((1 - var(--theme-t)) * 100%), #33c481);
-  --mist-deep: color-mix(in srgb, #0e7d4e calc((1 - var(--theme-t)) * 100%), #33c481);
+  /* Revenus / positif */
+  --mist: color-mix(in srgb, #0e9f5c calc((1 - var(--theme-t)) * 100%), #33c481);
+  --mist-deep: color-mix(in srgb, #0b7f49 calc((1 - var(--theme-t)) * 100%), #33c481);
 
-  /* Neutre tertiaire (virements…) */
-  --sand: color-mix(in srgb, #6b7280 calc((1 - var(--theme-t)) * 100%), #9aa0a6);
+  /* Neutre tertiaire (virements, budgets proches de la limite…) */
+  --sand: color-mix(in srgb, #9a9da6 calc((1 - var(--theme-t)) * 100%), #9aa0a6);
 
-  /* Dépassement de budget — jamais rouge, toujours ambre : on explique, on n'alarme pas */
-  --amber: color-mix(in srgb, #c6821a calc((1 - var(--theme-t)) * 100%), #e8a93c);
-  --amber-pale: color-mix(in srgb, #fbf0dd calc((1 - var(--theme-t)) * 100%), #2c2213);
+  /* Objectif d'épargne — teinte ambre dédiée. N'est plus la couleur de
+     dépassement de budget (voir --overrun-* ci-dessous) : dans cette direction,
+     le dépassement est corail/rose et l'ambre est réservé à l'épargne. */
+  --amber: color-mix(in srgb, #c6862f calc((1 - var(--theme-t)) * 100%), #e8a93c);
+  --amber-pale: color-mix(in srgb, #fff4e9 calc((1 - var(--theme-t)) * 100%), #2c2213);
+  --goal-badge: color-mix(in srgb, #ffe6c7 calc((1 - var(--theme-t)) * 100%), #3a2c16);
+  --goal-text: color-mix(in srgb, #8a6a38 calc((1 - var(--theme-t)) * 100%), #d9b876);
+
+  /* Dépassement de budget — corail/rose dédié (remplace l'ancien traitement
+     ambre ; les écrans existants qui lisent encore --amber pour un
+     dépassement seront migrés vers ces tokens écran par écran). */
+  --overrun-bg: color-mix(in srgb, #ffedef calc((1 - var(--theme-t)) * 100%), #331419);
+  --overrun-badge: color-mix(in srgb, #ffd9de calc((1 - var(--theme-t)) * 100%), #3a1a20);
+  --overrun-text: color-mix(in srgb, #b33a52 calc((1 - var(--theme-t)) * 100%), #ff7a93);
 
   /* Alertes système réelles uniquement (sync, erreurs) — jamais pour un dépassement de budget */
   --red: color-mix(in srgb, #e5484d calc((1 - var(--theme-t)) * 100%), #ff6b6e);
   --red-pale: color-mix(in srgb, #fdebec calc((1 - var(--theme-t)) * 100%), #301418);
 
   /* Structure */
-  --line: color-mix(in srgb, #eaeaec calc((1 - var(--theme-t)) * 100%), #242428);
-  --radius: 12px;
+  --line: color-mix(in srgb, #e7e5df calc((1 - var(--theme-t)) * 100%), #26272c);
+  --radius: 14px;
   --radius-lg: 20px;
-  /* Ombre douce en clair, invisible en sombre (le filet --line suffit) */
-  --shadow:
-    0 1px 2px rgba(20, 20, 22, calc(0.04 * (1 - var(--theme-t)))),
-    0 12px 28px rgba(20, 20, 22, calc(0.06 * (1 - var(--theme-t))));
+  --radius-hero: 28px;
+  --radius-pill: 999px;
+  --radius-badge: 10px;
+  /* Cartes en aplat pur : plus d'ombre par défaut, réservée au corail (CTA/FAB) */
+  --shadow: none;
+  --shadow-cta: 0 8px 20px rgba(255, 77, 109, 0.3);
+  --shadow-fab: 0 10px 24px rgba(255, 77, 109, 0.4);
 
   /* Typo */
-  --font-display: 'Plus Jakarta Sans Variable', -apple-system, 'Segoe UI', sans-serif;
-  --font-text: 'Plus Jakarta Sans Variable', -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Sora Variable', 'Sora', -apple-system, 'Segoe UI', sans-serif;
+  --font-text: 'IBM Plex Sans', -apple-system, 'Segoe UI', sans-serif;
 
   /* Espacements */
   --space-1: 4px;

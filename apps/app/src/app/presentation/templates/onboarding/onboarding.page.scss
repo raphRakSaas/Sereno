@@ -1,319 +1,393 @@
-/* Onboarding — toujours un panneau clair (le formulaire) et un panneau
-   sombre (l'illustration + une phrase), quel que soit le thème choisi par
-   ailleurs dans l'app. Les tokens sont donc figés ici, pas hérités du
-   thème global : tout composant partagé (bouton, champ, category-picker)
-   qui lit --ink/--surface/--line/--accent reste correct dans les deux
-   panneaux. Empilé sur mobile (bande sombre en haut, formulaire en bas),
-   côte à côte sur grand écran. */
+/* Onboarding — 4 étapes plein écran (bienvenue / revenu / dépenses / prêt),
+   toujours contournables. La bienvenue est le seul écran en dégradé corail
+   plein ; les autres restent en aplat clair. Voir docs/DESIGN.md. */
 
-.onboarding-shell {
-  display: flex;
-  flex-direction: column;
+.onb {
   min-height: 100dvh;
-}
-
-.panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-}
-
-.panel-inner {
-  width: 100%;
-  max-width: 400px;
-  padding: calc(var(--space-6) + var(--safe-top)) var(--space-5) var(--space-6);
-}
-
-/* ── Panneau clair (formulaire) — toujours clair ─────────────────── */
-
-.panel-light {
-  order: 2;
-  --ink: #0b0b0c;
-  --ink-soft: #5b5b60;
-  --ink-faint: #8a8a90;
-  --paper: #ffffff;
-  --surface: #ffffff;
-  --surface-2: #f6f6f7;
-  --line: #eaeaec;
-  --accent: #3a5cff;
-  --accent-deep: #2743d6;
-  --accent-pale: #eef1ff;
-  --on-accent: #ffffff;
-  --shadow: 0 1px 2px rgba(20, 20, 22, 0.04), 0 12px 28px rgba(20, 20, 22, 0.06);
-  background: var(--paper);
-  color: var(--ink);
-}
-
-/* ── Panneau sombre (illustration + phrase) — toujours sombre ────── */
-
-.panel-dark {
-  order: 1;
-  --ink: #f5f5f6;
-  --ink-soft: #a6a6ac;
-  --ink-faint: #75767c;
-  --paper: #000000;
-  --surface: #121214;
-  --surface-2: #1a1a1d;
-  --line: #242428;
-  --accent: #5b7cff;
-  --accent-deep: #7c97ff;
-  --accent-pale: #181d30;
-  --on-accent: #ffffff;
-  --shadow: none;
-  background: var(--paper);
-  color: var(--ink);
-  text-align: center;
-  min-height: 34vh;
-  padding: var(--space-5) 0;
-}
-
-.panel-dark .panel-inner {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-5) var(--space-5);
 }
 
-.panel-dark .illustration {
-  width: 100%;
-  max-width: 200px;
-  aspect-ratio: 1 / 1;
-  margin-bottom: var(--space-2);
-}
-
-.panel-dark h2 {
-  font-size: 19px;
-  margin: 0;
-}
-
-.panel-dark p {
-  margin: 0;
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.55;
-  max-width: 34ch;
-}
-
-/* ── Contenu du panneau clair ─────────────────────────────────────── */
-
-.progress {
+.step {
+  flex: 1;
   display: flex;
-  gap: 6px;
-  margin-bottom: var(--space-4);
+  flex-direction: column;
+  padding: calc(var(--space-5) + var(--safe-top)) var(--space-5) calc(var(--space-6) + var(--safe-bottom));
 }
 
-.progress span {
-  width: 20px;
-  height: 4px;
-  border-radius: 999px;
-  background: var(--line);
-}
+/* ── Bienvenue ─────────────────────────────────────────────────── */
 
-.progress span.on {
-  background: var(--accent);
-}
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  border: none;
-  background: none;
-  padding: 0;
-  margin-bottom: var(--space-3);
-  color: var(--ink-faint);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.back svg {
-  width: 15px;
-  height: 15px;
+.step-welcome {
+  justify-content: space-between;
+  background: var(--accent-gradient);
+  color: #fff;
+  gap: var(--space-5);
 }
 
 .masthead {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: 9px;
 }
 
-.masthead .wordmark {
+.mark {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 9px;
+  /* Toujours noir plein, même en thème sombre : ce badge vit sur le
+     dégradé corail fixe de l'écran de bienvenue, pas sur le fond de l'app. */
+  background: #14151a;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 15px;
+  color: #fff;
+}
+
+.wordmark {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 16px;
+  letter-spacing: -0.01em;
+}
+
+.illustration {
+  height: 190px;
+  margin: 0 calc(-1 * var(--space-5));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.illustration app-lottie-player {
+  width: 140px;
+  height: 140px;
+}
+
+.welcome-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.welcome-copy h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 800;
   letter-spacing: -0.02em;
 }
 
-.tagline {
-  margin: 0 0 var(--space-5);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ink-faint);
-}
-
-.panel-light h1 {
-  font-size: 22px;
-  margin-bottom: var(--space-2);
-}
-
-.lede {
-  margin: 0 0 var(--space-4);
-  font-size: 14px;
-  color: var(--ink-soft);
-  line-height: 1.55;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: var(--space-4);
-}
-
-.field label {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink-soft);
-}
-
-.amount-field {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.amount-field .input {
-  padding-right: 34px;
-  text-align: right;
-}
-
-.amount-field .euro {
-  position: absolute;
-  right: 14px;
-  color: var(--ink-faint);
+.welcome-copy p {
+  margin: 0;
   font-size: 15px;
-  pointer-events: none;
+  font-weight: 500;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 28ch;
 }
 
 .actions {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-2);
+  gap: 12px;
 }
 
-.btn-skip {
-  background: none;
+.btn-cta {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
   border: none;
-  color: var(--ink-faint);
+  border-radius: 16px;
+  /* Toujours noir plein, même en thème sombre — voir .mark ci-dessus. */
+  background: #14151a;
+  color: #fff;
+  font-family: var(--font-text);
+  font-size: 15.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-cta-solid {
+  background: var(--accent);
+  box-shadow: var(--shadow-cta);
+  width: 100%;
+  border-radius: 14px;
+  padding: 15px;
+  font-size: 15px;
+}
+
+.btn-cta-solid:disabled {
+  opacity: 0.7;
+}
+
+.btn-link-light {
+  border: none;
+  background: none;
+  padding: 8px;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 13.5px;
   font-weight: 600;
   cursor: pointer;
-  padding: 6px;
 }
 
-.btn-skip:hover {
+/* ── En-tête commun (revenu / dépenses) ───────────────────────────── */
+
+.step-form {
+  gap: var(--space-4);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-2);
+}
+
+.back {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 11px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.dots {
+  flex: 1;
+  display: flex;
+  gap: 5px;
+}
+
+.dots span {
+  flex: 1;
+  height: 4px;
+  border-radius: 3px;
+  background: var(--line);
+}
+
+.dots span.on {
+  background: var(--accent);
+}
+
+.step-form h1 {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.lede {
+  margin: 0 0 var(--space-2);
+  font-size: 14px;
+  font-weight: 500;
   color: var(--ink-soft);
 }
 
-/* ── Mobile : tout doit rentrer sans scroll, on allège le texte ──────── */
+/* ── Revenu ────────────────────────────────────────────────────── */
 
-@media (max-width: 1023px) {
-  .panel-inner {
-    padding: calc(var(--space-4) + var(--safe-top)) var(--space-4) var(--space-4);
-  }
-
-  .tagline {
-    display: none;
-  }
-
-  .panel-dark {
-    min-height: 0;
-    padding: var(--space-4) 0;
-  }
-
-  .panel-dark .panel-inner {
-    padding: var(--space-4) var(--space-4);
-    gap: 6px;
-  }
-
-  .panel-dark .illustration {
-    max-width: 100px;
-    margin-bottom: 0;
-  }
-
-  .panel-dark h2 {
-    font-size: 16px;
-  }
-
-  .panel-dark p {
-    display: none;
-  }
-
-  .masthead {
-    margin-bottom: 4px;
-  }
-
-  .lede {
-    display: none;
-  }
-
-  .field {
-    margin-bottom: var(--space-2);
-  }
-
-  /* Le sélecteur de catégorie défile horizontalement plutôt que de passer
-     à la ligne — sinon les 8 puces poussent la page à scroller. ::ng-deep
-     est nécessaire ici : app-category-picker est un composant enfant, ses
-     éléments internes portent son propre attribut d'encapsulation, pas
-     celui de cette page — un sélecteur descendant classique ne matcherait
-     jamais rien. */
-  app-category-picker ::ng-deep .grid {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 2px;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  app-category-picker ::ng-deep .grid button {
-    flex: none;
-  }
+.big-amount {
+  text-align: center;
+  margin: var(--space-4) 0;
 }
 
-/* ── Bureau : côte à côte, formulaire à gauche, illustration à droite ── */
+.big-amount span {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  font-feature-settings: 'tnum';
+  font-variant-numeric: tabular-nums;
+}
 
-@media (min-width: 1024px) {
-  .onboarding-shell {
-    flex-direction: row;
-  }
+/* ── Dépenses ──────────────────────────────────────────────────── */
 
-  .panel {
-    flex: 1;
-    min-height: 100dvh;
-  }
+.added-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: var(--space-2);
+}
 
-  .panel-light {
-    order: 1;
-  }
+.added-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface);
+}
 
-  .panel-dark {
-    order: 2;
-    min-height: 100dvh;
-  }
+.added-icon {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+}
 
-  .panel-dark .illustration {
-    max-width: 320px;
-  }
+.added-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
 
-  .panel-dark h2 {
-    font-size: 26px;
-  }
+.added-row input {
+  box-sizing: border-box;
+  width: 84px;
+  text-align: right;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ink);
+}
 
-  .panel-dark p {
-    font-size: 15px;
+.added-euro {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-faint);
+}
+
+.remove {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chips-label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--space-5);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-link {
+  margin-top: 12px;
+  border: none;
+  background: none;
+  padding: 6px;
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Prêt ──────────────────────────────────────────────────────── */
+
+.step-ready {
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.illustration-ready {
+  height: 180px;
+  margin: 0;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.illustration-ready app-lottie-player {
+  width: 120px;
+  height: 120px;
+}
+
+.step-ready h1 {
+  margin: var(--space-2) 0 6px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.recap {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.recap-tile {
+  flex: 1;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recap-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.recap-income {
+  color: var(--mist-deep);
+}
+
+.recap-expense {
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .onb {
+    max-width: 480px;
+    margin: 0 auto;
   }
 }

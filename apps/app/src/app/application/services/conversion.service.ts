@@ -3,7 +3,7 @@ import { AUTH_GATEWAY } from '../../domain/ports/auth.gateway';
 import { DexieService } from '../../infrastructure/dexie/dexie.providers';
 import { AppModeService } from './app-mode.service';
 
-export type ConversionReason = 'transactions' | 'days' | 'feature';
+export type ConversionReason = 'transactions' | 'days' | 'feature' | 'ai';
 
 const TRANSACTION_TRIGGER = 20;
 const DAYS_TRIGGER = 14;
@@ -64,6 +64,27 @@ export class ConversionService {
     }
     this.featureName.set(featureName);
     this.trigger('feature');
+  }
+
+  /** Tentative de scan de reçu par IA en mode invité. */
+  requestAiScan(): void {
+    if (this.mode.isCloud() || !this.gateway.available) {
+      return;
+    }
+    this.trigger('ai');
+  }
+
+  /** Le FAB (ou toute action d'ajout) appelle ceci avant de naviguer vers le
+      formulaire. Renvoie true si la limite invité est atteinte — la modale
+      s'ouvre alors (raison "transactions") et l'appelant doit annuler la
+      navigation prévue. Demande explicite comme requestLockedFeature : passe
+      outre le snooze de "Plus tard". */
+  guardTransactionLimit(currentCount: number): boolean {
+    if (this.mode.isCloud() || !this.gateway.available || currentCount < TRANSACTION_TRIGGER) {
+      return false;
+    }
+    this.trigger('transactions');
+    return true;
   }
 
   dismiss(): void {

@@ -70,6 +70,7 @@ export class DexieService {
         this.db.recurringRules,
         this.db.receipts,
         this.db.transactionTemplates,
+        this.db.savingsGoals,
         this.db.meta,
       ],
       async () => {
@@ -81,6 +82,7 @@ export class DexieService {
           this.db.recurringRules.clear(),
           this.db.receipts.clear(),
           this.db.transactionTemplates.clear(),
+          this.db.savingsGoals.clear(),
           this.db.meta.clear(),
         ]);
       },

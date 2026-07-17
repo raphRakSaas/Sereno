@@ -21,6 +21,7 @@ import { TransactionTemplatesStore } from '../../../application/stores/transacti
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { CategoryKind } from '../../../domain/models/category.model';
 import { DEFAULT_CATEGORIES } from '../../../domain/data/default-categories';
+import { balanceForAccount } from '../../../domain/utils/account-balance.util';
 import { TransactionTemplate } from '../../../domain/models/transaction-template.model';
 import {
   lastUsedCategoryId,
@@ -31,11 +32,17 @@ import { toIsoDate } from '../../../domain/utils/period.utils';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { MerchantBadgeComponent } from '../../atoms/merchant-badge/merchant-badge.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { AccountOption, AccountPickerComponent } from '../../molecules/account-picker/account-picker.component';
 import { CategoryPickerComponent } from '../../molecules/category-picker/category-picker.component';
+import { MarkerColorPickerComponent } from '../../molecules/marker-color-picker/marker-color-picker.component';
+import { NumericKeypadComponent } from '../../molecules/numeric-keypad/numeric-keypad.component';
 import {
   ReceiptAttachComponent,
   ReceiptSuggestionApply,
 } from '../../molecules/receipt-attach/receipt-attach.component';
+import { BottomSheetComponent } from '../../organisms/bottom-sheet/bottom-sheet.component';
+
+type TxModal = 'category' | 'account' | 'marker' | null;
 
 /** Montant saisi à la française : "12,50" comme "12.50". */
 function parseAmount(text: string): number | null {
@@ -67,7 +74,18 @@ const COMMON_INCOME_CATEGORY_IDS = DEFAULT_CATEGORIES.filter(
 @Component({
   selector: 'app-transaction-edit-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AmountComponent, CategoryPickerComponent, FormsModule, IconComponent, MerchantBadgeComponent, ReceiptAttachComponent],
+  imports: [
+    AccountPickerComponent,
+    AmountComponent,
+    BottomSheetComponent,
+    CategoryPickerComponent,
+    FormsModule,
+    IconComponent,
+    MarkerColorPickerComponent,
+    MerchantBadgeComponent,
+    NumericKeypadComponent,
+    ReceiptAttachComponent,
+  ],
   templateUrl: './transaction-edit.page.html',
   styleUrl: './transaction-edit.page.scss',
 })
@@ -103,6 +121,21 @@ export class TransactionEditPage {
   protected readonly pendingReceiptFile = signal<File | null>(null);
   protected readonly templateFormOpen = signal(false);
   protected readonly templateName = signal('');
+  protected readonly modal = signal<TxModal>(null);
+  /** Marqueur choisi manuellement — sinon suggéré automatiquement à l'enregistrement. */
+  protected readonly markerColor = signal<string | null>(null);
+
+  protected readonly accountOptions = computed((): AccountOption[] =>
+    this.accounts.items().map((account) => ({
+      id: account.id,
+      name: account.name,
+      balance: balanceForAccount(account, this.transactions.items()),
+    })),
+  );
+
+  protected readonly selectedAccountName = computed(
+    () => this.accounts.byId().get(this.accountId() ?? '')?.name ?? 'Choisir',
+  );
 
   protected readonly canSaveAsTemplate = computed(
     () => parseAmount(this.amountText()) !== null && this.categoryId() !== null,
@@ -189,6 +222,7 @@ export class TransactionEditPage {
       this.linkedRecurringRuleId.set(existing.recurringRuleId);
       this.detachFromRecurrence.set(false);
       this.categoryTouched.set(true);
+      this.markerColor.set(existing.markerColor);
     });
 
     effect(() => {
@@ -337,6 +371,22 @@ export class TransactionEditPage {
     this.categoryTouched.set(true);
     this.categoryId.set(categoryId);
     this.hint.set('');
+    this.modal.set(null);
+  }
+
+  protected selectAccount(accountId: string): void {
+    this.accountId.set(accountId);
+    this.modal.set(null);
+  }
+
+  protected selectMarkerColor(color: string | null): void {
+    this.markerColor.set(color);
+    this.modal.set(null);
+  }
+
+  /** Le Virement est un formulaire dédié — le segment n'y bascule pas sur place. */
+  protected goToTransfer(): void {
+    void this.router.navigate(['/transferts/nouveau']);
   }
 
   protected applyAmountSuggestion(amount: number): void {
@@ -475,7 +525,7 @@ export class TransactionEditPage {
       type: this.type(),
       date: selectedDate,
       note: this.note().trim() || null,
-      markerColor: suggestMarkerColor(selectedCategoryId, this.recentMarkerColors()),
+      markerColor: this.markerColor() ?? suggestMarkerColor(selectedCategoryId, this.recentMarkerColors()),
       status: 'posted',
       recurringRuleId,
       transferToAccountId: null,

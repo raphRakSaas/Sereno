@@ -5,6 +5,8 @@ test.describe('Formulaire d’ajout — catégories de revenu', () => {
   test.beforeEach(async ({ page }) => {
     await skipOnboarding(page);
     await page.goto('/transactions/nouvelle?type=income');
+    // La catégorie s'ouvre désormais dans une modale bottom-sheet.
+    await page.locator('.row-list .row').first().click();
     await expect(page.locator('app-category-picker button[role="option"]').first()).toBeVisible();
   });
 
@@ -29,6 +31,9 @@ test.describe('Formulaire d’ajout — catégories de revenu', () => {
 
     await more.click();
 
+    // Assertion auto-retry (pas un simple .count()) : laisse le temps au signal
+    // "expanded" de se refléter dans le DOM avant de comparer.
+    await expect(options).not.toHaveCount(collapsedCount);
     const expandedCount = await options.count();
     expect(expandedCount).toBeGreaterThan(collapsedCount);
     await expect(page.locator('app-category-picker button.more')).toHaveText(/Moins de catégories/);

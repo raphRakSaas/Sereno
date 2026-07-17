@@ -5,6 +5,7 @@ import { Budget, periodBoundsForMonth } from '../../domain/models/budget.model';
 import { Category } from '../../domain/models/category.model';
 import { Receipt } from '../../domain/models/receipt.model';
 import { RecurringRule } from '../../domain/models/recurring-rule.model';
+import { SavingsGoal } from '../../domain/models/savings-goal.model';
 import { Transaction } from '../../domain/models/transaction.model';
 import { TransactionTemplate } from '../../domain/models/transaction-template.model';
 
@@ -22,6 +23,7 @@ export class SerenoDb extends Dexie {
   recurringRules!: Table<RecurringRule, string>;
   receipts!: Table<Receipt & { blob: Blob }, string>;
   transactionTemplates!: Table<TransactionTemplate, string>;
+  savingsGoals!: Table<SavingsGoal, string>;
   meta!: Table<MetaEntry, string>;
 
   constructor() {
@@ -134,6 +136,9 @@ export class SerenoDb extends Dexie {
           isArchived: category.isArchived,
         });
       }
+    });
+    this.version(7).stores({
+      savingsGoals: 'id, createdAt',
     });
   }
 }

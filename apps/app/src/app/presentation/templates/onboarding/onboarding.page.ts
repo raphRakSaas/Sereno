@@ -1,15 +1,19 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { DEFAULT_CATEGORIES } from '../../../domain/data/default-categories';
 import { toIsoDate } from '../../../domain/utils/period.utils';
-import { LogoComponent } from '../../atoms/logo/logo.component';
+import { AmountComponent } from '../../atoms/amount/amount.component';
+import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
+import { IconComponent } from '../../atoms/icon/icon.component';
 import { LottiePlayerComponent } from '../../atoms/lottie-player/lottie-player.component';
-import { CategoryPickerComponent } from '../../molecules/category-picker/category-picker.component';
+import { NumericKeypadComponent } from '../../molecules/numeric-keypad/numeric-keypad.component';
 import { ONBOARDING_DONE_KEY } from '../../guards/onboarding.guard';
+
+type OnbStep = 'welcome' | 'income' | 'expenses' | 'ready';
+const STEP_ORDER: OnbStep[] = ['welcome', 'income', 'expenses', 'ready'];
 
 function parseAmount(text: string): number | null {
   const value = Number.parseFloat(text.replace(/\s/g, '').replace(',', '.'));
@@ -17,57 +21,99 @@ function parseAmount(text: string): number | null {
 }
 
 const SALAIRE_ID = DEFAULT_CATEGORIES.find((category) => category.name === 'Salaire')!.id;
-const LOGEMENT_ID = DEFAULT_CATEGORIES.find((category) => category.name === 'Logement')!.id;
 
-/* Premier écran d'un guest tout neuf (voir onboarding.guard.ts) : deux étapes
-   courtes, une donnée réelle à la fois, jamais de fausse donnée de démo.
-   Chaque étape se présente en deux panneaux — clair (le formulaire) et
-   sombre (l'illustration + une phrase) — toujours dans ces deux tons-là,
-   indépendamment du thème choisi par ailleurs dans l'app. Toujours
-   contournable, à aucun moment un mur. */
+/* Premier écran d'un guest tout neuf (voir onboarding.guard.ts) : 4 étapes
+   courtes (bienvenue / revenu / dépenses / prêt), toujours contournables,
+   jamais un mur. Rien n'est pré-rempli — l'utilisateur ajoute ce qu'il veut
+   suivre. Voir docs/DESIGN.md et le handoff pour le détail visuel. */
 @Component({
   selector: 'app-onboarding-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, CategoryPickerComponent, LogoComponent, LottiePlayerComponent],
+  imports: [
+    AmountComponent,
+    CategoryIconComponent,
+    IconComponent,
+    LottiePlayerComponent,
+    NumericKeypadComponent,
+  ],
   templateUrl: './onboarding.page.html',
   styleUrl: './onboarding.page.scss',
 })
 export class OnboardingPage {
   private readonly router = inject(Router);
   private readonly accounts = inject(AccountsStore);
-  private readonly categories = inject(CategoriesStore);
+  protected readonly categories = inject(CategoriesStore);
   private readonly transactions = inject(TransactionsStore);
 
-  protected readonly step = signal<1 | 2>(1);
-  protected readonly incomeText = signal('');
-  protected readonly expenseName = signal('');
-  protected readonly expenseText = signal('');
-  protected readonly expenseCategoryId = signal<string | null>(LOGEMENT_ID);
+  protected readonly step = signal<OnbStep>('welcome');
+  protected readonly income = signal('0');
+  protected readonly addedCategoryIds = signal<string[]>([]);
+  protected readonly expenseAmounts = signal<Record<string, string>>({});
   protected readonly saving = signal(false);
 
-  protected readonly expenseCategories = computed(() => this.categories.expenseCategories());
+  protected readonly stepIndex = computed(() => STEP_ORDER.indexOf(this.step()));
+  protected readonly dots = computed(() => {
+    const idx = this.stepIndex();
+    return [0, 1, 2].map((i) => i <= idx - 1);
+  });
 
-  protected goToStep2(): void {
-    this.step.set(2);
+  protected readonly availableChips = computed(() => {
+    const added = new Set(this.addedCategoryIds());
+    return this.categories.expenseCategories().filter((category) => !added.has(category.id));
+  });
+
+  protected readonly addedRows = computed(() => {
+    const byId = this.categories.byId();
+    const amounts = this.expenseAmounts();
+    return this.addedCategoryIds()
+      .map((id) => ({ id, category: byId.get(id), value: amounts[id] ?? '' }))
+      .filter((row) => row.category);
+  });
+
+  protected readonly incomeValue = computed(() => parseAmount(this.income()) ?? 0);
+
+  protected readonly totalExpense = computed(() =>
+    this.addedCategoryIds().reduce((sum, id) => sum + (parseAmount(this.expenseAmounts()[id] ?? '') ?? 0), 0),
+  );
+
+  protected next(): void {
+    const idx = this.stepIndex();
+    if (idx < STEP_ORDER.length - 1) {
+      this.step.set(STEP_ORDER[idx + 1]);
+    }
   }
 
-  protected backToStep1(): void {
-    this.step.set(1);
+  protected back(): void {
+    const idx = this.stepIndex();
+    if (idx > 0) {
+      this.step.set(STEP_ORDER[idx - 1]);
+    }
   }
 
-  protected skipAll(): void {
-    this.complete({ saveIncome: false, saveExpense: false });
+  protected goToAuth(): void {
+    void this.router.navigateByUrl('/compte');
   }
 
-  protected skipExpense(): void {
-    this.complete({ saveIncome: true, saveExpense: false });
+  protected addCategory(categoryId: string): void {
+    if (!this.addedCategoryIds().includes(categoryId)) {
+      this.addedCategoryIds.update((ids) => [...ids, categoryId]);
+    }
   }
 
-  protected finish(): void {
-    this.complete({ saveIncome: true, saveExpense: true });
+  protected removeCategory(categoryId: string): void {
+    this.addedCategoryIds.update((ids) => ids.filter((id) => id !== categoryId));
+    this.expenseAmounts.update((amounts) => {
+      const { [categoryId]: _removed, ...rest } = amounts;
+      return rest;
+    });
   }
 
-  private async complete(opts: { saveIncome: boolean; saveExpense: boolean }): Promise<void> {
+  protected setExpenseAmount(categoryId: string, raw: string): void {
+    const cleaned = raw.replace(/[^0-9,.]/g, '');
+    this.expenseAmounts.update((amounts) => ({ ...amounts, [categoryId]: cleaned }));
+  }
+
+  protected async finish(): Promise<void> {
     if (this.saving()) {
       return;
     }
@@ -80,7 +126,7 @@ export class OnboardingPage {
     const today = toIsoDate(new Date());
 
     if (accountId) {
-      const income = opts.saveIncome ? parseAmount(this.incomeText()) : null;
+      const income = parseAmount(this.income());
       if (income !== null) {
         await this.transactions.add({
           accountId,
@@ -96,16 +142,20 @@ export class OnboardingPage {
         });
       }
 
-      const expense = opts.saveExpense ? parseAmount(this.expenseText()) : null;
-      if (expense !== null) {
+      const byId = this.categories.byId();
+      for (const categoryId of this.addedCategoryIds()) {
+        const amount = parseAmount(this.expenseAmounts()[categoryId] ?? '');
+        if (amount === null) {
+          continue;
+        }
         await this.transactions.add({
           accountId,
-          categoryId: this.expenseCategoryId() ?? LOGEMENT_ID,
+          categoryId,
           transferToAccountId: null,
-          amount: expense,
+          amount,
           type: 'expense',
           date: today,
-          note: this.expenseName().trim() || null,
+          note: byId.get(categoryId)?.name ?? null,
           markerColor: null,
           status: 'posted',
           recurringRuleId: null,

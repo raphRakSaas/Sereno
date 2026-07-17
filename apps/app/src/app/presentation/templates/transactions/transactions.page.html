@@ -4,6 +4,20 @@
     <app-month-switcher [month]="month()" (monthChange)="month.set($event)" />
   </div>
 
+  <div class="type-pills" role="radiogroup" aria-label="Type">
+    @for (option of typeOptions; track option[0]) {
+      <button
+        type="button"
+        role="radio"
+        [attr.aria-checked]="typeFilter() === option[0]"
+        [class.on]="typeFilter() === option[0]"
+        (click)="setTypeFilter(option[0])"
+      >
+        {{ option[1] }}
+      </button>
+    }
+  </div>
+
   <div class="toolbar">
     <label class="search">
       <span class="sr-only">Rechercher</span>
@@ -42,20 +56,6 @@
   @if (filtersOpen()) {
     <div class="card filters">
       <div class="filter-grid">
-        <div class="field">
-          <label for="filter-type">Type</label>
-          <select
-            id="filter-type"
-            class="input"
-            [ngModel]="typeFilter()"
-            (ngModelChange)="setTypeFromSelect($event)"
-          >
-            @for (option of typeOptions; track option[0]) {
-              <option [value]="option[0]">{{ option[1] }}</option>
-            }
-          </select>
-        </div>
-
         <div class="field">
           <label for="filter-account">Compte</label>
           <select

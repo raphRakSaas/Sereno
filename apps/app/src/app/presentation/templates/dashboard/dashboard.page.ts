@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppModeService } from '../../../application/services/app-mode.service';
@@ -6,19 +5,20 @@ import { AccountsStore } from '../../../application/stores/accounts.store';
 import { BudgetsStore } from '../../../application/stores/budgets.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
 import { RecurringStore } from '../../../application/stores/recurring.store';
+import { SavingsGoalsStore } from '../../../application/stores/savings-goals.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { accountBalanceLines } from '../../../domain/utils/account-balance.util';
-import { GLOBAL_BUDGET_CATEGORY_ID, isGlobalBudget, monthOf } from '../../../domain/models/budget.model';
+import { isGlobalBudget, monthOf } from '../../../domain/models/budget.model';
+import { savingsGoalProgressPct } from '../../../domain/models/savings-goal.model';
 import { Transaction, isPosted } from '../../../domain/models/transaction.model';
 import { toIsoDate } from '../../../domain/utils/period.utils';
 import { savingsRatePercent } from '../../../domain/utils/stats.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
+import { LogoComponent } from '../../atoms/logo/logo.component';
 import { ExpenseTileComponent } from '../../molecules/expense-tile/expense-tile.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
-import { StrataGhostComponent } from '../../molecules/strata-ghost/strata-ghost.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
-import { StrataChartComponent } from '../../organisms/strata-chart/strata-chart.component';
 
 interface ExpenseTileData {
   id: string;
@@ -37,13 +37,11 @@ interface ExpenseTileData {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AmountComponent,
-    DatePipe,
     ExpenseTileComponent,
     IconComponent,
+    LogoComponent,
     MonthSwitcherComponent,
     RouterLink,
-    StrataChartComponent,
-    StrataGhostComponent,
     TransactionListItemComponent,
   ],
   templateUrl: './dashboard.page.html',
@@ -56,6 +54,7 @@ export class DashboardPage implements OnInit {
   protected readonly categories = inject(CategoriesStore);
   protected readonly recurring = inject(RecurringStore);
   protected readonly transactions = inject(TransactionsStore);
+  protected readonly savingsGoals = inject(SavingsGoalsStore);
 
   protected readonly selectedMonth = signal(monthOf(new Date()));
 
@@ -189,7 +188,8 @@ export class DashboardPage implements OnInit {
     return 'Fixe un budget global pour suivre tes dépenses ce mois-ci.';
   });
 
-  protected readonly expenseSlices = computed(() => {
+  /** Uniquement les catégories avec une dépense réelle ce mois-ci — jamais de 0 €. */
+  private readonly categorySpend = computed(() => {
     const byCategory = new Map<string, number>();
     for (const transaction of this.monthTransactions()) {
       if (transaction.type !== 'expense' || !transaction.categoryId) {
@@ -200,8 +200,12 @@ export class DashboardPage implements OnInit {
         (byCategory.get(transaction.categoryId) ?? 0) + transaction.amount,
       );
     }
+    return byCategory;
+  });
+
+  private readonly expenseSlices = computed(() => {
     const categories = this.categories.byId();
-    return [...byCategory.entries()]
+    return [...this.categorySpend().entries()]
       .map(([categoryId, amount]) => {
         const category = categories.get(categoryId);
         return {
@@ -211,8 +215,48 @@ export class DashboardPage implements OnInit {
           amount,
         };
       })
-      .sort((left, right) => right.amount - left.amount)
-      .slice(0, 5);
+      .sort((left, right) => right.amount - left.amount);
+  });
+
+  /** Carte "Top catégories" — 3 max, part du total dépensé ce mois-ci. */
+  protected readonly topCategories = computed(() => {
+    const slices = this.expenseSlices();
+    const total = slices.reduce((sum, slice) => sum + slice.amount, 0) || 1;
+    return slices.slice(0, 3).map((slice) => ({
+      ...slice,
+      pct: Math.round((slice.amount / total) * 100),
+    }));
+  });
+
+  /** Bannière de dépassement — la catégorie budgétée la plus au-dessus de sa limite ce mois-ci. */
+  protected readonly overBudgetCategory = computed(() => {
+    const spend = this.categorySpend();
+    const categories = this.categories.byId();
+    const worst = this.budgets
+      .items()
+      .filter((budget) => !isGlobalBudget(budget) && budget.categoryId && budget.limitAmount > 0)
+      .map((budget) => {
+        const spent = spend.get(budget.categoryId!) ?? 0;
+        return { budget, spent, overPct: Math.round(((spent - budget.limitAmount) / budget.limitAmount) * 100) };
+      })
+      .filter((entry) => entry.spent > entry.budget.limitAmount)
+      .sort((left, right) => right.overPct - left.overPct)[0];
+    if (!worst) {
+      return null;
+    }
+    return {
+      name: categories.get(worst.budget.categoryId!)?.name ?? 'Catégorie',
+      overPct: worst.overPct,
+      overAmount: worst.spent - worst.budget.limitAmount,
+    };
+  });
+
+  protected readonly savingsGoal = computed(() => {
+    const goal = this.savingsGoals.items()[0];
+    if (!goal) {
+      return null;
+    }
+    return { ...goal, progressPct: savingsGoalProgressPct(goal) };
   });
 
   protected readonly upcomingTiles = computed((): ExpenseTileData[] => {
@@ -263,7 +307,7 @@ export class DashboardPage implements OnInit {
     this.mode.isCloud() && this.recurring.items().length > 0 ? 'À venir' : 'Dépenses récentes',
   );
 
-  protected readonly recent = computed(() => this.transactions.items().slice(0, 4));
+  protected readonly recent = computed(() => this.transactions.items().slice(0, 3));
 
   private filterByMonthPrefix(transactions: Transaction[], monthStart: string): Transaction[] {
     const prefix = monthStart.slice(0, 7);

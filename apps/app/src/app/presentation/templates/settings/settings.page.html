@@ -1,6 +1,21 @@
 <div class="page">
   <h1 class="page-title">Réglages</h1>
 
+  @if (!auth.isSignedIn()) {
+    <section class="guest-banner">
+      <div class="guest-banner-text">
+        <span class="guest-banner-title">Mode invité</span>
+        <span class="guest-banner-subtitle">Tes données restent sur cet appareil</span>
+      </div>
+      @if (auth.available) {
+        <a routerLink="/compte" class="guest-banner-cta">Créer un compte</a>
+      }
+    </section>
+    @if (!auth.available) {
+      <p class="fine">Synchronisation non configurée sur cette installation (voir README).</p>
+    }
+  }
+
   <section class="card block">
     <div class="block-head">
       <app-icon name="sliders" />
@@ -50,12 +65,12 @@
     </label>
   </section>
 
-  <section class="card block">
-    <div class="block-head">
-      <app-icon [name]="auth.isSignedIn() ? 'cloud' : 'user'" />
-      <h2>Tes données</h2>
-    </div>
-    @if (auth.isSignedIn()) {
+  @if (auth.isSignedIn()) {
+    <section class="card block">
+      <div class="block-head">
+        <app-icon name="cloud" />
+        <h2>Tes données</h2>
+      </div>
       <p>
         Connecté en tant que <strong>{{ auth.user()?.email }}</strong>. Tes données sont synchronisées et
         te suivent d'un appareil à l'autre.
@@ -65,19 +80,9 @@
         {{ busy() ? 'Un instant…' : 'Me déconnecter' }}
       </button>
       <p class="fine">Tes données restent en sécurité dans ton compte.</p>
-    } @else {
-      <p>
-        Tu utilises Sereno en mode invité : tout vit sur cet appareil, rien ne part ailleurs. Un compte
-        gratuit synchronise tes données et ouvre les comptes multiples, les budgets et les récurrences.
-      </p>
-      @if (auth.available) {
-        <a routerLink="/compte" class="btn btn-primary">Créer un compte gratuit</a>
-      } @else {
-        <p class="fine">Synchronisation non configurée sur cette installation (voir README).</p>
-      }
-    }
-    <p class="fine sync">{{ lastSyncLabel() }}</p>
-  </section>
+      <p class="fine sync">{{ lastSyncLabel() }}</p>
+    </section>
+  }
 
   <section class="card block">
     <div class="block-head">
@@ -100,49 +105,6 @@
       Importer un CSV
       <input type="file" accept="text/csv,.csv" (change)="onCsvSelected($event)" [disabled]="importBusy()" />
     </label>
-  </section>
-
-  <section class="card links">
-    <a routerLink="/calendrier">
-      <app-icon name="calendar" [size]="19" />
-      <span>Calendrier</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/statistiques">
-      <app-icon name="strata" [size]="19" />
-      <span>Statistiques</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/budgets">
-      <app-icon name="wallet" [size]="19" />
-      <span>Budgets</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/comptes">
-      <app-icon name="wallet" [size]="19" />
-      <span>Comptes</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/categories">
-      <app-icon name="dots" [size]="19" />
-      <span>Catégories</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/recurrences">
-      <app-icon name="repeat" [size]="19" />
-      <span>Récurrences</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/echeances">
-      <app-icon name="calendar" [size]="19" />
-      <span>Échéances</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
-    <a routerLink="/modeles">
-      <app-icon name="sparkle" [size]="19" />
-      <span>Modèles</span>
-      <app-icon name="chevron-right" [size]="16" />
-    </a>
   </section>
 
   <section class="card block">

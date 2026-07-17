@@ -4,6 +4,7 @@ import { BudgetRepository } from './budget.repository';
 import { CategoryRepository } from './category.repository';
 import { RecurringRuleRepository } from './recurring-rule.repository';
 import { ReceiptRepository } from './receipt.repository';
+import { SavingsGoalRepository } from './savings-goal.repository';
 import { TransactionRepository } from './transaction.repository';
 import { TransactionTemplateRepository } from './transaction-template.repository';
 
@@ -22,4 +23,7 @@ export const RECURRING_RULE_REPOSITORY = new InjectionToken<RecurringRuleReposit
 export const RECEIPT_REPOSITORY = new InjectionToken<ReceiptRepository>('ReceiptRepository');
 export const TRANSACTION_TEMPLATE_REPOSITORY = new InjectionToken<TransactionTemplateRepository>(
   'TransactionTemplateRepository',
+);
+export const SAVINGS_GOAL_REPOSITORY = new InjectionToken<SavingsGoalRepository>(
+  'SavingsGoalRepository',
 );
