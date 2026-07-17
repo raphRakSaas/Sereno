@@ -2,132 +2,140 @@
 
   @if (step() === 'welcome') {
     <section class="step step-welcome">
-      <div class="masthead">
-        <div class="mark"><span>S</span></div>
-        <span class="wordmark">Sereno</span>
-      </div>
+      <div class="step-inner">
+        <div class="masthead">
+          <div class="mark"><span>S</span></div>
+          <span class="wordmark">Sereno</span>
+        </div>
 
-      <div class="illustration">
-        <app-lottie-player src="lottie/onboarding-1.lottie" />
-      </div>
+        <div class="illustration">
+          <app-lottie-player src="lottie/onboarding-1.lottie" />
+        </div>
 
-      <div class="welcome-copy">
-        <h1>Vois clair dans<br />ton argent.</h1>
-        <p>On configure ton tableau de bord en 30 secondes. Aucun compte requis.</p>
-      </div>
+        <div class="welcome-copy">
+          <h1>Vois clair dans<br />ton argent.</h1>
+          <p>On configure ton tableau de bord en 30 secondes. Aucun compte requis.</p>
+        </div>
 
-      <div class="actions">
-        <button type="button" class="btn-cta" (click)="next()">Commencer sans compte</button>
-        <button type="button" class="btn-link-light" (click)="goToAuth()">J'ai déjà un compte</button>
+        <div class="actions">
+          <button type="button" class="btn-cta" (click)="next()">Commencer sans compte</button>
+          <button type="button" class="btn-link-light" (click)="goToAuth()">J'ai déjà un compte</button>
+        </div>
       </div>
     </section>
   }
 
   @if (step() === 'income') {
     <section class="step step-form">
-      <div class="head">
-        <button type="button" class="back" (click)="back()" aria-label="Retour">
-          <app-icon name="chevron-left" [size]="18" />
-        </button>
-        <div class="dots" aria-hidden="true">
-          @for (on of dots(); track $index) {
-            <span [class.on]="on"></span>
-          }
+      <div class="step-inner">
+        <div class="head">
+          <button type="button" class="back" (click)="back()" aria-label="Retour">
+            <app-icon name="chevron-left" [size]="18" />
+          </button>
+          <div class="dots" aria-hidden="true">
+            @for (on of dots(); track $index) {
+              <span [class.on]="on"></span>
+            }
+          </div>
         </div>
+
+        <h1>Quel est ton revenu mensuel&nbsp;?</h1>
+        <p class="lede">Ça nous permet de calculer ton solde disponible dès l'arrivée sur le tableau de bord.</p>
+
+        <div class="big-amount">
+          <span>{{ income() }}&nbsp;€</span>
+        </div>
+
+        <app-numeric-keypad [value]="income()" (valueChange)="income.set($event)" />
+
+        <button type="button" class="btn btn-primary btn-block" (click)="next()">Continuer</button>
       </div>
-
-      <h1>Quel est ton revenu mensuel&nbsp;?</h1>
-      <p class="lede">Ça nous permet de calculer ton solde disponible dès l'arrivée sur le tableau de bord.</p>
-
-      <div class="big-amount">
-        <span>{{ income() }}&nbsp;€</span>
-      </div>
-
-      <app-numeric-keypad [value]="income()" (valueChange)="income.set($event)" />
-
-      <button type="button" class="btn btn-primary btn-block" (click)="next()">Continuer</button>
     </section>
   }
 
   @if (step() === 'expenses') {
     <section class="step step-form">
-      <div class="head">
-        <button type="button" class="back" (click)="back()" aria-label="Retour">
-          <app-icon name="chevron-left" [size]="18" />
-        </button>
-        <div class="dots" aria-hidden="true">
-          @for (on of dots(); track $index) {
-            <span [class.on]="on"></span>
-          }
-        </div>
-      </div>
-
-      <h1>Tes dépenses principales</h1>
-      <p class="lede">
-        Ajoute les postes que tu veux suivre et entre un montant approximatif — tout reste modifiable
-        plus tard. Cette étape est facultative.
-      </p>
-
-      @if (addedRows().length > 0) {
-        <div class="added-rows">
-          @for (row of addedRows(); track row.id) {
-            <div class="added-row">
-              <span class="added-icon" [style.color]="row.category!.color">
-                <app-category-icon [name]="row.category!.icon" [size]="18" />
-              </span>
-              <span class="added-name">{{ row.category!.name }}</span>
-              <input
-                type="text"
-                inputmode="decimal"
-                placeholder="0"
-                [value]="row.value"
-                (input)="setExpenseAmount(row.id, $any($event.target).value)"
-              />
-              <span class="added-euro">€</span>
-              <button type="button" class="remove" (click)="removeCategory(row.id)" aria-label="Retirer">×</button>
-            </div>
-          }
-        </div>
-      }
-
-      <span class="chips-label">Ajouter un poste</span>
-      <div class="chips">
-        @for (category of availableChips(); track category.id) {
-          <button type="button" class="chip" (click)="addCategory(category.id)">
-            <app-category-icon [name]="category.icon" [size]="15" />
-            + {{ category.name }}
+      <div class="step-inner">
+        <div class="head">
+          <button type="button" class="back" (click)="back()" aria-label="Retour">
+            <app-icon name="chevron-left" [size]="18" />
           </button>
-        }
-      </div>
+          <div class="dots" aria-hidden="true">
+            @for (on of dots(); track $index) {
+              <span [class.on]="on"></span>
+            }
+          </div>
+        </div>
 
-      <button type="button" class="btn btn-primary btn-block" (click)="next()">Continuer</button>
-      <button type="button" class="btn-link" (click)="next()">Passer cette étape</button>
+        <h1>Tes dépenses principales</h1>
+        <p class="lede">
+          Ajoute les postes que tu veux suivre et entre un montant approximatif — tout reste modifiable
+          plus tard. Cette étape est facultative.
+        </p>
+
+        @if (addedRows().length > 0) {
+          <div class="added-rows">
+            @for (row of addedRows(); track row.id) {
+              <div class="added-row">
+                <span class="added-icon" [style.color]="row.category!.color">
+                  <app-category-icon [name]="row.category!.icon" [size]="18" />
+                </span>
+                <span class="added-name">{{ row.category!.name }}</span>
+                <input
+                  type="text"
+                  inputmode="decimal"
+                  placeholder="0"
+                  [value]="row.value"
+                  (input)="setExpenseAmount(row.id, $any($event.target).value)"
+                />
+                <span class="added-euro">€</span>
+                <button type="button" class="remove" (click)="removeCategory(row.id)" aria-label="Retirer">×</button>
+              </div>
+            }
+          </div>
+        }
+
+        <span class="chips-label">Ajouter un poste</span>
+        <div class="chips">
+          @for (category of availableChips(); track category.id) {
+            <button type="button" class="chip" (click)="addCategory(category.id)">
+              <app-category-icon [name]="category.icon" [size]="15" />
+              + {{ category.name }}
+            </button>
+          }
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block" (click)="next()">Continuer</button>
+        <button type="button" class="btn-link" (click)="next()">Passer cette étape</button>
+      </div>
     </section>
   }
 
   @if (step() === 'ready') {
     <section class="step step-ready">
-      <div class="illustration illustration-ready">
-        <app-lottie-player src="lottie/onboarding-2.lottie" />
-      </div>
-
-      <h1>Ton tableau de bord est prêt</h1>
-      <p class="lede">On a préparé ton solde à partir de ce que tu viens d'indiquer.</p>
-
-      <div class="recap">
-        <div class="recap-tile">
-          <span class="recap-label">Revenu</span>
-          <app-amount class="recap-income" [value]="incomeValue()" size="md" sign="+" />
+      <div class="step-inner">
+        <div class="illustration illustration-ready">
+          <app-lottie-player src="lottie/onboarding-2.lottie" />
         </div>
-        <div class="recap-tile">
-          <span class="recap-label">Dépenses</span>
-          <app-amount class="recap-expense" [value]="totalExpense()" size="md" sign="−" />
-        </div>
-      </div>
 
-      <button type="button" class="btn-cta btn-cta-solid" [disabled]="saving()" (click)="finish()">
-        {{ saving() ? 'Un instant…' : 'Aller à mon tableau de bord' }}
-      </button>
+        <h1>Ton tableau de bord est prêt</h1>
+        <p class="lede">On a préparé ton solde à partir de ce que tu viens d'indiquer.</p>
+
+        <div class="recap">
+          <div class="recap-tile">
+            <span class="recap-label">Revenu</span>
+            <app-amount class="recap-income" [value]="incomeValue()" size="md" sign="+" />
+          </div>
+          <div class="recap-tile">
+            <span class="recap-label">Dépenses</span>
+            <app-amount class="recap-expense" [value]="totalExpense()" size="md" sign="−" />
+          </div>
+        </div>
+
+        <button type="button" class="btn-cta btn-cta-solid" [disabled]="saving()" (click)="finish()">
+          {{ saving() ? 'Un instant…' : 'Aller à mon tableau de bord' }}
+        </button>
+      </div>
     </section>
   }
 

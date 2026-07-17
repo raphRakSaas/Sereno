@@ -8,8 +8,18 @@
   flex-direction: column;
 }
 
+/* Le fond (dégradé ou aplat) occupe toute la largeur ; seul le contenu
+   reste dans une colonne confortable à lire — sinon grand vide des deux
+   côtés sur desktop. */
 .step {
   flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.step-inner {
+  width: 100%;
+  max-width: 480px;
   display: flex;
   flex-direction: column;
   padding: calc(var(--space-5) + var(--safe-top)) var(--space-5) calc(var(--space-6) + var(--safe-bottom));
@@ -18,9 +28,12 @@
 /* ── Bienvenue ─────────────────────────────────────────────────── */
 
 .step-welcome {
-  justify-content: space-between;
   background: var(--accent-gradient);
   color: #fff;
+}
+
+.step-welcome .step-inner {
+  justify-content: space-between;
   gap: var(--space-5);
 }
 
@@ -54,17 +67,15 @@
 }
 
 .illustration {
-  height: 190px;
-  margin: 0 calc(-1 * var(--space-5));
+  height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.12);
 }
 
 .illustration app-lottie-player {
-  width: 140px;
-  height: 140px;
+  width: 220px;
+  height: 220px;
 }
 
 .welcome-copy {
@@ -139,7 +150,7 @@
 
 /* ── En-tête commun (revenu / dépenses) ───────────────────────────── */
 
-.step-form {
+.step-form .step-inner {
   gap: var(--space-4);
 }
 
@@ -326,21 +337,18 @@
 
 /* ── Prêt ──────────────────────────────────────────────────────── */
 
-.step-ready {
+.step-ready .step-inner {
   justify-content: space-between;
   gap: var(--space-4);
 }
 
 .illustration-ready {
-  height: 180px;
-  margin: 0;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
+  height: 220px;
 }
 
 .illustration-ready app-lottie-player {
-  width: 120px;
-  height: 120px;
+  width: 180px;
+  height: 180px;
 }
 
 .step-ready h1 {
@@ -383,11 +391,4 @@
 
 .recap-expense {
   color: var(--ink);
-}
-
-@media (min-width: 768px) {
-  .onb {
-    max-width: 480px;
-    margin: 0 auto;
-  }
 }
