@@ -21,9 +21,9 @@
   (tabulaires) partout. Le solde hero est le moment fort de la marque : Sora
   800, ~46-54px, l'entier domine, décimales et devise réduites (45-65 %
   d'opacité).
-- **Un accent unique : le corail.** Dégradé (`--accent-gradient`,
-  `linear-gradient(155deg, #FF4D6D 0%, #FF7A56 100%)`) sur les grandes
-  surfaces (carte solde, bannières, logo) ; à plat (`--accent`, `#FF4D6D`) sur
+- **Un accent unique : Rausch.** Dégradé (`--accent-gradient`,
+  `linear-gradient(155deg, #FF5A5F 0%, #FC642D 100%)`) sur les grandes
+  surfaces (carte solde, bannières, logo) ; à plat (`--accent`, `#FF5A5F`) sur
   les CTA et petits éléments. Jamais les deux traitements sur un même écran.
 - **Voix calme.** Tutoiement, jamais de culpabilisation. Le dépassement de
   budget est un fait énoncé posément, pas une faute — voir la gouvernance des
@@ -31,38 +31,41 @@
 
 ## Tokens
 
+Palette de marque alignée sur Airbnb (airbnb.design) : `#FF5A5F` Rausch,
+`#00A699` Babu, `#FC642D` Arches, `#484848` Hof, `#767676` Foggy.
+
 | Token | Valeur (clair) | Usage |
 |---|---|---|
-| `--ink` | `#14151A` | Texte principal |
-| `--ink-soft` | `#6B6E76` | Texte secondaire |
-| `--ink-faint` | `#9A9DA6` | Texte tertiaire, placeholders |
+| `--ink` | `#484848` | Texte principal (Hof) |
+| `--ink-soft` | `#767676` | Texte secondaire (Foggy) |
+| `--ink-faint` | `#9A9A9A` | Texte tertiaire, placeholders |
 | `--paper` | `#FFFFFF` | Fond de page |
 | `--surface` | `#F7F6F3` | Cartes — aplat distinct du fond de page |
 | `--surface-2` | `#EFECE6` | Éléments imbriqués (ex. bouton de suppression sur une carte) |
 | `--line` | `#E7E5DF` | Filets, séparateurs |
-| `--accent` / `--accent-2` | `#FF4D6D` / `#FF7A56` | Les deux arrêts du dégradé signature ; `--accent` seul sert d'à-plat |
+| `--accent` / `--accent-2` | `#FF5A5F` / `#FC642D` | Les deux arrêts du dégradé signature (Rausch → Arches) ; `--accent` seul sert d'à-plat |
 | `--accent-gradient` | `linear-gradient(155deg, var(--accent), var(--accent-2))` | Grandes surfaces (hero, bannières, logo) |
-| `--accent-deep` | `#E04460` | Pressed/hover sur à-plat corail |
-| `--accent-pale` | `#FFEDEF` | Fonds teintés génériques (chips, lignes actives) |
-| `--mist` / `--mist-deep` | `#0E9F5C` / `#0B7F49` | Revenus, montants positifs |
-| `--sand` | `#9A9DA6` | Neutre tertiaire (virements, budgets proches de la limite) |
-| `--amber` / `--amber-pale` | `#C6862F` / `#FFF4E9` | **Objectif d'épargne** (barre/fond) |
-| `--goal-badge` / `--goal-text` | `#FFE6C7` / `#8A6A38` | Objectif d'épargne (badge icône / texte) |
-| `--overrun-bg` / `--overrun-badge` / `--overrun-text` | `#FFEDEF` / `#FFD9DE` / `#B33A52` | **Dépassement de budget** |
-| `--red` / `--red-pale` | `#E5484D` / `#FDEBEC` | Alertes système réelles uniquement (sync, erreurs) — jamais le dépassement |
+| `--accent-deep` | `#E04E53` | Pressed/hover sur à-plat Rausch |
+| `--accent-pale` | `#FFE8E9` | Fonds teintés génériques (chips, lignes actives) |
+| `--mist` / `--mist-deep` | `#00A699` / `#008C82` | Revenus, montants positifs (Babu) |
+| `--sand` | `#767676` | Neutre tertiaire (virements, budgets proches de la limite) |
+| `--amber` / `--amber-pale` | `#FC642D` / `#FFF0E8` | **Objectif d'épargne** (Arches) |
+| `--goal-badge` / `--goal-text` | `#FFE0D0` / `#A84A20` | Objectif d'épargne (badge icône / texte) |
+| `--overrun-bg` / `--overrun-badge` / `--overrun-text` | `#FFE8E9` / `#FFD5D7` / `#C4454A` | **Dépassement de budget** |
+| `--red` / `--red-pale` | `#FF5A5F` / `#FFE8E9` | Alertes système réelles uniquement (sync, erreurs) — jamais le dépassement |
 
 Rayons : `--radius` 14px (boutons/champs), `--radius-lg` 20px (cartes),
 `--radius-hero` 28px (carte hero — 26-36px), `--radius-pill` 999px (pilules),
 `--radius-badge` 10px (badges d'icône, 9-11px).
 
 Ombres : les cartes sont en aplat pur, **sans ombre par défaut**
-(`--shadow: none`). L'ombre ne sert plus qu'au corail : `--shadow-cta`
-(`0 8px 20px rgba(255,77,109,.3)`) sur les CTA, `--shadow-fab`
-(`0 10px 24px rgba(255,77,109,.4)`) sur le bouton flottant d'ajout.
+(`--shadow: none`). L'ombre ne sert plus qu'à l'accent : `--shadow-cta`
+(`0 8px 20px rgba(255,90,95,.3)`) sur les CTA, `--shadow-fab`
+(`0 10px 24px rgba(255,90,95,.4)`) sur le bouton flottant d'ajout.
 
 **Mode sombre** : dérivé du même mécanisme `--theme-t` (color-mix continu),
 best-effort en l'absence de valeurs sombres dans le handoff — fond noir pur,
-carte légèrement plus claire que le fond (`#17181D`), accent corail éclairci
+carte légèrement plus claire que le fond (`#17181D`), accent Rausch éclairci
 pour rester lisible sur noir. **À valider visuellement** (contraste,
 lisibilité) avant de considérer le dark mode définitif sur cette direction.
 

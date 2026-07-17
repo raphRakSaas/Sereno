@@ -1,9 +1,10 @@
 /* Sereno — feuille de style globale.
-   Accent unique : corail (dégradé sur les grandes surfaces — hero, bannières —
-   à plat sur les CTA et petits éléments, jamais les deux à la fois sur un même
-   écran). Les cartes ont leur propre aplat (--surface), distinct du fond de
-   page (--paper) : ombre supprimée par défaut, réservée au corail (CTA/FAB).
-   Voir docs/DESIGN.md. */
+   Palette Airbnb (airbnb.design) : #ff5a5f Rausch, #00a699 Babu, #fc642d
+   Arches, #484848 Hof, #767676 Foggy. Accent unique Rausch→Arches (dégradé
+   sur les grandes surfaces — hero, bannières — à plat sur les CTA et petits
+   éléments, jamais les deux à la fois sur un même écran). Les cartes ont
+   leur propre aplat (--surface), distinct du fond de page (--paper) : ombre
+   supprimée par défaut, réservée à l'accent (CTA/FAB). Voir docs/DESIGN.md. */
 
 @use '@fontsource-variable/sora' as sora;
 @use '@fontsource/ibm-plex-sans/400.css' as plex-400;
@@ -11,51 +12,52 @@
 @use '@fontsource/ibm-plex-sans/600.css' as plex-600;
 
 :root {
-  /* Encres — quasi-noir en clair, quasi-blanc en sombre */
+  /* Encres — palette Airbnb (#484848 Hof, #767676 Foggy) */
   --theme-t: 0;
-  --ink: color-mix(in srgb, #14151a calc((1 - var(--theme-t)) * 100%), #f2f1ed);
-  --ink-soft: color-mix(in srgb, #6b6e76 calc((1 - var(--theme-t)) * 100%), #a7aab2);
-  --ink-faint: color-mix(in srgb, #9a9da6 calc((1 - var(--theme-t)) * 100%), #7d8088);
+  --ink: color-mix(in srgb, #484848 calc((1 - var(--theme-t)) * 100%), #f2f1ed);
+  --ink-soft: color-mix(in srgb, #767676 calc((1 - var(--theme-t)) * 100%), #a7aab2);
+  --ink-faint: color-mix(in srgb, #9a9a9a calc((1 - var(--theme-t)) * 100%), #7d8088);
 
   /* Surfaces — la carte a son propre aplat (#F7F6F3), distinct du fond de page */
   --paper: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #000000);
   --surface: color-mix(in srgb, #f7f6f3 calc((1 - var(--theme-t)) * 100%), #17181d);
   --surface-2: color-mix(in srgb, #efece6 calc((1 - var(--theme-t)) * 100%), #1e2027);
 
-  /* Accent unique : corail vif. --accent/--accent-2 sont les deux arrêts du
-     dégradé signature ; --accent seul sert de à-plat (CTA, petits éléments). */
-  --accent: color-mix(in srgb, #ff4d6d calc((1 - var(--theme-t)) * 100%), #ff6b85);
-  --accent-2: color-mix(in srgb, #ff7a56 calc((1 - var(--theme-t)) * 100%), #ff9470);
+  /* Accent unique : Airbnb Rausch (#ff5a5f) → Arches (#fc642d).
+     --accent/--accent-2 sont les deux arrêts du dégradé signature ;
+     --accent seul sert de à-plat (CTA, petits éléments). */
+  --accent: color-mix(in srgb, #ff5a5f calc((1 - var(--theme-t)) * 100%), #ff7a7e);
+  --accent-2: color-mix(in srgb, #fc642d calc((1 - var(--theme-t)) * 100%), #ff8558);
   --accent-gradient: linear-gradient(155deg, var(--accent) 0%, var(--accent-2) 100%);
-  --accent-deep: color-mix(in srgb, #e04460 calc((1 - var(--theme-t)) * 100%), #e8607a);
-  --accent-pale: color-mix(in srgb, #ffedef calc((1 - var(--theme-t)) * 100%), #2e1720);
+  --accent-deep: color-mix(in srgb, #e04e53 calc((1 - var(--theme-t)) * 100%), #e8607a);
+  --accent-pale: color-mix(in srgb, #ffe8e9 calc((1 - var(--theme-t)) * 100%), #2e1718);
   --on-accent: #ffffff;
 
-  /* Revenus / positif */
-  --mist: color-mix(in srgb, #0e9f5c calc((1 - var(--theme-t)) * 100%), #33c481);
-  --mist-deep: color-mix(in srgb, #0b7f49 calc((1 - var(--theme-t)) * 100%), #33c481);
+  /* Revenus / positif — Airbnb Babu (#00a699) */
+  --mist: color-mix(in srgb, #00a699 calc((1 - var(--theme-t)) * 100%), #26c4b8);
+  --mist-deep: color-mix(in srgb, #008c82 calc((1 - var(--theme-t)) * 100%), #26c4b8);
 
   /* Neutre tertiaire (virements, budgets proches de la limite…) */
-  --sand: color-mix(in srgb, #9a9da6 calc((1 - var(--theme-t)) * 100%), #9aa0a6);
+  --sand: color-mix(in srgb, #767676 calc((1 - var(--theme-t)) * 100%), #9aa0a6);
 
-  /* Objectif d'épargne — teinte ambre dédiée. N'est plus la couleur de
+  /* Objectif d'épargne — Airbnb Arches (#fc642d). N'est plus la couleur de
      dépassement de budget (voir --overrun-* ci-dessous) : dans cette direction,
      le dépassement est corail/rose et l'ambre est réservé à l'épargne. */
-  --amber: color-mix(in srgb, #c6862f calc((1 - var(--theme-t)) * 100%), #e8a93c);
-  --amber-pale: color-mix(in srgb, #fff4e9 calc((1 - var(--theme-t)) * 100%), #2c2213);
-  --goal-badge: color-mix(in srgb, #ffe6c7 calc((1 - var(--theme-t)) * 100%), #3a2c16);
-  --goal-text: color-mix(in srgb, #8a6a38 calc((1 - var(--theme-t)) * 100%), #d9b876);
+  --amber: color-mix(in srgb, #fc642d calc((1 - var(--theme-t)) * 100%), #ff8558);
+  --amber-pale: color-mix(in srgb, #fff0e8 calc((1 - var(--theme-t)) * 100%), #2c1a13);
+  --goal-badge: color-mix(in srgb, #ffe0d0 calc((1 - var(--theme-t)) * 100%), #3a2216);
+  --goal-text: color-mix(in srgb, #a84a20 calc((1 - var(--theme-t)) * 100%), #ffb08a);
 
-  /* Dépassement de budget — corail/rose dédié (remplace l'ancien traitement
-     ambre ; les écrans existants qui lisent encore --amber pour un
+  /* Dépassement de budget — teinte Rausch (#ff5a5f) dédiée (remplace l'ancien
+     traitement ambre ; les écrans existants qui lisent encore --amber pour un
      dépassement seront migrés vers ces tokens écran par écran). */
-  --overrun-bg: color-mix(in srgb, #ffedef calc((1 - var(--theme-t)) * 100%), #331419);
-  --overrun-badge: color-mix(in srgb, #ffd9de calc((1 - var(--theme-t)) * 100%), #3a1a20);
-  --overrun-text: color-mix(in srgb, #b33a52 calc((1 - var(--theme-t)) * 100%), #ff7a93);
+  --overrun-bg: color-mix(in srgb, #ffe8e9 calc((1 - var(--theme-t)) * 100%), #331416);
+  --overrun-badge: color-mix(in srgb, #ffd5d7 calc((1 - var(--theme-t)) * 100%), #3a1a1c);
+  --overrun-text: color-mix(in srgb, #c4454a calc((1 - var(--theme-t)) * 100%), #ff7a7e);
 
   /* Alertes système réelles uniquement (sync, erreurs) — jamais pour un dépassement de budget */
-  --red: color-mix(in srgb, #e5484d calc((1 - var(--theme-t)) * 100%), #ff6b6e);
-  --red-pale: color-mix(in srgb, #fdebec calc((1 - var(--theme-t)) * 100%), #301418);
+  --red: color-mix(in srgb, #ff5a5f calc((1 - var(--theme-t)) * 100%), #ff7a7e);
+  --red-pale: color-mix(in srgb, #ffe8e9 calc((1 - var(--theme-t)) * 100%), #301416);
 
   /* Structure */
   --line: color-mix(in srgb, #e7e5df calc((1 - var(--theme-t)) * 100%), #26272c);
@@ -66,8 +68,8 @@
   --radius-badge: 10px;
   /* Cartes en aplat pur : plus d'ombre par défaut, réservée au corail (CTA/FAB) */
   --shadow: none;
-  --shadow-cta: 0 8px 20px rgba(255, 77, 109, 0.3);
-  --shadow-fab: 0 10px 24px rgba(255, 77, 109, 0.4);
+  --shadow-cta: 0 8px 20px rgba(255, 90, 95, 0.3);
+  --shadow-fab: 0 10px 24px rgba(255, 90, 95, 0.4);
 
   /* Typo */
   --font-display: 'Sora Variable', 'Sora', -apple-system, 'Segoe UI', sans-serif;

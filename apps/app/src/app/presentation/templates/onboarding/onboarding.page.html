@@ -42,9 +42,19 @@
         <h1>Quel est ton revenu mensuel&nbsp;?</h1>
         <p class="lede">Ça nous permet de calculer ton solde disponible dès l'arrivée sur le tableau de bord.</p>
 
-        <div class="big-amount">
-          <span>{{ income() }}&nbsp;€</span>
-        </div>
+        <label class="big-amount" for="income">
+          <input
+            id="income"
+            type="text"
+            inputmode="decimal"
+            autocomplete="off"
+            enterkeyhint="done"
+            placeholder="0"
+            [value]="income()"
+            (input)="setIncome($any($event.target).value)"
+          />
+          <span class="euro">€</span>
+        </label>
 
         <app-numeric-keypad [value]="income()" (valueChange)="income.set($event)" />
 

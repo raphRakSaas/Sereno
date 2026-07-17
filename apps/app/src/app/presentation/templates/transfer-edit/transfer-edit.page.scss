@@ -42,6 +42,11 @@ form {
   color: var(--ink-soft);
 }
 
+/* Clavier natif obligatoire sur mobile — voir transaction-edit.page.scss. */
+app-numeric-keypad {
+  display: none;
+}
+
 .accounts {
   display: flex;
   flex-direction: column;
@@ -136,5 +141,9 @@ form {
 @media (min-width: 768px) {
   .page {
     max-width: 520px;
+  }
+
+  app-numeric-keypad {
+    display: block;
   }
 }

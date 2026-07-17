@@ -48,9 +48,9 @@
   height: 32px;
   flex: none;
   border-radius: 9px;
-  /* Toujours noir plein, même en thème sombre : ce badge vit sur le
-     dégradé corail fixe de l'écran de bienvenue, pas sur le fond de l'app. */
-  background: #14151a;
+  /* Toujours Hof (#484848) plein, même en thème sombre : ce badge vit sur le
+     dégradé accent fixe de l'écran de bienvenue, pas sur le fond de l'app. */
+  background: #484848;
   display: grid;
   place-items: center;
   font-family: var(--font-display);
@@ -116,8 +116,8 @@
   padding: 16px;
   border: none;
   border-radius: 16px;
-  /* Toujours noir plein, même en thème sombre — voir .mark ci-dessus. */
-  background: #14151a;
+  /* Toujours Hof (#484848) plein, même en thème sombre — voir .mark ci-dessus. */
+  background: #484848;
   color: #fff;
   font-family: var(--font-text);
   font-size: 15.5px;
@@ -211,11 +211,20 @@
 /* ── Revenu ────────────────────────────────────────────────────── */
 
 .big-amount {
-  text-align: center;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
   margin: var(--space-4) 0;
 }
 
-.big-amount span {
+.big-amount input {
+  width: auto;
+  max-width: 70%;
+  border: none;
+  background: none;
+  padding: 0;
+  text-align: right;
   font-family: var(--font-display);
   font-size: 48px;
   font-weight: 800;
@@ -223,6 +232,28 @@
   color: var(--ink);
   font-feature-settings: 'tnum';
   font-variant-numeric: tabular-nums;
+}
+
+.big-amount input:focus {
+  outline: none;
+}
+
+.big-amount .euro {
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--ink-soft);
+}
+
+/* Clavier natif obligatoire sur mobile — le pavé numérique custom ne
+   reste que pour la souris, au delà du point de bascule desktop. */
+app-numeric-keypad {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  app-numeric-keypad {
+    display: block;
+  }
 }
 
 /* ── Dépenses ──────────────────────────────────────────────────── */

@@ -113,6 +113,10 @@ export class OnboardingPage {
     this.expenseAmounts.update((amounts) => ({ ...amounts, [categoryId]: cleaned }));
   }
 
+  protected setIncome(raw: string): void {
+    this.income.set(raw.replace(/[^0-9,.]/g, ''));
+  }
+
   protected async finish(): Promise<void> {
     if (this.saving()) {
       return;

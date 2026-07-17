@@ -65,6 +65,13 @@ form {
   color: var(--ink-soft);
 }
 
+/* Sur mobile, le clavier natif est obligatoire (accessibilité, autocomplétion,
+   clavier physique éventuel) — le pavé numérique custom n'apparaît qu'au delà
+   du point de bascule desktop, en complément pour la souris. */
+app-numeric-keypad {
+  display: none;
+}
+
 .amount-suggestions {
   display: flex;
   flex-direction: column;
@@ -304,5 +311,9 @@ form {
 @media (min-width: 768px) {
   .page {
     max-width: 620px;
+  }
+
+  app-numeric-keypad {
+    display: block;
   }
 }
