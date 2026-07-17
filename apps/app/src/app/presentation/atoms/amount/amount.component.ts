@@ -34,11 +34,11 @@ import { ChangeDetectionStrategy, Component, computed, input, LOCALE_ID, inject 
       font-family: var(--font-display);
       font-weight: 560;
       font-variation-settings: 'opsz' 40;
-      font-size: 56px;
+      font-size: clamp(36px, 12vw, 56px);
       letter-spacing: -0.02em;
       line-height: 1.05;
     }
-    .s-hero .frac, .s-hero .cur { font-size: 20px; opacity: 0.5; }
+    .s-hero .frac, .s-hero .cur { font-size: clamp(14px, 4.5vw, 20px); opacity: 0.5; }
     .s-lg .int, .s-lg .sign { font-size: 26px; line-height: 1.15; }
     .s-lg .frac, .s-lg .cur { font-size: 15px; }
     .s-md .int, .s-md .sign { font-size: 17px; }

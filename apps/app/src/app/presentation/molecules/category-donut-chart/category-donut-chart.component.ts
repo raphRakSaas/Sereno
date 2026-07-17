@@ -88,8 +88,8 @@ const OTHER_COLOR = '#9A9DA6';
       @for (callout of callouts(); track callout.id) {
         <div
           class="callout"
-          [style.left.px]="callout.xText"
-          [style.top.px]="callout.yText"
+          [style.left.%]="(callout.xText / 300) * 100"
+          [style.top.%]="(callout.yText / 300) * 100"
           [style.text-align]="callout.align"
         >
           <div class="callout-name">{{ callout.name }}</div>
@@ -101,8 +101,9 @@ const OTHER_COLOR = '#9A9DA6';
   styles: `
     .donut-wrap {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: min(300px, 100%);
+      aspect-ratio: 1;
+      height: auto;
       margin: 0 auto;
     }
     svg {
@@ -115,8 +116,8 @@ const OTHER_COLOR = '#9A9DA6';
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 98px;
-      height: 98px;
+      width: min(98px, 32%);
+      height: min(98px, 32%);
       transform: translate(-50%, -50%);
       border-radius: 50%;
       background: var(--surface);
@@ -135,9 +136,14 @@ const OTHER_COLOR = '#9A9DA6';
     }
     .callout {
       position: absolute;
-      width: 78px;
+      width: min(78px, 26%);
       transform: translate(-50%, -50%);
       pointer-events: none;
+    }
+    @media (max-width: 360px) {
+      .callout {
+        display: none;
+      }
     }
     .callout-name {
       font-size: 12px;

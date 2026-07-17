@@ -19,17 +19,25 @@ form {
 }
 
 .amount-field .amount {
-  width: min(220px, 70vw);
+  width: auto;
+  min-width: 3ch;
+  max-width: 100%;
   border: none;
   background: none;
   font-family: var(--font-display);
-  font-size: 46px;
+  font-size: clamp(36px, 11vw, 46px);
   font-weight: 800;
   letter-spacing: -0.02em;
   font-feature-settings: 'tnum';
   font-variant-numeric: tabular-nums;
-  text-align: right;
+  text-align: center;
   color: var(--ink);
+}
+
+@supports (field-sizing: content) {
+  .amount-field .amount {
+    field-sizing: content;
+  }
 }
 
 .amount-field .amount:focus {

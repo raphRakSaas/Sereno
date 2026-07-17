@@ -1,10 +1,10 @@
 .head {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
-  margin-bottom: var(--space-3);
+  margin-bottom: var(--space-2);
 }
 
 .head-controls {
@@ -12,6 +12,8 @@
   align-items: center;
   gap: var(--space-3);
   flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
 }
 
 .view-toggle {
@@ -92,14 +94,29 @@
   gap: 4px;
 }
 
-.calendar.week-view .day {
-  min-height: 72px;
-}
-
 .day,
 .pad {
-  aspect-ratio: 1;
-  min-height: 44px;
+  min-height: 36px;
+  height: clamp(36px, 10.5vw, 48px);
+  aspect-ratio: unset;
+}
+
+.calendar.week-view .day {
+  min-height: 56px;
+  height: auto;
+}
+
+@media (min-width: 768px) {
+  .day,
+  .pad {
+    aspect-ratio: 1;
+    height: auto;
+    min-height: 44px;
+  }
+
+  .calendar.week-view .day {
+    min-height: 72px;
+  }
 }
 
 .day {

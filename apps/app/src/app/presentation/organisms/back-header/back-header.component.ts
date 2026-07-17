@@ -18,11 +18,18 @@ import { IconComponent } from '../../atoms/icon/icon.component';
     </div>
   `,
   styles: `
+    :host {
+      display: block;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 15;
+    }
     .head {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: calc(20px + var(--safe-top)) 20px 4px;
+      padding: calc(12px + var(--safe-top)) var(--page-gutter) 8px;
       background: var(--paper);
     }
     .back {

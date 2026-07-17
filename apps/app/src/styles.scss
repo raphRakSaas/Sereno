@@ -96,6 +96,17 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-top: env(safe-area-inset-top, 0px);
 
+  /* Layout mobile — gutters et dégagements shell (handoff : 20px / ~110px) */
+  --page-gutter: 20px;
+  --page-gap: var(--space-4);
+  --nav-height: 64px;
+  --fab-size: 56px;
+  --fab-clearance: calc(
+    var(--nav-height) + var(--fab-size) + var(--space-4) + var(--safe-bottom)
+  );
+  --page-pad-bottom: var(--space-6);
+  --page-pad-bottom-fab: var(--fab-clearance);
+
   /* Couleurs de données (strates, donuts…) : en sombre elles sont éclaircies
      uniformément (85 % couleur + 15 % blanc) pour garder ≥ 3:1 sur --surface
      — validé par calcul, cf. docs/DESIGN.md. */
@@ -108,16 +119,18 @@
 
 html {
   height: 100%;
+  overflow: hidden;
 }
 
 app-root {
   display: block;
-  min-height: 100dvh;
+  height: 100%;
 }
 
 body {
   margin: 0;
-  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-text);
@@ -178,8 +191,21 @@ a {
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
-  padding: calc(var(--space-5) + var(--safe-top)) var(--space-4) var(--space-6);
+  gap: var(--page-gap);
+  padding: calc(var(--space-5) + var(--safe-top)) var(--page-gutter) var(--page-pad-bottom);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Pages sous back-header : safe-top déjà dans l'en-tête — pas de second. */
+.frame.has-header .page {
+  padding-top: var(--space-4);
+}
+
+/* Accueil / Historique : dégagement pour le FAB au-dessus de la tab bar. */
+.frame.has-fab .page,
+.frame.has-fab .dash {
+  padding-bottom: var(--page-pad-bottom-fab);
 }
 
 .page-title {
@@ -193,6 +219,13 @@ a {
     margin: 0 auto;
     padding: 40px 48px 64px;
     gap: var(--space-6);
+  }
+
+  .frame.has-header .page,
+  .frame.has-fab .page,
+  .frame.has-fab .dash {
+    padding-top: 40px;
+    padding-bottom: 64px;
   }
 
   .page-title {
