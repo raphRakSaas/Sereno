@@ -22,7 +22,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 20px 20px 4px;
+      padding: calc(20px + var(--safe-top)) 20px 4px;
+      background: var(--paper);
     }
     .back {
       flex: none;

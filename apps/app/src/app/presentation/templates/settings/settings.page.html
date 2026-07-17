@@ -114,19 +114,11 @@
     </div>
     @if (pwa.isStandalone()) {
       <p>Sereno est installé sur cet appareil. Les mises à jour s'affichent ici quand elles sont prêtes.</p>
-    } @else if (pwa.canNativeInstall()) {
-      <p>Installe Sereno pour y accéder depuis ton écran d'accueil, même hors ligne.</p>
-      <button type="button" class="btn btn-primary" (click)="pwa.promptInstall()">Installer l'application</button>
-    } @else if (pwa.isIosDevice()) {
-      <p>
-        Sur iPhone ou iPad : touche <strong>Partager</strong> dans Safari, puis
-        <strong>Sur l'écran d'accueil</strong>.
-      </p>
     } @else {
-      <p>
-        Pour installer Sereno, ouvre le menu de ton navigateur (Chrome, Edge, Firefox…) et choisis
-        « Installer l'application » ou « Ajouter à l'écran d'accueil ».
-      </p>
+      <p>Installe Sereno sur ton écran d'accueil pour un accès rapide, même hors ligne.</p>
+      <button type="button" class="btn btn-primary" (click)="pwa.openInstallSheet()">
+        Installer l'application
+      </button>
     }
   </section>
 

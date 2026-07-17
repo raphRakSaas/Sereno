@@ -6,8 +6,8 @@ export const languages = { fr: 'Français', en: 'English' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'fr';
 
-/** L'app elle-même (CTA « Ouvrir l'app »). */
-export const APP_URL = 'https://sereno-2qj.pages.dev';
+/** L'app elle-même (CTA « Ouvrir l'app »). ?install=1 ouvre le choix d'installation sur mobile. */
+export const APP_URL = 'https://sereno-2qj.pages.dev/?install=1';
 
 export type RouteKey =
   | 'home'
