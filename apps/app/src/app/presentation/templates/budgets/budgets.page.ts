@@ -1,7 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { AppModeService } from '../../../application/services/app-mode.service';
-import { ConversionService } from '../../../application/services/conversion.service';
 import { ToastService } from '../../../application/services/toast.service';
 import { BudgetsStore } from '../../../application/stores/budgets.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
@@ -42,8 +40,6 @@ interface BudgetLine {
   styleUrl: './budgets.page.scss',
 })
 export class BudgetsPage {
-  protected readonly mode = inject(AppModeService);
-  protected readonly conversion = inject(ConversionService);
   protected readonly budgets = inject(BudgetsStore);
   protected readonly categories = inject(CategoriesStore);
   protected readonly transactions = inject(TransactionsStore);
@@ -63,11 +59,7 @@ export class BudgetsPage {
   protected readonly todayIso = toIsoDate(new Date());
 
   constructor() {
-    if (this.mode.isCloud()) {
-      void this.budgets.load();
-    } else {
-      this.conversion.requestLockedFeature('les budgets');
-    }
+    void this.budgets.load();
   }
 
   protected readonly spentByCategory = computed(() => {

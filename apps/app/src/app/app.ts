@@ -2,8 +2,8 @@ import { Component, computed, inject, isDevMode, signal } from '@angular/core';
 import { Data, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 import { filter } from 'rxjs';
-import { ConversionService } from './application/services/conversion.service';
 import { KeyboardShortcutsService } from './application/services/keyboard-shortcuts.service';
+import { LocalRecurringService } from './application/services/local-recurring.service';
 import { PwaService } from './application/services/pwa.service';
 import { ToastService } from './application/services/toast.service';
 import { AccountsStore } from './application/stores/accounts.store';
@@ -14,7 +14,6 @@ import { TransactionsStore } from './application/stores/transactions.store';
 import { PwaBannerComponent } from './presentation/molecules/pwa-banner/pwa-banner.component';
 import { BackHeaderComponent } from './presentation/organisms/back-header/back-header.component';
 import { BottomNavComponent } from './presentation/organisms/bottom-nav/bottom-nav.component';
-import { ConversionModalComponent } from './presentation/organisms/conversion-modal/conversion-modal.component';
 import { FabComponent } from './presentation/organisms/fab/fab.component';
 import { SideNavComponent } from './presentation/organisms/side-nav/side-nav.component';
 
@@ -28,7 +27,6 @@ const FULLSCREEN_ROUTES = ['/bienvenue', '/compte'];
     RouterOutlet,
     BackHeaderComponent,
     BottomNavComponent,
-    ConversionModalComponent,
     FabComponent,
     PwaBannerComponent,
     SideNavComponent,
@@ -38,7 +36,7 @@ const FULLSCREEN_ROUTES = ['/bienvenue', '/compte'];
 })
 export class App {
   protected readonly toasts = inject(ToastService);
-  private readonly conversion = inject(ConversionService);
+  private readonly localRecurring = inject(LocalRecurringService);
   private readonly shortcuts = inject(KeyboardShortcutsService);
   private readonly pwa = inject(PwaService);
   private readonly swUpdate = inject(SwUpdate, { optional: true });
@@ -71,8 +69,8 @@ export class App {
     if (!this.templates.loaded()) void this.templates.load();
     if (!this.savingsGoals.loaded()) void this.savingsGoals.load();
 
-    // Déclencheur "14 jours d'utilisation" — vérifié à chaque démarrage.
-    void this.conversion.checkQuotaTriggers();
+    // Rattrapage des récurrences dues en mode invité (idempotent).
+    void this.localRecurring.processDue();
 
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))

@@ -3,6 +3,7 @@
   "short_name": "Sereno",
   "description": "Vois clair dans ton argent, sans anxiété.",
   "lang": "fr",
+  "id": "/",
   "display": "standalone",
   "scope": "/",
   "start_url": "/",

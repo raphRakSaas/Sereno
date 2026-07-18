@@ -12,41 +12,80 @@ const tr = t(lang);
 const nav = [
   { to: href(lang, 'features'), label: tr('nav.features') },
   { to: href(lang, 'method'), label: tr('nav.method') },
-  { to: href(lang, 'pricing'), label: tr('nav.pricing') },
+  { to: href(lang, 'support'), label: tr('nav.support') },
   { to: href(lang, 'blog'), label: tr('nav.blog') },
   { to: href(lang, 'faq'), label: tr('nav.faq') },
 ];
+const menuLabel = lang === 'fr' ? 'Menu' : 'Menu';
+const navLabel = lang === 'fr' ? 'Navigation principale' : 'Main navigation';
 ---
 
 <header class="site-header">
   <div class="wrap bar">
     <a class="brand" href={href(lang, 'home')}>
-      <img src="/logo.svg" alt="" width="26" height="26" />
+      <span class="mark" aria-hidden="true">S</span>
       <span>Sereno</span>
     </a>
-    <nav aria-label={lang === 'fr' ? 'Navigation principale' : 'Main navigation'}>
+
+    <nav class="nav-desktop" aria-label={navLabel}>
       {nav.map((item) => <a href={item.to}>{item.label}</a>)}
     </nav>
+
     <div class="actions">
-      <a class="lang" href={switchHref} rel="alternate">{lang === 'fr' ? 'EN' : 'FR'}</a>
+      <a class="lang" href={switchHref} rel="alternate" hreflang={lang === 'fr' ? 'en' : 'fr'}>
+        {lang === 'fr' ? 'EN' : 'FR'}
+      </a>
       <a class="btn btn-primary app-cta" href={APP_URL} aria-label={tr('cta.openApp.aria')}>
         {tr('cta.openApp')}
       </a>
+      <button
+        type="button"
+        class="menu-btn"
+        aria-expanded="false"
+        aria-controls="nav-mobile"
+        data-menu-toggle
+      >
+        {menuLabel}
+      </button>
     </div>
   </div>
+
+  <nav id="nav-mobile" class="nav-mobile" aria-label={navLabel} hidden>
+    <div class="wrap">
+      {nav.map((item) => <a href={item.to}>{item.label}</a>)}
+      <a href={href(lang, 'contact')}>{tr('nav.contact')}</a>
+    </div>
+  </nav>
 </header>
+
+<script>
+  const toggle = document.querySelector('[data-menu-toggle]');
+  const panel = document.getElementById('nav-mobile');
+  if (toggle instanceof HTMLButtonElement && panel) {
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      panel.hidden = open;
+    });
+  }
+</script>
 
 <style>
   .site-header {
-    border-bottom: 1px solid var(--line);
-    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+    background: color-mix(in srgb, var(--paper) 82%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .bar {
     display: flex;
     align-items: center;
-    gap: 24px;
-    min-height: 64px;
+    gap: 20px;
+    min-height: 68px;
   }
 
   .brand {
@@ -56,32 +95,45 @@ const nav = [
     text-decoration: none;
     color: var(--ink);
     font-family: var(--font-display);
-    font-size: 21px;
-    font-weight: 560;
-    font-variation-settings: 'opsz' 40;
+    font-size: 20px;
+    font-weight: 800;
   }
 
-  nav {
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: var(--accent-gradient);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .nav-desktop {
     display: none;
     gap: 22px;
     flex: 1;
   }
 
-  nav a {
+  .nav-desktop a {
     color: var(--ink-soft);
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
   }
 
-  nav a:hover {
+  .nav-desktop a:hover {
     color: var(--ink);
   }
 
   .actions {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     margin-left: auto;
   }
 
@@ -97,17 +149,61 @@ const nav = [
   }
 
   .lang:hover {
-    background: var(--sage-pale);
+    background: var(--surface);
   }
 
   .app-cta {
-    padding: 9px 16px;
-    font-size: 14.5px;
+    padding: 10px 16px;
+    font-size: 14px;
   }
 
-  @media (min-width: 860px) {
-    nav {
+  .menu-btn {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-family: var(--font-text);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .nav-mobile {
+    border-top: 1px solid var(--line);
+    padding: 12px 0 18px;
+    background: var(--paper);
+  }
+
+  .nav-mobile .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .nav-mobile a {
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 0;
+  }
+
+  @media (min-width: 900px) {
+    .nav-desktop {
       display: flex;
+    }
+
+    .menu-btn,
+    .nav-mobile {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .app-cta {
+      display: none;
     }
   }
 </style>

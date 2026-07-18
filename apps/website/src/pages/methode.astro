@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { APP_URL, t } from '../i18n/ui';
+import { APP_URL, href, t } from '../i18n/ui';
 
 const tr = t('fr');
 ---
@@ -8,88 +8,148 @@ const tr = t('fr');
 <Base
   lang="fr"
   routeKey="method"
-  title="La méthode — pourquoi Sereno est manuel, exprès"
-  description="Sereno refuse la connexion bancaire par choix : noter ses dépenses à la main, c'est le geste qui transforme l'anxiété financière en clarté. Le manifeste."
+  title="À propos & méthode — Sereno"
+  description="Pourquoi Sereno est manuel, local et gratuit : le manifeste d’une app de budget qui refuse l’anxiété et la connexion bancaire."
 >
+  <section class="hero-about section-soft">
+    <div class="wrap about-grid">
+      <div>
+        <span class="lbl">À propos</span>
+        <h1>Une app de budget faite pour calmer, pas pour presser.</h1>
+        <p>
+          Sereno est un projet indépendant. Pas d’équipe marketing, pas de
+          modèle publicitaire, pas de plan payant caché. Juste une app qui
+          répond à une anxiété précise : ne pas savoir où va l’argent.
+        </p>
+      </div>
+      <img src="/illustrations/local-first.svg" alt="" width="220" height="180" class="about-illo" />
+    </div>
+  </section>
+
   <article class="section">
     <div class="wrap prose">
-      <span class="eyebrow">Le manifeste</span>
-      <h1>Manuel, exprès.</h1>
+      <span class="lbl">Le manifeste</span>
+      <h2>Manuel, exprès.</h2>
 
       <p>
         Toutes les apps de budget promettent la même chose : « connecte ta
-        banque, on s'occupe du reste ». Sereno fait le pari inverse — et c'est
+        banque, on s’occupe du reste ». Sereno fait le pari inverse — et c’est
         un choix réfléchi, pas une fonctionnalité manquante.
       </p>
 
-      <h2>L'anxiété ne vient pas du manque d'argent</h2>
+      <h2>L’anxiété ne vient pas du manque d’argent</h2>
       <p>
-        Elle vient de ne pas savoir. Le découvert qu'on découvre trop tard, le
-        « où est passé mon salaire ? » du 20 du mois, l'app bancaire qu'on
-        n'ose plus ouvrir. L'information existait pourtant — quelque part, dans
+        Elle vient de ne pas savoir. Le découvert qu’on découvre trop tard, le
+        « où est passé mon salaire ? » du 20 du mois, l’app bancaire qu’on
+        n’ose plus ouvrir. L’information existait pourtant — quelque part, dans
         un flux automatique que personne ne regarde.
       </p>
       <p>
-        L'automatisation totale a un angle mort : ce qu'on ne fait pas
+        L’automatisation totale a un angle mort : ce qu’on ne fait pas
         soi-même, on ne le ressent pas. Un prélèvement importé silencieusement
-        à 3 h du matin ne t'apprend rien. La même dépense notée par toi, en
-        cinq secondes, laisse une trace — dans l'app et dans ta tête.
+        à 3 h du matin ne t’apprend rien. La même dépense notée par toi, en
+        cinq secondes, laisse une trace — dans l’app et dans ta tête.
       </p>
 
-      <h2>Cinq secondes qui changent le rapport à l'argent</h2>
+      <h2>Cinq secondes qui changent le rapport à l’argent</h2>
       <p>
-        Noter une dépense à la main, c'est court. Mais pendant ces cinq
+        Noter une dépense à la main, c’est court. Mais pendant ces cinq
         secondes, tu sais ce que tu viens de dépenser, tu choisis sa catégorie,
-        tu la vois s'ajouter au mois. Ce micro-geste répété fait ce qu'aucun
+        tu la vois s’ajouter au mois. Ce micro-geste répété fait ce qu’aucun
         algorithme ne peut faire à ta place : il te remet aux commandes.
       </p>
       <blockquote>
-        La saisie manuelle n'est pas le prix à payer pour utiliser Sereno.
-        C'est le traitement.
+        La saisie manuelle n’est pas le prix à payer pour utiliser Sereno.
+        C’est le traitement.
       </blockquote>
 
       <h2>Ce que Sereno fait pour que ça tienne</h2>
       <ul>
         <li>
-          <strong>Le geste est réduit à l'essentiel.</strong> Montant,
+          <strong>Le geste est réduit à l’essentiel.</strong> Montant,
           catégorie, enregistré. Des modèles pour ce qui revient souvent, des
-          récurrences automatiques pour ce qui est vraiment mécanique (loyer,
-          abonnements — là, l'automatisation a du sens).
+          récurrences pour ce qui est vraiment mécanique (loyer, abonnements).
         </li>
         <li>
           <strong>La récompense est immédiate.</strong> Chaque saisie nourrit
-          les strates — la carte de ton mois. Tu vois littéralement ton argent
-          prendre forme.
+          le tableau de bord et les statistiques. Tu vois littéralement ton
+          argent prendre forme.
         </li>
         <li>
-          <strong>Aucune punition.</strong> Un budget dépassé s'affiche en
-          ambre, avec un constat calme. Manquer trois jours de saisie n'efface
-          rien, ne casse aucune « série ». Tu reprends, c'est tout.
+          <strong>Aucune punition.</strong> Un budget dépassé s’affiche en
+          corail, avec un constat calme. Manquer trois jours de saisie n’efface
+          rien, ne casse aucune « série ». Tu reprends, c’est tout.
         </li>
       </ul>
+
+      <h2>Gratuit, sans piège</h2>
+      <p>
+        Tout est gratuit pour toujours — mode invité et compte sync. Pas de
+        quota, pas d’IA, pas de plan Plus. Si tu veux soutenir le projet, c’est
+        volontaire : un café, un sandwich, un coup de pouce via
+        <a href={href('fr', 'support')}>la page Soutenir</a>.
+      </p>
 
       <h2>Ce que ça implique — honnêtement</h2>
       <p>
         Sereno ne conviendra pas à tout le monde. Si tu cherches un agrégateur
         qui catégorise trois comptes bancaires sans que tu lèves le petit
-        doigt, il existe d'excellentes apps pour ça. Sereno s'adresse à celles
+        doigt, il existe d’excellentes apps pour ça. Sereno s’adresse à celles
         et ceux qui ont déjà essayé — et qui ont remarqué que voir passer des
-        lignes importées n'a jamais changé leur façon de dépenser.
-      </p>
-      <p>
-        Et parce que tes données ne transitent par aucune banque : pas
-        d'identifiants bancaires à confier, pas d'agrément à espérer, rien à
-        pirater. Ce que tu notes reste sur ton appareil, ou dans ton compte
-        chiffré si tu choisis la synchronisation.
+        lignes importées n’a jamais changé leur façon de dépenser.
       </p>
 
       <hr />
 
       <p>
         <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>
-          Essayer — sans compte, tout de suite
+          {tr('cta.openApp')}
         </a>
       </p>
     </div>
   </article>
 </Base>
+
+<style>
+  .hero-about {
+    padding: 72px 0 56px;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: 32px;
+    align-items: center;
+    grid-template-columns: 1fr;
+  }
+
+  .about-grid h1 {
+    font-size: clamp(30px, 5vw, 42px);
+    margin: 14px 0 16px;
+  }
+
+  .about-grid p {
+    color: var(--ink-soft);
+    font-size: 18px;
+    max-width: 42ch;
+  }
+
+  .about-illo {
+    width: min(100%, 240px);
+    height: auto;
+    justify-self: start;
+  }
+
+  @media (min-width: 800px) {
+    .about-grid {
+      grid-template-columns: 1.4fr 0.6fr;
+    }
+
+    .about-illo {
+      justify-self: end;
+    }
+  }
+
+  .prose .lbl {
+    margin-bottom: 12px;
+  }
+</style>

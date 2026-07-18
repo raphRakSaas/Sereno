@@ -26,10 +26,9 @@ honnête de ton mois réel, tes budgets seront des vœux pieux calibrés sur la
 personne que tu aimerais être, pas sur celle que tu es. Ils casseront dès la
 semaine deux.
 
-À la fin du mois, regarde ta répartition. Dans Sereno, ce sont les strates :
-ta plus grosse catégorie forme le socle, et un regard suffit pour voir où va
-l'argent. Souvent, cette seule image change déjà des comportements — sans
-aucun budget.
+À la fin du mois, regarde ta répartition. Dans Sereno, le tableau de bord et
+les statistiques te montrent où va l'argent d'un regard. Souvent, cette seule
+image change déjà des comportements — sans aucun budget.
 
 ## Étape 2 — Poser deux ou trois budgets, pas douze
 
@@ -57,15 +56,15 @@ mangeant que des pâtes ».
 
 Un dépassement est une information (« ce plafond était trop bas » ou « ce
 mois était particulier »), pas une faute. C'est exactement pour ça que Sereno
-affiche « Dépassé de 50 € — ça arrive » en ambre, jamais en rouge : la couleur
-de l'information, pas celle de l'alarme.
+affiche « Dépassé de 50 € — ça arrive » en corail calme : la couleur de
+l'information, pas celle de l'alarme.
 
 ## Étape 4 — Un rendez-vous de dix minutes par mois
 
 Une fois par mois — le 1er, un dimanche matin, peu importe — ouvre l'app dix
 minutes :
 
-1. Regarde les strates du mois écoulé. Qu'est-ce qui a grossi, rétréci ?
+1. Regarde la répartition du mois écoulé. Qu'est-ce qui a grossi, rétréci ?
 2. Compare au mois précédent (Sereno le fait : « +120 € vs mois précédent »).
 3. Ajuste tes deux-trois budgets si besoin. Monte un plafond trop optimiste
    sans honte : un budget réaliste qui tient vaut mieux qu'un budget

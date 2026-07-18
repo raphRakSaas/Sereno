@@ -2,14 +2,14 @@
 import Base from '../../layouts/Base.astro';
 
 const email = 'raphael@plumservices.co';
-const updated = 'July 3, 2026';
+const updated = '18 July 2026';
 ---
 
 <Base
   lang="en"
   routeKey="legal"
   title="Legal notice — Sereno"
-  description="Legal notice for the Sereno website and application: publisher, hosting providers, contact."
+  description="Legal notice for the Sereno website and application: publisher, hosting, Stripe (support), contact."
 >
   <article class="section">
     <div class="wrap prose">
@@ -22,11 +22,11 @@ const updated = 'July 3, 2026';
 
       <h2>Publisher</h2>
       <p>
-        The sereno website and the Sereno application are published on a
-        non-professional basis by <strong>Raphaël</strong> (a private
-        individual). Under Article 6, III-2 of French law no. 2004-575 of
-        21 June 2004 (LCEN), a non-professional publisher may remain anonymous
-        provided their identity has been communicated to the hosting provider.
+        The Sereno website and application are published on a non-professional
+        basis by <strong>Raphaël</strong> (a private individual). Under Article
+        6, III-2 of French law no. 2004-575 of 21 June 2004 (LCEN), a
+        non-professional publisher may remain anonymous provided their identity
+        has been communicated to the hosting provider.
       </p>
       <p>
         Contact: <a href={`mailto:${email}`}>{email}</a>
@@ -37,26 +37,31 @@ const updated = 'July 3, 2026';
       <p>
         The website and application (static files) are hosted by
         <strong>Cloudflare, Inc.</strong>, 101 Townsend St, San Francisco,
-        CA 94107, USA — <a href="https://www.cloudflare.com" rel="noopener">cloudflare.com</a>.
+        CA 94107, USA —
+        <a href="https://www.cloudflare.com" rel="noopener">cloudflare.com</a>.
       </p>
       <p>
-        User account data (the optional sync feature) is hosted by
-        <strong>Supabase, Inc.</strong>, 970 Toa Payoh North #07-04, Singapore
-        318992 — <a href="https://supabase.com" rel="noopener">supabase.com</a>.
-        The project database is located in the European Union (AWS region
-        eu-west-1, Ireland).
+        User account data (optional sync) is hosted by
+        <strong>Supabase, Inc.</strong>. The project database is in the
+        European Union (AWS eu-west-1, Ireland).
+      </p>
+      <p>
+        Voluntary support payments are processed by
+        <strong>Stripe Payments Europe, Ltd.</strong> —
+        <a href="https://stripe.com" rel="noopener">stripe.com</a>. Sereno does
+        not store card details.
       </p>
 
       <h2>Intellectual property</h2>
       <p>
-        The name “Sereno”, the visual identity, the texts and the graphic
-        elements of this site are the property of their author. Unauthorized
-        reproduction is prohibited.
+        The name “Sereno”, the visual identity, texts and graphic elements of
+        this site are the property of their author. Unauthorized reproduction
+        is prohibited.
       </p>
 
       <h2>Reporting content</h2>
       <p>
-        For any question or report about the site or the application:
+        For any question or report:
         <a href={`mailto:${email}`}>{email}</a>.
       </p>
     </div>

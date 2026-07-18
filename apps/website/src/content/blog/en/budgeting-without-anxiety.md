@@ -25,10 +25,9 @@ everyone skips — and the reason everything fails. Without an honest snapshot
 of your real month, your budgets will be wishful numbers calibrated for the
 person you'd like to be, not the one you are. They'll break by week two.
 
-At the end of the month, look at your breakdown. In Sereno, that's the
-strata: your biggest category forms the bedrock, and one glance shows where
-the money goes. Often, that image alone already changes behavior — before any
-budget exists.
+At the end of the month, look at your breakdown. In Sereno, the dashboard and
+statistics show where the money goes at a glance. Often, that image alone
+already changes behavior — before any budget exists.
 
 ## Step 2 — Set two or three budgets, not twelve
 
@@ -54,14 +53,14 @@ punitive deprivation, no “I'll make up for it by eating plain pasta.”
 
 An overrun is information (“that ceiling was too low” or “this month was
 unusual”), not a fault. That's exactly why Sereno displays “€50 over — it
-happens” in amber, never in red: the color of information, not of alarm.
+happens” in calm coral: the color of information, not of alarm.
 
 ## Step 4 — A ten-minute appointment once a month
 
 Once a month — the 1st, a Sunday morning, whatever suits you — open the app
 for ten minutes:
 
-1. Look at last month's strata. What grew, what shrank?
+1. Look at last month's breakdown. What grew, what shrank?
 2. Compare with the previous month (Sereno does it for you: “+€120 vs last
    month”).
 3. Adjust your two or three budgets if needed. Raise an over-optimistic

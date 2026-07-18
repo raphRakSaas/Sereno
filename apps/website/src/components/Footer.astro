@@ -13,14 +13,17 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="wrap grid">
     <div class="brand-col">
-      <span class="brand">Sereno</span>
+      <span class="brand">
+        <span class="mark" aria-hidden="true">S</span>
+        Sereno
+      </span>
       <p>{tr('site.tagline')}</p>
       <p class="note">{tr('footer.note')}</p>
     </div>
     <nav aria-label={lang === 'fr' ? 'Liens de bas de page' : 'Footer links'}>
       <a href={href(lang, 'features')}>{tr('nav.features')}</a>
       <a href={href(lang, 'method')}>{tr('nav.method')}</a>
-      <a href={href(lang, 'pricing')}>{tr('nav.pricing')}</a>
+      <a href={href(lang, 'support')}>{tr('nav.support')}</a>
       <a href={href(lang, 'blog')}>{tr('nav.blog')}</a>
       <a href={href(lang, 'faq')}>{tr('nav.faq')}</a>
       <a href={href(lang, 'contact')}>{tr('nav.contact')}</a>
@@ -39,26 +42,41 @@ const year = new Date().getFullYear();
 <style>
   .site-footer {
     border-top: 1px solid var(--line);
-    padding: 48px 0 32px;
-    margin-top: 96px;
+    padding: 56px 0 36px;
+    margin-top: 0;
     background: var(--surface);
   }
 
   .grid {
     display: grid;
-    gap: 32px;
+    gap: 36px;
     grid-template-columns: 1fr;
   }
 
   .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     font-family: var(--font-display);
     font-size: 20px;
-    font-weight: 560;
-    font-variation-settings: 'opsz' 40;
+    font-weight: 800;
+  }
+
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--accent-gradient);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
   }
 
   .brand-col p {
-    margin-top: 8px;
+    margin-top: 12px;
     color: var(--ink-soft);
     font-size: 15px;
     max-width: 34ch;

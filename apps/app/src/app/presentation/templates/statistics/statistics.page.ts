@@ -136,7 +136,7 @@ export class StatisticsPage {
     topCategories(this.scopedTransactions(), 'expense', this.categories.byId(), 12).map((line) => ({
       id: line.id,
       name: line.label,
-      color: line.color ?? '#8B948C',
+      color: line.color ?? '#6B7280',
       amount: line.amount,
     })),
   );

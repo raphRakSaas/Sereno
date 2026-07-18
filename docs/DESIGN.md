@@ -22,10 +22,12 @@
   800, ~46-54px, l'entier domine, décimales et devise réduites (45-65 %
   d'opacité).
 - **Un accent unique : Rausch.** Dégradé (`--accent-gradient`,
-  `linear-gradient(155deg, #E61E4D 0%, #E31C5F 50%, #D70466 100%)`) sur les
-  grandes surfaces (carte solde, bannières, logo) — le même sweep magenta que
-  le search orb Airbnb ; à plat (`--accent`, `#FF385C`) sur les CTA et petits
-  éléments. Jamais les deux traitements sur un même écran.
+  `linear-gradient(155deg, #FF4D6D 0%, #FF7A56 100%)` — rose-corail vers
+  orange, celui du handoff) sur les grandes surfaces (carte solde, bannières,
+  logo) ; à plat (`--accent`, `#FF385C`) sur les CTA et petits éléments.
+  Jamais les deux traitements sur un même écran. L'ancien sweep magenta
+  (#E61E4D → #D70466) a été retiré : arrêts trop proches en teinte, il
+  paraissait uni.
 - **Voix calme.** Tutoiement, jamais de culpabilisation. Le dépassement de
   budget est un fait énoncé posément, pas une faute — voir la gouvernance des
   couleurs sémantiques ci-dessous.
@@ -33,21 +35,22 @@
 ## Tokens
 
 Palette de marque alignée sur le **produit Airbnb actuel** (pas le Rausch
-2014 `#FF5A5F`, trop terne) : `#FF385C` Rausch, dégradé CTA
-`#E61E4D → #E31C5F → #D70466`, `#E00B41` pressed, `#00A699` Babu,
+2014 `#FF5A5F`, trop terne) : `#FF385C` Rausch, dégradé signature
+`#FF4D6D → #FF7A56` (handoff), `#E00B41` pressed, `#00A699` Babu,
 `#FC642D` Arches, `#484848` Hof, `#767676` Foggy.
 
 | Token | Valeur (clair) | Usage |
 |---|---|---|
 | `--ink` | `#484848` | Texte principal (Hof) |
+| `--ink-solid` | `#000000` | Boutons/remplissages « noirs » (avatar, CTA sombre, jour sélectionné, pilules actives) — vrai noir en clair, encre claire en sombre |
 | `--ink-soft` | `#767676` | Texte secondaire (Foggy) |
 | `--ink-faint` | `#9A9A9A` | Texte tertiaire, placeholders |
 | `--paper` | `#FFFFFF` | Fond de page |
 | `--surface` | `#F7F6F3` | Cartes — aplat distinct du fond de page |
 | `--surface-2` | `#EFECE6` | Éléments imbriqués (ex. bouton de suppression sur une carte) |
 | `--line` | `#E7E5DF` | Filets, séparateurs |
-| `--accent` / `--accent-2` | `#FF385C` / `#D70466` | À-plat CTA (Rausch) / arrêt magenta du dégradé |
-| `--accent-gradient` | `linear-gradient(155deg, #E61E4D, #E31C5F, #D70466)` | Grandes surfaces (hero, bannières, logo) — sweep Airbnb |
+| `--accent` / `--accent-2` | `#FF385C` / `#FF7A56` | À-plat CTA (Rausch) / arrêt orange du dégradé |
+| `--accent-gradient` | `linear-gradient(155deg, #FF4D6D, #FF7A56)` | Grandes surfaces (hero, bannières, logo) — rose-corail → orange |
 | `--accent-deep` | `#E00B41` | Pressed/hover sur à-plat Rausch |
 | `--accent-pale` | `#FFD1DA` | Fonds teintés génériques (chips, lignes actives) |
 | `--mist` / `--mist-deep` | `#00A699` / `#008C82` | Revenus, montants positifs (Babu) |
@@ -99,14 +102,38 @@ lisibilité) avant de considérer le dark mode définitif sur cette direction.
 
 ## Couleurs de catégories (données)
 
-Palette reprise du handoff — **pas encore revalidée par calcul** (bande de
+Palette reprise du handoff, désormais **appliquée aux catégories par défaut**
+(`domain/data/default-categories.ts` + seed `supabase/schema.sql`, couleurs
+synchronisées au lancement via `syncDefaultCategories()`) — l'ancienne palette
+sourde vert-de-gris est retirée. **Pas encore revalidée par calcul** (bande de
 luminosité OKLCH, plancher de chroma, séparation daltonisme, contraste ≥ 3:1)
 contrairement à l'ancienne palette à 11 couleurs. À revalider avec le
-validateur dataviz avant de la considérer définitive :
+validateur dataviz avant de la considérer définitive.
 
-`#3B82F6` Logement · `#10B981` Alimentation · `#8B5CF6` Loisirs ·
-`#F59E0B` Abonnements · `#06B6D4` Transport · `#EC4899` Santé ·
-`#6B7280` Autre
+Dépenses : `#3B82F6` Logement · `#10B981` Courses · `#06B6D4` Transports ·
+`#F97316` Restaurants · `#EC4899` Santé · `#8B5CF6` Loisirs ·
+`#F59E0B` Abonnements · `#D946EF` Vêtements · `#6B7280` Autres (aussi le
+fallback « sans catégorie » dans le code).
+
+Revenus (même gamme, teintes distinctes) : `#0EA5E9` Salaire · `#6366F1`
+Freelance · `#A855F7` Allocations · `#14B8A6` APL · `#22C55E` Prestations ·
+`#84CC16` Pension · `#EAB308` Locatif · `#0891B2` Dividendes · `#059669`
+Plus-values · `#7C3AED` Remboursements · `#64748B` Autres.
+
+Pastilles d'icônes (`app-merchant-badge`) : fond `color-mix(couleur 22 %,
+--paper)`, icône à pleine couleur — plus de mélange 14 % sur fond grège qui
+délavait tout.
+
+**Icônes de catégories** : `app-category-icon` affiche les **Fluent Emoji 3D**
+de Microsoft (licence MIT, github.com/microsoft/fluentui-emoji), téléchargés
+dans `apps/app/public/emoji3d/` sous le nom de l'icône (`home` →
+`emoji3d/home.png`, PNG 256×256). Rendu volumique et coloré, choisi pour rendre
+chaque catégorie reconnaissable d'un coup d'œil (maison pour Logement, caddie
+pour Courses…). Les pictogrammes d'interface (navigation, actions) restent au
+trait via `app-icon` — deux registres distincts et assumés : trait pour
+l'outil, couleur pour le contenu. Pour ajouter une icône de catégorie :
+télécharger le PNG 3D correspondant dans `emoji3d/` et l'ajouter à
+`CATEGORY_EMOJI_NAMES` (`category-icon.component.ts`).
 
 ## Dataviz
 

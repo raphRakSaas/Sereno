@@ -1,6 +1,6 @@
-/* Sereno — site public. Même discipline que l'app (docs/DESIGN.md) :
-   aplats nets, filets 1px, zéro dégradé, zéro ombre portée. Les tokens
-   viennent de @sereno/brand (importé dans le layout avant ce fichier). */
+/* Sereno — site public. Direction corail (handoff juillet 2026) :
+   dégradé + ombre CTA autorisés sur hero/CTA ; sinon aplats nets, filets 1px.
+   Tokens : @sereno/brand (importé dans Base.astro avant ce fichier). */
 
 * {
   box-sizing: border-box;
@@ -26,9 +26,8 @@ h1,
 h2,
 h3 {
   font-family: var(--font-display);
-  font-weight: 560;
-  font-variation-settings: 'opsz' 40;
-  letter-spacing: -0.01em;
+  font-weight: 700;
+  letter-spacing: -0.02em;
   line-height: 1.15;
   margin: 0;
 }
@@ -38,11 +37,11 @@ p {
 }
 
 a {
-  color: var(--sage);
+  color: var(--accent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--sage);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -63,7 +62,7 @@ a {
 
 .wrap {
   width: 100%;
-  max-width: 1080px;
+  max-width: 1160px;
   margin: 0 auto;
   padding: 0 20px;
 }
@@ -74,13 +73,22 @@ a {
   }
 }
 
+.lbl,
 .eyebrow {
-  display: block;
-  font-size: 12.5px;
+  display: inline-block;
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--ink-soft);
+}
+
+.lbl {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--accent-pale);
+  color: var(--accent-text);
+  letter-spacing: 0.04em;
 }
 
 .btn {
@@ -89,51 +97,73 @@ a {
   justify-content: center;
   gap: 8px;
   border: 1px solid transparent;
-  border-radius: var(--radius);
-  padding: 13px 20px;
+  border-radius: 999px;
+  padding: 14px 22px;
   font-family: var(--font-text);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   text-decoration: none;
-  transition: background 0.15s ease;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
 }
 
 .btn-primary {
-  background: var(--sage);
-  color: var(--surface);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: var(--shadow-cta);
 }
 
 .btn-primary:hover {
   background: var(--sage-deep);
+  color: #fff;
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--sage);
+  color: var(--ink);
   border-color: var(--line);
 }
 
 .btn-ghost:hover {
-  background: var(--sage-pale);
+  background: var(--surface);
+}
+
+.btn-dark {
+  background: var(--ink-solid);
+  color: #fff;
+}
+
+.btn-dark:hover {
+  background: #000;
+  color: #fff;
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  pointer-events: none;
 }
 
 .card {
-  background: var(--surface);
+  background: var(--paper);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
 }
 
-/* Montants : chiffres tabulaires, toujours (règle produit). */
 .amount {
   font-feature-settings: 'tnum';
   font-variant-numeric: tabular-nums;
 }
 
-/* ---- Sections de page ---- */
+/* ---- Sections ---- */
 
 .section {
-  padding: 72px 0;
+  padding: 80px 0;
 }
 
 .section + .section {
@@ -141,29 +171,67 @@ a {
 }
 
 .section-head {
-  max-width: 56ch;
-  margin-bottom: 40px;
+  max-width: 40rem;
+  margin-bottom: 48px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  align-items: flex-start;
 }
 
+.section-head h1,
 .section-head h2 {
-  font-size: clamp(26px, 4vw, 34px);
+  font-size: clamp(28px, 4.2vw, 40px);
 }
 
 .section-head p {
   color: var(--ink-soft);
+  font-size: 17.5px;
 }
 
-/* ---- Prose (blog, légal, FAQ) ---- */
+.section-dark {
+  background: var(--ink-solid);
+  color: #fff;
+  border-top: none;
+}
+
+.section-dark + .section,
+.section + .section-dark {
+  border-top: none;
+}
+
+.section-dark .lbl {
+  background: rgba(255, 77, 109, 0.18);
+  color: #ffb3c0;
+}
+
+.section-dark h2,
+.section-dark h3 {
+  color: #fff;
+}
+
+.section-dark p {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.section-soft {
+  background: var(--paper-soft);
+  border-top: none;
+}
+
+.section-surface {
+  background: var(--surface);
+  border-top: none;
+}
+
+/* ---- Prose ---- */
 
 .prose {
   max-width: 68ch;
 }
 
 .prose h1 {
-  font-size: clamp(30px, 5vw, 40px);
+  font-size: clamp(30px, 5vw, 42px);
   margin-bottom: 16px;
 }
 
@@ -193,7 +261,7 @@ a {
 .prose blockquote {
   margin: 24px 0;
   padding: 4px 0 4px 20px;
-  border-left: 2px solid var(--clay);
+  border-left: 3px solid var(--accent);
   color: var(--ink-soft);
   font-style: italic;
 }
@@ -220,16 +288,147 @@ a {
 
 .prose code {
   font-size: 0.9em;
-  background: var(--sage-pale);
+  background: var(--accent-pale);
   padding: 1px 5px;
   border-radius: 4px;
 }
 
-/* Note posée (jamais une alerte rouge) : information calme sur fond ambre pâle. */
 .notice {
   padding: 14px 18px;
   border-radius: var(--radius);
-  background: var(--amber-pale);
-  border: 1px solid color-mix(in srgb, var(--amber) 35%, transparent);
+  background: var(--accent-pale);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
   font-size: 15px;
+  color: var(--accent-text);
+}
+
+/* ---- CTA bandeau ---- */
+
+.cta-band {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.cta-band h2 {
+  font-size: clamp(26px, 4vw, 36px);
+}
+
+.cta-band p {
+  color: var(--ink-soft);
+}
+
+.cta-band-coral {
+  background: var(--accent-gradient);
+  color: #fff;
+  border-radius: var(--radius-lg);
+  padding: 48px 32px;
+}
+
+.cta-band-coral h2,
+.cta-band-coral p {
+  color: #fff;
+}
+
+.cta-band-coral p {
+  opacity: 0.92;
+}
+
+.cta-band-coral .btn-primary {
+  background: var(--ink-solid);
+  box-shadow: none;
+  color: #fff;
+}
+
+.cta-band-coral .btn-primary:hover {
+  background: #000;
+}
+
+/* ---- Animations ----
+   Révélation au scroll : le script de Base.astro pose `.anim` (état caché)
+   puis `.anim-in` à l'entrée dans le viewport, avec un décalage par fratrie
+   via --anim-i. Sans JS ou avec prefers-reduced-motion, rien n'est caché. */
+
+.anim {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: calc(min(var(--anim-i, 0), 5) * 80ms);
+  will-change: opacity, transform;
+}
+
+.anim-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Flottement doux de l'illustration du hero */
+.hero-illo {
+  animation: float-soft 7s ease-in-out infinite;
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Micro-interactions au survol — sobres, cohérentes avec le ton calme */
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.teasers a,
+.posts a,
+.tier,
+.channel {
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.teasers a:hover,
+.posts a:hover,
+.tier:hover,
+.channel:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--line));
+}
+
+/* Soulignement animé de la navigation desktop */
+.nav-desktop a {
+  position: relative;
+}
+
+.nav-desktop a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.nav-desktop a:hover::after,
+.nav-desktop a:focus-visible::after {
+  transform: scaleX(1);
 }

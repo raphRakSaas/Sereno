@@ -17,13 +17,7 @@
         <img [src]="previewUrl" alt="Aperçu du reçu" />
       </button>
       <div class="preview-meta">
-        @if (isProcessing(activeReceipt())) {
-          <p class="status">Analyse en cours…</p>
-        } @else if (activeReceipt()?.status === 'failed') {
-          <p class="status">L’analyse n’a pas abouti — tu peux saisir à la main.</p>
-        } @else {
-          <p class="status">Reçu attaché</p>
-        }
+        <p class="status">Reçu attaché</p>
         <div class="preview-actions">
           <button type="button" class="link-btn" [disabled]="disabled()" (click)="openGalleryInput(galleryInput)">
             Remplacer
@@ -44,35 +38,6 @@
         <app-icon name="image" [size]="18" />
         Importer
       </button>
-    </div>
-    <button type="button" class="attach-btn ai" [disabled]="disabled()" (click)="scanWithAi(galleryInput)">
-      <app-icon name="sparkle" [size]="18" />
-      Scanner automatiquement (IA)
-    </button>
-  }
-
-  @if (showSuggestions(activeReceipt())) {
-    @let data = extractedData(activeReceipt());
-    <div class="suggestions card">
-      <p class="suggestions-title">Suggestions du reçu</p>
-      <p class="suggestions-copy">Vérifie avant d’appliquer — rien n’est enregistré sans ton accord.</p>
-      <div class="suggestion-list">
-        @if (data?.amount !== undefined) {
-          <button type="button" class="suggestion" (click)="applyAmount(data!.amount!)">
-            Montant · {{ formatAmount(data!.amount!) }}
-          </button>
-        }
-        @if (data?.date) {
-          <button type="button" class="suggestion" (click)="applyDate(data!.date!)">
-            Date · {{ formatDate(data!.date!) }}
-          </button>
-        }
-        @if (data?.merchant) {
-          <button type="button" class="suggestion" (click)="applyMerchant(data!.merchant!)">
-            Lieu · {{ data!.merchant }}
-          </button>
-        }
-      </div>
     </div>
   }
 

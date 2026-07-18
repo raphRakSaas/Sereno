@@ -138,11 +138,11 @@
   border-color: var(--accent);
 }
 
-/* Jour sélectionné : fond noir plein, comme dans le handoff — priorité sur
-   la teinte de chaleur (le fond noir gagne toujours sur l'intensité). */
+/* Jour sélectionné : fond noir plein (#000 en clair), comme dans le handoff —
+   priorité sur la teinte de chaleur (le fond noir gagne toujours sur l'intensité). */
 .day.selected {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: var(--ink-solid);
+  border-color: var(--ink-solid);
   color: var(--paper);
 }
 

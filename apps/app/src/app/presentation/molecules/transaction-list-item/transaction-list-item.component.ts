@@ -19,7 +19,7 @@ import { MerchantBadgeComponent } from '../../atoms/merchant-badge/merchant-badg
       <app-merchant-badge
         [texts]="merchantTexts()"
         [fallbackIcon]="isTransferRow() ? 'transit' : (category()?.icon ?? 'dots')"
-        [fallbackColor]="isTransferRow() ? 'var(--sand)' : (category()?.color ?? '#8B948C')"
+        [fallbackColor]="isTransferRow() ? 'var(--sand)' : (category()?.color ?? '#6B7280')"
         [size]="38"
         shape="square"
       />
@@ -80,12 +80,12 @@ import { MerchantBadgeComponent } from '../../atoms/merchant-badge/merchant-badg
       flex-direction: column;
     }
     .name {
-      font-size: 15px;
-      font-weight: 500;
+      font-size: 14px;
+      font-weight: 600;
     }
     .note {
-      font-size: 13px;
-      color: var(--ink-soft);
+      font-size: 12.5px;
+      color: var(--ink-faint);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

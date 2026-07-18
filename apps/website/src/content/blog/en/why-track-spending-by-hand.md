@@ -36,7 +36,7 @@ five seconds, three things happen:
    micro-decision — “was that eating out, or groceries?” — that builds your
    mental map of the month.
 3. **You see the effect immediately.** The expense joins the month, the
-   strata shift. The action has visible weight.
+   dashboard updates. The action has visible weight.
 
 Psychologists call this the generation effect: what you produce yourself gets
 encoded deeply; what you watch scroll by gets forgotten. It's the difference

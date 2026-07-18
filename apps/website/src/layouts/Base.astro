@@ -38,7 +38,7 @@ const alternateEn = alternates?.en ?? (routeKey ? href('en', routeKey) : null);
     {alternateFr && <link rel="alternate" hreflang="fr" href={new URL(alternateFr, site)} />}
     {alternateEn && <link rel="alternate" hreflang="en" href={new URL(alternateEn, site)} />}
     {alternateFr && <link rel="alternate" hreflang="x-default" href={new URL(alternateFr, site)} />}
-    <meta name="theme-color" content="#EEF1EA" />
+    <meta name="theme-color" content="#FF4D6D" />
     <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="icon" type="image/png" href="/favicon-light.png" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: dark)" />
@@ -58,5 +58,65 @@ const alternateEn = alternates?.en ?? (routeKey ? href('en', routeKey) : null);
       <slot />
     </main>
     <Footer lang={lang} />
+    <script>
+      // Révélation douce au scroll. Sans JS ou avec prefers-reduced-motion,
+      // rien n'est masqué : les classes .anim ne sont posées qu'ici.
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+        const revealSelectors = [
+          '.hero-copy',
+          '.hero-visual',
+          '.section-head',
+          '.pillar',
+          '.feature-block',
+          '.trust-inner',
+          '.teasers > li',
+          '.posts > li',
+          '.tier',
+          '.channel',
+          '.why',
+          '.cta-band',
+          '.about-grid > *',
+          '.free-grid > *',
+          '.faq-acc .item',
+          'main .prose',
+          '.notfound',
+        ].join(',');
+
+        const revealTargets = Array.from(document.querySelectorAll<HTMLElement>(revealSelectors));
+        const siblingCountByParent = new Map<HTMLElement | null, number>();
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue;
+              entry.target.classList.add('anim-in');
+              observer.unobserve(entry.target);
+            }
+          },
+          { rootMargin: '0px 0px -60px 0px' },
+        );
+
+        for (const target of revealTargets) {
+          const parent = target.parentElement;
+          const siblingIndex = siblingCountByParent.get(parent) ?? 0;
+          siblingCountByParent.set(parent, siblingIndex + 1);
+
+          target.style.setProperty('--anim-i', String(siblingIndex));
+          target.classList.add('anim');
+          // Une fois révélé, on rend la main aux styles normaux (survols, etc.).
+          // transitionend bulle depuis les enfants : on ne réagit qu'à la cible.
+          const releaseAnimationState = (event: TransitionEvent) => {
+            if (event.target !== target) return;
+            target.classList.remove('anim', 'anim-in');
+            target.style.removeProperty('--anim-i');
+            target.removeEventListener('transitionend', releaseAnimationState);
+          };
+          target.addEventListener('transitionend', releaseAnimationState);
+          observer.observe(target);
+        }
+      }
+    </script>
   </body>
 </html>

@@ -51,19 +51,32 @@ import { IconComponent } from '../../atoms/icon/icon.component';
           </button>
         } @else if (pwa.installSheetView() === 'ios-steps') {
           <span class="mark">
-            <app-icon name="plus" [size]="26" />
+            <app-icon name="home" [size]="26" />
           </span>
-          <h2 id="pwa-install-title">Ajoute Sereno à l'accueil</h2>
-          <ol class="steps">
-            <li>Touche <strong>Partager</strong> en bas de Safari</li>
-            <li>Fais défiler et choisis <strong>Sur l'écran d'accueil</strong></li>
-            <li>Confirme avec <strong>Ajouter</strong></li>
-            <li>Ouvre ensuite l'icône Sereno depuis ton écran d'accueil</li>
-          </ol>
-          <p class="note">
-            Safari ne permet pas d'installer automatiquement — ces quelques gestes suffisent, une
+          <h2 id="pwa-install-title">Ajoute Sereno à ton écran d'accueil</h2>
+          <p>
+            Safari ne permet pas d'installer automatiquement — ces trois gestes suffisent, une
             seule fois.
           </p>
+          <div class="steps">
+            <div class="step">
+              <span class="step-num">1</span>
+              <span class="step-icon"><app-icon name="arrow-out" [size]="17" /></span>
+              <span class="step-text">Touche <strong>Partager</strong> en bas de Safari</span>
+            </div>
+            <div class="step">
+              <span class="step-num">2</span>
+              <span class="step-icon"><app-icon name="plus" [size]="17" /></span>
+              <span class="step-text">
+                Choisis <strong>Sur l'écran d'accueil</strong>, puis <strong>Ajouter</strong>
+              </span>
+            </div>
+            <div class="step">
+              <span class="step-num">3</span>
+              <span class="step-icon"><app-icon name="home" [size]="17" /></span>
+              <span class="step-text">Ouvre Sereno depuis ton écran d'accueil</span>
+            </div>
+          </div>
           <button type="button" class="btn btn-primary btn-block" (click)="pwa.continueInBrowser()">
             J'ai compris
           </button>
@@ -75,14 +88,26 @@ import { IconComponent } from '../../atoms/icon/icon.component';
             <app-icon name="plus" [size]="26" />
           </span>
           <h2 id="pwa-install-title">Installer depuis le navigateur</h2>
-          <ol class="steps">
-            <li>Ouvre le menu du navigateur (⋮ ou ≡)</li>
-            <li>
-              Choisis <strong>Installer l'application</strong> ou
-              <strong>Ajouter à l'écran d'accueil</strong>
-            </li>
-            <li>Confirme, puis ouvre Sereno depuis ton écran d'accueil</li>
-          </ol>
+          <div class="steps">
+            <div class="step">
+              <span class="step-num">1</span>
+              <span class="step-icon"><app-icon name="sliders" [size]="17" /></span>
+              <span class="step-text">Ouvre le menu du navigateur (⋮ ou ≡)</span>
+            </div>
+            <div class="step">
+              <span class="step-num">2</span>
+              <span class="step-icon"><app-icon name="plus" [size]="17" /></span>
+              <span class="step-text">
+                Choisis <strong>Installer l'application</strong> ou
+                <strong>Ajouter à l'écran d'accueil</strong>
+              </span>
+            </div>
+            <div class="step">
+              <span class="step-num">3</span>
+              <span class="step-icon"><app-icon name="home" [size]="17" /></span>
+              <span class="step-text">Confirme, puis ouvre Sereno depuis ton écran d'accueil</span>
+            </div>
+          </div>
           <button type="button" class="btn btn-primary btn-block" (click)="pwa.continueInBrowser()">
             J'ai compris
           </button>
@@ -154,7 +179,7 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       width: min(100%, 480px);
       background: var(--paper);
       border-radius: 24px 24px 0 0;
-      padding: var(--space-5) var(--space-5) calc(var(--space-5) + var(--safe-bottom));
+      padding: var(--space-5) var(--space-5) max(var(--space-5), calc(12px + var(--safe-bottom)));
       z-index: 61;
       display: flex;
       flex-direction: column;
@@ -192,21 +217,45 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       font-size: 15px;
       line-height: 1.55;
     }
-    .note {
-      font-size: 13.5px;
-      color: var(--ink-faint);
-    }
     .steps {
-      margin: 0 0 var(--space-2);
-      padding-left: 1.25rem;
-      color: var(--ink-soft);
-      font-size: 15px;
-      line-height: 1.55;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      margin-bottom: var(--space-2);
     }
-    .steps strong {
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--surface);
+    }
+    .step-num {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: var(--accent-pale);
+      color: var(--accent-deep);
+      font-family: var(--font-display);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .step-icon {
+      flex: none;
+      display: grid;
+      place-items: center;
+      color: var(--ink-faint);
+    }
+    .step-text {
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .step-text strong {
       color: var(--ink);
       font-weight: 600;
     }

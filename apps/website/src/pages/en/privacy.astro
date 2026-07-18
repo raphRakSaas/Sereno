@@ -1,124 +1,95 @@
 ---
 import Base from '../../layouts/Base.astro';
+import { href } from '../../i18n/ui';
 
 const email = 'raphael@plumservices.co';
-const updated = 'July 3, 2026';
+const updated = '18 July 2026';
 ---
 
 <Base
   lang="en"
   routeKey="privacy"
   title="Privacy policy — Sereno"
-  description="What Sereno collects (very little), where your data goes (nowhere without an account, the EU with one), and your GDPR rights."
+  description="What Sereno collects (very little), where data goes, Stripe voluntary support, and your rights — no AI processing of receipts."
 >
   <article class="section">
     <div class="wrap prose">
       <h1>Privacy policy</h1>
       <p>Last updated: {updated}</p>
-      <p class="notice" lang="fr">
-        Version informative — la <a href="/confidentialite">version française</a> fait foi.
-        <span lang="en">(Informative translation — the French version prevails.)</span>
-      </p>
       <p>
-        Sereno is a budgeting app: privacy isn't fine print here, it's the
-        product. This page states exactly what is collected (very little),
-        where it goes, and how to exercise your rights.
+        Sereno is a budgeting app: privacy isn’t fine print — it’s the product.
       </p>
 
       <h2>Data controller</h2>
       <p>
-        Raphaël (publisher of Sereno, private individual) —
+        Raphaël (publisher of Sereno, natural person) —
         <a href={`mailto:${email}`}>{email}</a>.
       </p>
 
       <h2>Without an account: nothing leaves your device</h2>
       <p>
-        In guest mode (the default), all your data — transactions, accounts,
-        budgets, categories, receipts — is stored
-        <strong>only in your browser's local storage</strong> (IndexedDB), on
-        your device. It is transmitted to no server. We can't see it, and
-        neither can anyone else.
-      </p>
-      <p>
-        Clearing the site's data in your browser (or uninstalling the PWA)
-        erases it permanently — export a backup first.
+        In guest mode, all your data — transactions, accounts, budgets,
+        categories, optional receipt photos — is stored
+        <strong>only in your browser’s local storage</strong> (IndexedDB). It is
+        not sent to any server. Receipt photos are
+        <strong>never analyzed by AI</strong> or sent to an OCR service.
       </p>
 
-      <h2>With an account: the minimum, in the European Union</h2>
-      <p>If you create an account (optional and free), the following is processed:</p>
+      <h2>With an account: the minimum, in the EU</h2>
+      <p>If you create an account (optional and free), we process:</p>
       <table>
         <thead>
           <tr><th>Data</th><th>Purpose</th><th>Legal basis</th></tr>
         </thead>
         <tbody>
           <tr>
-            <td>Email address (and Google identifier if you choose Google sign-in)</td>
-            <td>Creating and securing your account, signing you back in</td>
-            <td>Performance of the contract (Terms)</td>
+            <td>Email (and Google ID if you choose Google sign-in)</td>
+            <td>Create and secure your account</td>
+            <td>Contract performance (Terms)</td>
           </tr>
           <tr>
-            <td>Your budgeting data (transactions, accounts, budgets, categories, recurring rules, receipts)</td>
-            <td>Providing sync across your devices</td>
-            <td>Performance of the contract (Terms)</td>
+            <td>Budget data (transactions, accounts, budgets, categories, recurring rules, receipts)</td>
+            <td>Sync across your devices</td>
+            <td>Contract performance (Terms)</td>
           </tr>
         </tbody>
       </table>
       <p>
-        This data is stored with <strong>Supabase</strong> (processor), in a
-        database located in the <strong>European Union</strong> (AWS region
-        eu-west-1, Ireland), partitioned per user (row-level security): each
-        account can only read its own rows. Supabase, Inc. is a foreign
-        company; any transfers outside the EU (e.g. for technical support) are
-        governed by standard contractual clauses.
+        Stored at <strong>Supabase</strong> (EU, AWS eu-west-1), isolated per
+        user (row-level security). The site is served by
+        <strong>Cloudflare</strong> (technical IP logs, legitimate interest).
+      </p>
+
+      <h2>Voluntary support (Stripe)</h2>
+      <p>
+        If you choose to support Sereno via a Stripe Payment Link, payment is
+        processed by <strong>Stripe</strong>. Sereno does not store your card
+        numbers. Stripe processes payment data under its own policy. This
+        processing is based on performing the donation transaction you initiate.
       </p>
       <p>
-        The website and application files are served by
-        <strong>Cloudflare</strong> (CDN), which processes your IP address in
-        its technical logs for security and routing purposes (legitimate
-        interest).
+        See also the <a href={href('en', 'support')}>Support</a> page.
       </p>
 
       <h2>What Sereno does not do</h2>
       <ul>
-        <li>No bank connection — no banking credentials exist on our side.</li>
-        <li>No ads, no selling or commercial sharing of data.</li>
-        <li>No tracking cookies; no audience analytics to date. If a
-          respectful tool (anonymized data, EU hosting) is ever added, this
-          policy will be updated before it is switched on.</li>
-        <li>No profiling, no automated decision-making.</li>
+        <li>No bank connection.</li>
+        <li>No ads, no selling your data.</li>
+        <li>No tracking cookies; no analytics tool at this time.</li>
+        <li>No profiling, no automated decision-making, no AI processing of receipts.</li>
       </ul>
-
-      <h2>Technical local storage</h2>
-      <p>
-        The app uses browser local storage (localStorage/IndexedDB) to
-        function: your guest-mode data, your preferences (theme, sorting…),
-        and the session token if you have an account. This strictly necessary
-        storage is exempt from consent requirements; it is not used for any
-        tracking.
-      </p>
 
       <h2>Retention</h2>
       <ul>
-        <li><strong>Guest mode:</strong> your data stays with you, for as long as you keep it.</li>
-        <li><strong>Account:</strong> data is kept while the account exists, then deleted when the account is deleted.</li>
+        <li><strong>Guest mode:</strong> on your device, as long as you keep it.</li>
+        <li><strong>Account:</strong> while the account exists, then deleted on request.</li>
       </ul>
 
       <h2>Your rights</h2>
       <p>
-        Under the GDPR you have the rights of access, rectification, erasure,
-        portability, restriction and objection. To exercise them — including
-        <strong>deleting your account and all its data</strong> — write to
-        <a href={`mailto:${email}`}>{email}</a> from the email address of the
-        account concerned. Answered within 30 days at most.
-      </p>
-      <p>
-        Exporting your data is also available directly in the app (Settings →
-        full backup / CSV export), no need to ask anyone.
-      </p>
-      <p>
-        If you believe your rights are not being respected, you can lodge a
-        complaint with the French supervisory authority, the CNIL
-        (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).
+        GDPR rights of access, rectification, erasure, portability, restriction
+        and objection: <a href={`mailto:${email}`}>{email}</a>. Export also
+        available in-app.
       </p>
     </div>
   </article>

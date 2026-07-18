@@ -1,0 +1,55 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  /** Optional width hint for layout. */
+  width?: number;
+}
+
+const { src, alt, width = 280 } = Astro.props;
+---
+
+<figure class="phone-mock" style={`--phone-w: ${width}px`}>
+  <div class="frame">
+    <div class="notch" aria-hidden="true"></div>
+    <img src={src} alt={alt} width={width} height={Math.round(width * 2.05)} loading="lazy" />
+  </div>
+</figure>
+
+<style>
+  .phone-mock {
+    margin: 0;
+    width: var(--phone-w);
+    max-width: 100%;
+  }
+
+  .frame {
+    position: relative;
+    border-radius: 28px;
+    border: 2px solid var(--ink-solid);
+    background: var(--ink-solid);
+    padding: 10px 8px 12px;
+    box-shadow: var(--shadow-device);
+    overflow: hidden;
+  }
+
+  .notch {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 72px;
+    height: 8px;
+    border-radius: 999px;
+    background: #2a2b30;
+    z-index: 1;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+    background: var(--surface);
+  }
+</style>

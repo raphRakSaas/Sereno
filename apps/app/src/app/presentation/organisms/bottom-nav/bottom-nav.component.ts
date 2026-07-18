@@ -46,7 +46,10 @@ import { IconComponent } from '../../atoms/icon/icon.component';
       gap: 2px;
       background: var(--paper);
       border-top: 1px solid var(--line);
-      padding: 8px 6px calc(10px + var(--safe-bottom));
+      /* max() et non calc(+) : sur les téléphones avec barre gestuelle
+         (safe-bottom 24-48px), l'inset sert de padding au lieu de s'empiler
+         dessus — sinon grand vide sous les onglets. */
+      padding: 8px 6px max(10px, var(--safe-bottom));
     }
     a {
       flex: 1;

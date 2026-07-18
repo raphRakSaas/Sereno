@@ -23,7 +23,12 @@
   max-width: 480px;
   display: flex;
   flex-direction: column;
-  padding: calc(var(--space-5) + var(--safe-top)) var(--page-gutter) calc(var(--space-6) + var(--safe-bottom));
+  /* Bas : max() et non calc(+) — sur les téléphones avec barre gestuelle,
+     l'inset remplace le padding visuel au lieu de s'y ajouter (sinon grand
+     vide sous le CTA). Le haut reste additif : le contenu passe derrière la
+     barre de statut, il faut l'inset entier + une respiration. */
+  padding: calc(var(--space-5) + var(--safe-top)) var(--page-gutter)
+    max(var(--space-6), calc(var(--space-2) + var(--safe-bottom)));
   box-sizing: border-box;
 }
 
@@ -50,9 +55,9 @@
   height: 32px;
   flex: none;
   border-radius: 9px;
-  /* Toujours Hof (#484848) plein, même en thème sombre : ce badge vit sur le
-     dégradé accent fixe de l'écran de bienvenue, pas sur le fond de l'app. */
-  background: #484848;
+  /* Vrai noir #000, même en thème sombre : ce badge vit sur le dégradé
+     accent fixe de l'écran de bienvenue, pas sur le fond de l'app. */
+  background: #000000;
   display: grid;
   place-items: center;
   font-family: var(--font-display);
@@ -121,8 +126,8 @@
   padding: 16px;
   border: none;
   border-radius: 16px;
-  /* Toujours Hof (#484848) plein, même en thème sombre — voir .mark ci-dessus. */
-  background: #484848;
+  /* Vrai noir #000, même en thème sombre — voir .mark ci-dessus. */
+  background: #000000;
   color: #fff;
   font-family: var(--font-text);
   font-size: 15.5px;

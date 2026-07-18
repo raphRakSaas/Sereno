@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
-/* Pictogrammes de Sereno : tracés à la main sur grille 24px, trait 1.7,
-   extrémités rondes. Jamais d'emoji. Un point = `M x 12h.01` (cap rond). */
-const ICON_PATHS: Record<string, string[]> = {
+/* Pictogrammes d'interface de Sereno (navigation, actions) : tracés à la main
+   sur grille 24px, trait 1.7, extrémités rondes. Un point = `M x 12h.01`
+   (cap rond). Les catégories, elles, utilisent les Fluent Emoji 3D via
+   app-category-icon (voir category-icon.component.ts) — rendu coloré voulu. */
+export const ICON_PATHS: Record<string, string[]> = {
   // Catégories
   work: ['M4 8h16v11H4z', 'M9 8V6a1.8 1.8 0 0 1 1.8-1.8h2.4A1.8 1.8 0 0 1 15 6v2', 'M4 12.5h16'],
   sparkle: ['M12 4.5l1.7 4.3 4.3 1.7-4.3 1.7L12 16.5l-1.7-4.3L6 10.5l4.3-1.7z', 'M18 16.5v3', 'M16.5 18h3'],

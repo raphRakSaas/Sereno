@@ -33,7 +33,7 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
       overflow-y: auto;
       background: var(--paper);
       border-radius: 24px 24px 0 0;
-      padding: 20px 20px calc(28px + var(--safe-bottom));
+      padding: 20px 20px max(28px, calc(12px + var(--safe-bottom)));
       box-sizing: border-box;
       z-index: 61;
       animation: rise 0.25s ease-out;

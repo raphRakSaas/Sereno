@@ -8,18 +8,10 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { AppModeService } from '../../../application/services/app-mode.service';
-import { ConversionService } from '../../../application/services/conversion.service';
 import { ReceiptsStore } from '../../../application/stores/receipts.store';
-import { Receipt, ReceiptExtractedData } from '../../../domain/models/receipt.model';
+import { Receipt } from '../../../domain/models/receipt.model';
 import { validateReceiptFile } from '../../../domain/utils/receipt-file.util';
 import { IconComponent } from '../../atoms/icon/icon.component';
-
-export interface ReceiptSuggestionApply {
-  amount?: number;
-  date?: string;
-  merchant?: string;
-}
 
 @Component({
   selector: 'app-receipt-attach',
@@ -30,13 +22,10 @@ export interface ReceiptSuggestionApply {
 })
 export class ReceiptAttachComponent {
   protected readonly receipts = inject(ReceiptsStore);
-  private readonly mode = inject(AppModeService);
-  private readonly conversion = inject(ConversionService);
 
   readonly transactionId = input<string | null>(null);
   readonly disabled = input(false);
 
-  readonly applySuggestion = output<ReceiptSuggestionApply>();
   readonly pendingFileChange = output<File | null>();
 
   protected readonly pendingFile = signal<File | null>(null);
@@ -61,10 +50,6 @@ export class ReceiptAttachComponent {
     });
   }
 
-  protected isCloud(): boolean {
-    return this.mode.isCloud();
-  }
-
   protected receiptPreview(receipt: Receipt | null): string | null {
     if (!receipt) {
       return this.pendingPreviewUrl();
@@ -72,40 +57,11 @@ export class ReceiptAttachComponent {
     return this.receipts.previewUrl(receipt.id);
   }
 
-  protected isProcessing(receipt: Receipt | null): boolean {
-    return receipt ? this.receipts.processingReceiptId() === receipt.id : false;
-  }
-
-  protected extractedData(receipt: Receipt | null): ReceiptExtractedData | null {
-    if (!receipt?.extractedData) {
-      return null;
-    }
-    return receipt.extractedData;
-  }
-
-  protected showSuggestions(receipt: Receipt | null): boolean {
-    if (!receipt || !this.isCloud()) {
-      return false;
-    }
-    return receipt.status === 'extracted' && !!receipt.extractedData;
-  }
-
   protected openCameraInput(cameraInput: HTMLInputElement): void {
     cameraInput.click();
   }
 
   protected openGalleryInput(galleryInput: HTMLInputElement): void {
-    galleryInput.click();
-  }
-
-  /** L'analyse automatique (montant/date/commerçant) tourne déjà à l'upload
-      en mode connecté (voir showSuggestions) — ce bouton ouvre juste le
-      sélecteur de fichier, ou le paywall IA si invité. */
-  protected scanWithAi(galleryInput: HTMLInputElement): void {
-    if (!this.isCloud()) {
-      this.conversion.requestAiScan();
-      return;
-    }
     galleryInput.click();
   }
 
@@ -159,31 +115,6 @@ export class ReceiptAttachComponent {
     this.viewerOpen.set(false);
   }
 
-  protected applyAmount(amount: number): void {
-    this.applySuggestion.emit({ amount });
-    void this.confirmCurrentReceipt();
-  }
-
-  protected applyDate(date: string): void {
-    this.applySuggestion.emit({ date });
-    void this.confirmCurrentReceipt();
-  }
-
-  protected applyMerchant(merchant: string): void {
-    this.applySuggestion.emit({ merchant });
-    void this.confirmCurrentReceipt();
-  }
-
-  protected formatAmount(amount: number): string {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
-  }
-
-  protected formatDate(date: string): string {
-    return new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }).format(
-      new Date(`${date}T00:00:00`),
-    );
-  }
-
   private setPendingFile(file: File): void {
     this.clearPendingFile(false);
     this.pendingFile.set(file);
@@ -201,13 +132,6 @@ export class ReceiptAttachComponent {
     this.pendingPreviewUrl.set(null);
     if (emit) {
       this.pendingFileChange.emit(null);
-    }
-  }
-
-  private async confirmCurrentReceipt(): Promise<void> {
-    const receipt = this.activeReceipt();
-    if (receipt && receipt.status === 'extracted') {
-      await this.receipts.confirmExtraction(receipt.id);
     }
   }
 }

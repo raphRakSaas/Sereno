@@ -11,7 +11,4 @@ export interface ReceiptRepository {
   /** URL affichable (Object URL invité, URL signée cloud). */
   getPreviewUrl(receiptId: string): Promise<string | null>;
   releasePreviewUrl(url: string): void;
-  /** Lance l'OCR côté cloud ; no-op ou échec gracieux en mode invité. */
-  requestOcr(receiptId: string): Promise<Receipt>;
-  confirmExtraction(receiptId: string): Promise<Receipt>;
 }

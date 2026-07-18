@@ -117,7 +117,7 @@ import { LogoComponent } from '../../atoms/logo/logo.component';
       align-items: center;
       justify-content: center;
       gap: 7px;
-      background: var(--ink);
+      background: var(--ink-solid);
       color: var(--paper);
       border: none;
       border-radius: var(--radius);

@@ -11,9 +11,9 @@ const tr = t('fr');
   title="Page introuvable — Sereno"
   description="Cette page n'existe pas (ou plus). Rien de grave."
 >
-  <section class="section">
+  <section class="section section-soft">
     <div class="wrap notfound">
-      <span class="eyebrow">404</span>
+      <span class="lbl">404</span>
       <h1>{tr('notfound.title')}</h1>
       <p>{tr('notfound.body')}</p>
       <p class="en" lang="en">This page doesn’t exist. <a href="/en">English home →</a></p>
@@ -29,6 +29,7 @@ const tr = t('fr');
     align-items: flex-start;
     gap: 14px;
     max-width: 34rem;
+    padding: 24px 0 48px;
   }
 
   h1 {

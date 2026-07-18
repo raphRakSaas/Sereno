@@ -35,7 +35,7 @@ import { CategoryIconComponent } from '../category-icon/category-icon.component'
       border-radius: 999px;
     }
     .square {
-      border-radius: 10px;
+      border-radius: 11px;
     }
     .logo {
       width: 58%;
@@ -52,20 +52,24 @@ import { CategoryIconComponent } from '../category-icon/category-icon.component'
 export class MerchantBadgeComponent {
   readonly texts = input<string[]>([]);
   readonly fallbackIcon = input('dots');
-  readonly fallbackColor = input('#8B948C');
+  readonly fallbackColor = input('#6B7280');
   readonly size = input(40);
   readonly shape = input<'round' | 'square'>('square');
 
   protected readonly brand = computed(() => resolveMerchantBrand(...this.texts()));
 
-  protected readonly iconSize = computed(() => Math.round(this.size() * 0.46));
+  /* Les Fluent Emoji 3D ont leur propre marge interne : on les affiche plus
+     grands que les anciens pictos au trait pour qu'ils remplissent la pastille. */
+  protected readonly iconSize = computed(() => Math.round(this.size() * 0.62));
 
   protected readonly background = computed(() => {
     const merchant = this.brand();
     if (merchant) {
       return merchant.tint;
     }
-    return `color-mix(in srgb, ${this.fallbackColor()} 14%, var(--surface))`;
+    /* Pastel franc : assez de couleur pour que la pastille se voie (l'ancien
+       14 % sur fond grège rendait tout délavé). */
+    return `color-mix(in srgb, ${this.fallbackColor()} 22%, var(--paper))`;
   });
 
   protected readonly foreground = computed(() => {

@@ -70,7 +70,9 @@ frequently.
   `<PROJECT_REF>` / `<ANON_KEY>` — fill in before running against a project.
 - `supabase/functions/process-recurring/` — idempotent recurring-transaction
   generator (catches up missed occurrences, never duplicates a (rule, date)
-  pair). Deploy with `supabase functions deploy process-recurring`.
+  pair). Deploy with `supabase functions deploy process-recurring`. Guest mode
+  uses the mirrored local generator instead (`LocalRecurringService`).
+  There is no `process-receipt` OCR function anymore.
 
 ## Architecture
 
@@ -116,16 +118,20 @@ order; if any step fails, everything inserted so far is deleted in reverse
 order (client-side rollback) and the local Dexie data is left untouched. Only
 after full success is Dexie cleared and `AppModeService` flipped to `cloud`.
 
-### Conversion triggers (`application/services/conversion.service.ts`)
+### Mode gratuit sans quotas
 
-Three independent triggers open the same upsell modal (whichever fires
-first): 20 transactions created, 14 days since first launch, or an attempt to
-reach a cloud-only route. Cloud-only routes are guarded by
-`presentation/guards/cloud-only.guard.ts` (`cloudOnlyGuard(featureName)`),
-which redirects to `/reglages` and fires the "feature" trigger reason rather
-than blocking navigation with an error. "Plus tard" snoozes automatic
-(non-feature) triggers for 7 days via localStorage — don't remove or shorten
-this without reason, it's what keeps the upsell from being naggy.
+Toute l'app est utilisable sans compte et sans limite artificielle (pas de
+seuil de transactions, pas de routes cloud-only). Un compte gratuit reste
+optionnel pour synchroniser plusieurs appareils. Les budgets, comptes,
+catégories et récurrences fonctionnent aussi en mode invité via Dexie.
+
+Les récurrences en invité sont générées localement par
+`application/services/local-recurring.service.ts` (idempotent par
+`(ruleId, date)`, aligné sur l'Edge Function cloud `process-recurring`).
+En mode cloud, la génération reste côté serveur.
+
+Les reçus restent des photos attachées manuellement — **pas d'OCR / IA**
+(`process-receipt` a été retiré).
 
 ### Domain models vs. Supabase rows
 

@@ -9,33 +9,32 @@ const email = 'raphael@plumservices.co';
   lang="en"
   routeKey="contact"
   title="Contact — Sereno"
-  description="A question, a bug, an idea? Write directly to Sereno's creator — a human answers."
+  description="A question, a bug, an idea? Write directly to Sereno’s maker — a human replies."
 >
-  <section class="section">
+  <section class="section section-soft">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Contact</span>
-        <h1>A human answers.</h1>
+        <span class="lbl">Contact</span>
+        <h1>A human replies.</h1>
         <p>
-          Sereno is an independent project. No support chatbot, no ticket
-          #48,291: you write, and the person who builds the app reads it.
+          Sereno is an independent project. No chatbot, no ticket #48291: you
+          write, and the person who builds the app reads it.
         </p>
       </div>
 
       <div class="channels">
         <div class="channel card">
           <h2>By email</h2>
-          <p>Questions, bugs, ideas, or just telling us how you use Sereno:</p>
+          <p>Questions, bugs, ideas, or just how you use Sereno:</p>
           <a class="mail" href={`mailto:${email}`}>{email}</a>
           <p class="hint">Usually answered within a few days.</p>
         </div>
         <div class="channel card">
-          <h2>Before writing</h2>
+          <h2>Before you write</h2>
           <p>
-            The <a href={href('en', 'faq')}>FAQ</a> covers the most common
-            questions (data, accounts, why it's free). For requests about your
-            personal data (access, deletion), see the
-            <a href={href('en', 'privacy')}>privacy policy</a>.
+            The <a href={href('en', 'faq')}>FAQ</a> covers common questions
+            (data, account, free forever). For access or deletion of your data, see
+            the <a href={href('en', 'privacy')}>privacy policy</a>.
           </p>
         </div>
       </div>

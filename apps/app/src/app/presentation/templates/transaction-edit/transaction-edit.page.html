@@ -116,7 +116,7 @@
         <app-merchant-badge
           [texts]="merchantTexts()"
           [fallbackIcon]="selectedCategory()?.icon ?? 'dots'"
-          [fallbackColor]="selectedCategory()?.color ?? '#8B948C'"
+          [fallbackColor]="selectedCategory()?.color ?? '#6B7280'"
           [size]="40"
           shape="square"
         />
@@ -138,14 +138,12 @@
         [transactionId]="editedId()"
         [disabled]="saving()"
         (pendingFileChange)="onPendingReceiptFile($event)"
-        (applySuggestion)="applyReceiptSuggestion($event)"
       />
     } @else {
       <app-receipt-attach
         [transactionId]="editedId()"
         [disabled]="saving()"
         (pendingFileChange)="onPendingReceiptFile($event)"
-        (applySuggestion)="applyReceiptSuggestion($event)"
       />
       @if (linkedRecurringRuleId()) {
         <label class="toggle-row">

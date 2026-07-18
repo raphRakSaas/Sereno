@@ -1,6 +1,5 @@
 import { computed, inject } from '@angular/core';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { AppModeService } from '../services/app-mode.service';
 import { Receipt } from '../../domain/models/receipt.model';
 import { RECEIPT_REPOSITORY } from '../../domain/ports/tokens';
 
@@ -9,7 +8,6 @@ interface ReceiptsState {
   transactionIdsWithReceipt: string[];
   previewUrls: Record<string, string>;
   loadingTransactionId: string | null;
-  processingReceiptId: string | null;
   error: string | null;
 }
 
@@ -18,7 +16,6 @@ const initialState: ReceiptsState = {
   transactionIdsWithReceipt: [],
   previewUrls: {},
   loadingTransactionId: null,
-  processingReceiptId: null,
   error: null,
 };
 
@@ -30,7 +27,6 @@ export const ReceiptsStore = signalStore(
   })),
   withMethods((store) => {
     const repo = inject(RECEIPT_REPOSITORY);
-    const mode = inject(AppModeService);
 
     const setTransactionReceipts = (transactionId: string, receipts: Receipt[]) => {
       patchState(store, {
@@ -56,22 +52,6 @@ export const ReceiptsStore = signalStore(
         patchState(store, { previewUrls: { ...store.previewUrls(), [receiptId]: url } });
       }
       return url;
-    };
-
-    const runOcr = async (receiptId: string): Promise<Receipt | null> => {
-      patchState(store, { processingReceiptId: receiptId, error: null });
-      try {
-        const receipt = await repo.requestOcr(receiptId);
-        upsertReceipt(receipt);
-        patchState(store, { processingReceiptId: null });
-        return receipt;
-      } catch {
-        patchState(store, {
-          processingReceiptId: null,
-          error: 'L’analyse du reçu n’a pas abouti. Tu peux saisir les infos à la main.',
-        });
-        return null;
-      }
     };
 
     return {
@@ -111,9 +91,6 @@ export const ReceiptsStore = signalStore(
           const receipt = await repo.attach(transactionId, file);
           upsertReceipt(receipt);
           await ensurePreview(receipt.id);
-          if (mode.isCloud()) {
-            await runOcr(receipt.id);
-          }
           return receipt;
         } catch (error) {
           const message =
@@ -134,9 +111,6 @@ export const ReceiptsStore = signalStore(
             ),
           });
           await ensurePreview(receipt.id);
-          if (mode.isCloud()) {
-            await runOcr(receipt.id);
-          }
           return receipt;
         } catch (error) {
           const message =
@@ -191,17 +165,6 @@ export const ReceiptsStore = signalStore(
           });
         } catch {
           patchState(store, { error: 'Les reçus n’ont pas pu être supprimés. Réessaie dans un instant.' });
-        }
-      },
-
-      runOcr,
-
-      async confirmExtraction(receiptId: string): Promise<void> {
-        try {
-          const receipt = await repo.confirmExtraction(receiptId);
-          upsertReceipt(receipt);
-        } catch {
-          patchState(store, { error: 'La confirmation n’a pas abouti. Réessaie dans un instant.' });
         }
       },
 

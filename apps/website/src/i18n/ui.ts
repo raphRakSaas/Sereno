@@ -6,14 +6,14 @@ export const languages = { fr: 'Français', en: 'English' } as const;
 export type Lang = keyof typeof languages;
 export const defaultLang: Lang = 'fr';
 
-/** L'app elle-même (CTA « Ouvrir l'app »). ?install=1 ouvre le choix d'installation sur mobile. */
+/** L'app elle-même (CTA « Essayer gratuitement »). ?install=1 ouvre le choix d'installation sur mobile. */
 export const APP_URL = 'https://sereno-2qj.pages.dev/?install=1';
 
 export type RouteKey =
   | 'home'
   | 'features'
   | 'method'
-  | 'pricing'
+  | 'support'
   | 'faq'
   | 'contact'
   | 'blog'
@@ -25,7 +25,7 @@ export const routeMap: Record<RouteKey, Record<Lang, string>> = {
   home: { fr: '/', en: '/en' },
   features: { fr: '/fonctionnalites', en: '/en/features' },
   method: { fr: '/methode', en: '/en/method' },
-  pricing: { fr: '/tarifs', en: '/en/pricing' },
+  support: { fr: '/soutenir', en: '/en/support' },
   faq: { fr: '/faq', en: '/en/faq' },
   contact: { fr: '/contact', en: '/en/contact' },
   blog: { fr: '/blog', en: '/en/blog' },
@@ -38,48 +38,50 @@ export const ui = {
   fr: {
     'site.tagline': 'Vois clair dans ton argent, sans anxiété.',
     'site.description':
-      'Sereno est une app de budget calme : tu notes tes dépenses à la main, tu vois où va ton argent, sans alerte rouge ni culpabilisation.',
+      'Sereno est une app de budget calme : tu notes tes dépenses à la main, tu vois où va ton argent — gratuitement, sans alerte culpabilisante.',
     'nav.features': 'Fonctionnalités',
-    'nav.method': 'La méthode',
-    'nav.pricing': 'Tarifs',
+    'nav.method': 'À propos',
+    'nav.support': 'Soutenir',
     'nav.faq': 'FAQ',
     'nav.blog': 'Blog',
     'nav.contact': 'Contact',
-    'cta.openApp': 'Ouvrir l’app',
-    'cta.openApp.aria': 'Ouvrir l’app Sereno (gratuite, sans inscription)',
+    'cta.openApp': 'Essayer gratuitement',
+    'cta.openApp.aria': 'Essayer Sereno gratuitement, sans inscription',
     'footer.legal': 'Mentions légales',
     'footer.privacy': 'Confidentialité',
     'footer.terms': 'CGU',
-    'footer.note': 'Sereno fonctionne aussi sans compte, en local sur ton appareil.',
+    'footer.note': 'Gratuit pour toujours. Fonctionne aussi sans compte, en local sur ton appareil.',
     'lang.switch': 'English version',
     'blog.readMore': 'Lire',
     'blog.published': 'Publié le',
     'notfound.title': 'Page introuvable',
     'notfound.body': 'Cette page n’existe pas (ou plus). Rien de grave.',
     'notfound.back': 'Retour à l’accueil',
+    'support.soon': 'Bientôt disponible',
   },
   en: {
     'site.tagline': 'See your money clearly, without the anxiety.',
     'site.description':
-      'Sereno is a calm budgeting app: you log your spending by hand, you see where your money goes — no red alerts, no guilt.',
+      'Sereno is a calm budgeting app: you log your spending by hand, you see where your money goes — free forever, no guilt trips.',
     'nav.features': 'Features',
-    'nav.method': 'The method',
-    'nav.pricing': 'Pricing',
+    'nav.method': 'About',
+    'nav.support': 'Support',
     'nav.faq': 'FAQ',
     'nav.blog': 'Blog',
     'nav.contact': 'Contact',
-    'cta.openApp': 'Open the app',
-    'cta.openApp.aria': 'Open the Sereno app (free, no sign-up)',
+    'cta.openApp': 'Try for free',
+    'cta.openApp.aria': 'Try Sereno for free, no sign-up required',
     'footer.legal': 'Legal notice',
     'footer.privacy': 'Privacy',
     'footer.terms': 'Terms',
-    'footer.note': 'Sereno also works without an account, locally on your device.',
+    'footer.note': 'Free forever. Also works without an account, locally on your device.',
     'lang.switch': 'Version française',
     'blog.readMore': 'Read',
     'blog.published': 'Published on',
     'notfound.title': 'Page not found',
     'notfound.body': 'This page doesn’t exist (or no longer does). No harm done.',
     'notfound.back': 'Back to home',
+    'support.soon': 'Coming soon',
   },
 } as const;
 

@@ -138,8 +138,6 @@ export class SwitchingReceiptRepository implements ReceiptRepository {
   removeByTransaction = (transactionId: string) => this.active.removeByTransaction(transactionId);
   getPreviewUrl = (receiptId: string) => this.active.getPreviewUrl(receiptId);
   releasePreviewUrl = (url: string) => this.active.releasePreviewUrl(url);
-  requestOcr = (receiptId: string) => this.active.requestOcr(receiptId);
-  confirmExtraction = (receiptId: string) => this.active.confirmExtraction(receiptId);
 }
 
 @Injectable({ providedIn: 'root' })

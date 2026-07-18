@@ -215,7 +215,7 @@ Backlog fonctionnel inspiré de Money Manager.
 - [x] Mode invité (IndexedDB, zero config)
 - [x] Compte cloud gratuit (Supabase sync)
 - [x] Migration invité → cloud à l’inscription
-- [x] Upsell conversion (20 tx / 14 jours / feature cloud)
+- [x] ~~Upsell conversion (20 tx / 14 jours / feature cloud)~~ — retiré (juillet 2026) : app entièrement gratuite sans quotas
 - [x] PWA (service worker prod)
 
 ---
@@ -316,8 +316,8 @@ Backlog fonctionnel inspiré de Money Manager.
 - [x] Importer depuis galerie / fichiers
 - [x] Visualiser la photo
 - [x] Remplacer / supprimer
-- [x] Extraction OCR montant / date / marchand (Tesseract, Edge Function)
-- [x] Validation utilisateur avant enregistrement
+- [x] ~~Extraction OCR montant / date / marchand (Tesseract, Edge Function)~~ — retiré (juillet 2026) : trop coûteux en ressources ; les reçus restent des photos manuelles
+- [x] ~~Validation utilisateur avant enregistrement~~ — n/a sans OCR
 
 ---
 

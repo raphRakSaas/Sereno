@@ -1,0 +1,113 @@
+---
+import PhoneMock from './PhoneMock.astro';
+
+interface Props {
+  label?: string;
+  title: string;
+  body: string;
+  /** Screenshot path under /screenshots/ or illustration under /illustrations/ */
+  mediaSrc: string;
+  mediaAlt: string;
+  /** 'phone' wraps in PhoneMock; 'illustration' shows a flat image */
+  mediaKind?: 'phone' | 'illustration';
+  /** Flip media to the left on desktop */
+  reverse?: boolean;
+}
+
+const {
+  label,
+  title,
+  body,
+  mediaSrc,
+  mediaAlt,
+  mediaKind = 'phone',
+  reverse = false,
+} = Astro.props;
+---
+
+<div class:list={['feature-block', { reverse }]}>
+  <div class="copy">
+    {label && <span class="lbl">{label}</span>}
+    <h2>{title}</h2>
+    <p>{body}</p>
+    <slot />
+  </div>
+  <div class="media">
+    {
+      mediaKind === 'phone' ? (
+        <PhoneMock src={mediaSrc} alt={mediaAlt} width={260} />
+      ) : (
+        <img class="illo" src={mediaSrc} alt={mediaAlt} width="320" height="240" loading="lazy" />
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .feature-block {
+    display: grid;
+    gap: 40px;
+    align-items: center;
+    grid-template-columns: 1fr;
+    padding: 48px 0;
+  }
+
+  .feature-block + .feature-block {
+    border-top: 1px solid var(--line);
+  }
+
+  .copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    max-width: 34rem;
+  }
+
+  h2 {
+    font-size: clamp(24px, 3.2vw, 32px);
+  }
+
+  p {
+    color: var(--ink-soft);
+    font-size: 17px;
+  }
+
+  .media {
+    display: flex;
+    justify-content: center;
+  }
+
+  .illo {
+    width: min(100%, 360px);
+    height: auto;
+  }
+
+  @media (min-width: 860px) {
+    .feature-block {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 64px;
+      padding: 64px 0;
+    }
+
+    .feature-block.reverse {
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+
+    .feature-block.reverse .copy {
+      order: 2;
+    }
+
+    .feature-block.reverse .media {
+      order: 1;
+    }
+
+    .media {
+      justify-content: flex-end;
+    }
+
+    .feature-block.reverse .media {
+      justify-content: flex-start;
+    }
+  }
+</style>

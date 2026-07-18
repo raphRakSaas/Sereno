@@ -1,49 +1,50 @@
 ---
 import Base from '../../layouts/Base.astro';
+import FaqAccordion from '../../components/FaqAccordion.astro';
 import { href } from '../../i18n/ui';
 
 const faqs = [
   {
     q: 'Does Sereno connect to my bank?',
-    a: 'No — by choice, not omission: you log your spending yourself. That five-second gesture is the heart of the method; it’s what changes your relationship with money. A welcome consequence: no banking credentials to hand over.',
+    a: 'No — by design. You log spending yourself. That five-second gesture is the method. Upside: no bank credentials to hand over.',
   },
   {
-    q: 'Do I need an account to use Sereno?',
-    a: 'No. The app works fully without one: your data stays local, on your device, and nothing is sent to any server. The (free) account only exists to sync several devices and unlock multiple accounts, custom categories and server-side recurring rules.',
+    q: 'Do I need an account?',
+    a: 'No. The app works fully without one: data stays local on your device. An account (free) is only for syncing devices and unlocking multiple accounts, custom categories, and server-side recurring rules.',
+  },
+  {
+    q: 'Is there a guest-mode limit?',
+    a: 'No. No transaction quotas, no artificial caps. Guest mode is complete and free forever.',
+  },
+  {
+    q: 'Does Sereno use AI?',
+    a: 'No. No AI receipt scanning, no opaque auto-categorization. You log, you see — that’s it.',
   },
   {
     q: 'Where is my data stored?',
-    a: 'Without an account: in your browser’s local storage (IndexedDB), on your device only. With an account: in a Postgres database hosted by Supabase in the European Union, partitioned per user (row-level security). Details are in the privacy policy.',
+    a: 'Without an account: IndexedDB on your device only. With an account: Postgres at Supabase (EU), isolated per user. Details in the privacy policy.',
   },
   {
-    q: 'What happens if I create an account after weeks of local use?',
-    a: 'Your local data is migrated to your account automatically, with nothing lost — and if the migration fails midway (network…), everything is rolled back cleanly and your local data remains intact.',
+    q: 'What if I create an account after weeks offline?',
+    a: 'Your local data migrates automatically. If migration fails mid-way, everything rolls back and your local data stays intact.',
   },
   {
-    q: 'Can I get my data out?',
-    a: 'Yes, at any time: CSV export for transactions, and a full JSON backup from the settings. Your data is yours — including the day you leave.',
+    q: 'Why is it free? Can I support it?',
+    a: 'Local mode costs almost nothing to run, and there’s no paid plan. Support is voluntary via the Support page (Stripe) — never required, never a gate.',
   },
   {
-    q: 'Does it work on my phone?',
-    a: 'Yes — Sereno is a PWA: open the app in your browser, then “Add to Home Screen”. It installs like a native app and works offline.',
-  },
-  {
-    q: 'Why is it free?',
-    a: 'Local mode costs nothing to run (a static site, your data lives with you) and a cloud account costs a few cents per user. If a paid Sereno+ tier ever appears, it will be announced clearly — never ads, never selling data.',
-  },
-  {
-    q: 'Multiple currencies? Shared accounts?',
-    a: 'Not yet. The foundations exist (every account has a currency) but the screens don’t. Sharing a budget between two people is on the list, with no promised date.',
+    q: 'Can I export my data?',
+    a: 'Yes: CSV export and full JSON backup from settings. Your data is yours, including when you leave.',
   },
 ];
 
 const jsonLd = JSON.stringify({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: faqs.map((f) => ({
+  mainEntity: faqs.map((item) => ({
     '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
   })),
 });
 ---
@@ -52,25 +53,18 @@ const jsonLd = JSON.stringify({
   lang="en"
   routeKey="faq"
   title="FAQ — Sereno"
-  description="Bank connections, data storage, the optional account, why it's free: straight answers to the questions people ask about Sereno."
+  description="Free forever, unlimited guest mode, optional account, no AI: straight answers about Sereno."
 >
   <script type="application/ld+json" set:html={jsonLd} slot="head" />
   <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">FAQ</span>
+        <span class="lbl">FAQ</span>
         <h1>Straight questions, straight answers.</h1>
       </div>
-      <dl class="faq">
-        {faqs.map((f) => (
-          <div class="item">
-            <dt>{f.q}</dt>
-            <dd>{f.a}</dd>
-          </div>
-        ))}
-      </dl>
+      <FaqAccordion items={faqs} />
       <p class="ask">
-        Another question? <a href={href('en', 'contact')}>Write to us</a> — a human answers.
+        Another question? <a href={href('en', 'contact')}>Write to us</a> — a human replies.
       </p>
     </div>
   </section>
@@ -81,30 +75,8 @@ const jsonLd = JSON.stringify({
     font-size: clamp(30px, 5vw, 42px);
   }
 
-  .faq {
-    margin: 0;
-    max-width: 46rem;
-  }
-
-  .item {
-    padding: 22px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  dt {
-    font-weight: 600;
-    font-size: 17px;
-    margin-bottom: 8px;
-  }
-
-  dd {
-    margin: 0;
-    color: var(--ink-soft);
-    font-size: 15.5px;
-  }
-
   .ask {
-    margin-top: 32px;
+    margin-top: 36px;
     color: var(--ink-soft);
   }
 </style>

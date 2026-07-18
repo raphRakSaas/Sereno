@@ -9,7 +9,7 @@
 
     <div class="hero-top">
       <div class="hero-intro">
-        <p class="greeting">{{ greeting() }} <span aria-hidden="true">👋</span></p>
+        <p class="greeting">{{ greeting() }}</p>
         <app-month-switcher [month]="selectedMonth()" (monthChange)="selectedMonth.set($event)" />
       </div>
       <a routerLink="/reglages" class="avatar" aria-label="Réglages">
@@ -32,14 +32,12 @@
         }
       }
     </div>
+  </section>
 
-    <!-- Carte budget : chevauche le bas du hero, tout le bloc est cliquable — pas de + ici, le FAB s'en charge. -->
-    <a routerLink="/budgets" class="budget-card">
+  <!-- Carte budget : carte à part sous le hero, tout le bloc est cliquable — pas de + ici, le FAB s'en charge. -->
+  <a routerLink="/budgets" class="budget-card">
       <div class="budget-card-top">
-        <span class="budget-card-heading">
-          <span>Budget mensuel</span>
-          <app-icon name="chevron-right" [size]="16" />
-        </span>
+        <span class="budget-card-heading">Budget mensuel</span>
         @if (globalBudget(); as budget) {
           <p class="budget-numbers">
             <app-amount [value]="monthExpense()" size="md" />
@@ -71,7 +69,6 @@
         }
       </p>
     </a>
-  </section>
 
   @if (transactions.error()) {
     <p class="notice">{{ transactions.error() }}</p>
@@ -88,25 +85,6 @@
         <span class="overrun-subtitle">{{ over.overPct }}&nbsp;% au-dessus du budget</span>
       </span>
       <app-amount class="overrun-amount" [value]="over.overAmount" size="md" />
-    </a>
-  }
-
-  <!-- ── Objectif d'épargne ───────────────────────────────────── -->
-  @if (savingsGoal(); as goal) {
-    <a routerLink="/objectif" class="goal-card">
-      <span class="goal-badge" aria-hidden="true">
-        <app-icon name="target" [size]="16" />
-      </span>
-      <div class="goal-body">
-        <span class="goal-label">Objectif · {{ goal.name }}</span>
-        <div class="goal-track">
-          <div class="goal-fill" [style.width.%]="goal.progressPct"></div>
-        </div>
-        <p class="goal-numbers">
-          <app-amount [value]="goal.currentAmount" size="sm" />
-          <span class="goal-target">/ <app-amount [value]="goal.targetAmount" size="sm" /></span>
-        </p>
-      </div>
     </a>
   }
 
@@ -127,7 +105,12 @@
         @for (cat of topCategories(); track cat.id) {
           <div class="top-category-row">
             <div class="top-category-head">
-              <span class="name">{{ cat.name }}</span>
+              <span class="name">
+                <span class="top-category-icon" [style.color]="cat.color" aria-hidden="true">
+                  <app-category-icon [name]="cat.icon" [size]="16" />
+                </span>
+                {{ cat.name }}
+              </span>
               <app-amount [value]="cat.amount" size="sm" />
             </div>
             <div class="top-category-track">
@@ -141,71 +124,57 @@
     }
   </section>
 
-  <!-- ── Sections inférieures ────────────────────────────────── -->
-  <div class="dash-lower">
-    <section class="reminders">
-      <div class="section-head">
-        <h2>{{ upcomingTitle() }}</h2>
-        @if (upcomingTiles().length > 0) {
-          <a routerLink="/transactions" class="see-all">Tout voir</a>
+  <!-- ── Objectif d'épargne ───────────────────────────────────── -->
+  @if (savingsGoal(); as goal) {
+    <a routerLink="/objectif" class="goal-card">
+      <span class="goal-badge" aria-hidden="true">
+        <app-icon name="target" [size]="16" />
+      </span>
+      <div class="goal-body">
+        <span class="goal-label">Objectif · {{ goal.name }}</span>
+        <div class="goal-track">
+          <div class="goal-fill" [style.width.%]="goal.progressPct"></div>
+        </div>
+        <p class="goal-numbers">
+          <app-amount [value]="goal.currentAmount" size="sm" />
+          <span class="goal-target">/ <app-amount [value]="goal.targetAmount" size="sm" /></span>
+        </p>
+      </div>
+    </a>
+  }
+
+  <!-- ── Transactions récentes — liste à nu sur le fond de page, cf. handoff ── -->
+  <section class="recent">
+    <div class="section-head">
+      <h2>Transactions récentes</h2>
+      @if (recent().length > 0) {
+        <a routerLink="/transactions" class="see-all">Tout voir</a>
+      }
+    </div>
+    @if (!transactions.loaded()) {
+      <div class="recent-list" aria-hidden="true">
+        <div class="skeleton skeleton-row"></div>
+        <div class="skeleton skeleton-row"></div>
+      </div>
+    } @else if (recent().length > 0) {
+      <div class="recent-list">
+        @for (transaction of recent(); track transaction.id) {
+          <app-transaction-list-item
+            [transaction]="transaction"
+            [category]="categories.byId().get(transaction.categoryId ?? '')"
+            [categoriesById]="categories.byId()"
+            [accountsById]="accounts.byId()"
+          />
         }
       </div>
-
-      @if (!transactions.loaded()) {
-        <div class="reminder-scroll" aria-hidden="true">
-          <div class="skeleton skeleton-tile"></div>
-          <div class="skeleton skeleton-tile"></div>
-        </div>
-      } @else if (upcomingTiles().length > 0) {
-        <div class="reminder-scroll">
-          @for (tile of upcomingTiles(); track tile.id) {
-            <app-expense-tile
-              [title]="tile.title"
-              [meta]="tile.meta"
-              [amount]="tile.amount"
-              [dueDate]="tile.dueDate"
-              [merchantTexts]="tile.merchantTexts"
-              [icon]="tile.icon"
-              [color]="tile.color"
-              [link]="tile.link"
-            />
-          }
-        </div>
-      } @else {
-        <div class="card empty-strip">
-          <img src="illustrations/vide.svg" alt="" aria-hidden="true" width="72" height="72" />
-          <p>Aucune dépense pour l'instant. Un montant et une catégorie suffisent.</p>
-          <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'expense' }" class="btn btn-primary btn-sm">
-            Noter une dépense
-          </a>
-        </div>
-      }
-    </section>
-
-    <section class="recent">
-      <div class="section-head">
-        <h2>Transactions récentes</h2>
-        @if (recent().length > 0) {
-          <a routerLink="/transactions" class="see-all">Tout voir</a>
-        }
+    } @else {
+      <div class="card empty-strip">
+        <img src="illustrations/vide.svg" alt="" aria-hidden="true" width="72" height="72" />
+        <p>Aucune dépense pour l'instant. Un montant et une catégorie suffisent.</p>
+        <a routerLink="/transactions/nouvelle" [queryParams]="{ type: 'expense' }" class="btn btn-primary btn-sm">
+          Noter une dépense
+        </a>
       </div>
-      @if (!transactions.loaded()) {
-        <div class="card list-card" aria-hidden="true">
-          <div class="skeleton skeleton-row"></div>
-          <div class="skeleton skeleton-row"></div>
-        </div>
-      } @else if (recent().length > 0) {
-        <div class="card list-card">
-          @for (transaction of recent(); track transaction.id) {
-            <app-transaction-list-item
-              [transaction]="transaction"
-              [category]="categories.byId().get(transaction.categoryId ?? '')"
-              [categoriesById]="categories.byId()"
-              [accountsById]="accounts.byId()"
-            />
-          }
-        </div>
-      }
-    </section>
-  </div>
+    }
+  </section>
 </div>

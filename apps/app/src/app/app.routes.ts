@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { cloudOnlyGuard } from './presentation/guards/cloud-only.guard';
 import { onboardingGuard } from './presentation/guards/onboarding.guard';
 import { startScreenGuard } from './presentation/guards/start-screen.guard';
 
@@ -92,7 +91,6 @@ export const routes: Routes = [
   {
     path: 'comptes',
     loadComponent: () => import('./presentation/templates/accounts/accounts.page').then((m) => m.AccountsPage),
-    canActivate: [cloudOnlyGuard('les comptes multiples')],
     title: 'Comptes — Sereno',
     data: { headerTitle: 'Comptes' },
   },
@@ -100,7 +98,6 @@ export const routes: Routes = [
     path: 'categories',
     loadComponent: () =>
       import('./presentation/templates/categories/categories.page').then((m) => m.CategoriesPage),
-    canActivate: [cloudOnlyGuard('les catégories personnalisées')],
     title: 'Catégories — Sereno',
     data: { headerTitle: 'Catégories' },
   },
@@ -108,7 +105,6 @@ export const routes: Routes = [
     path: 'recurrences',
     loadComponent: () =>
       import('./presentation/templates/recurring/recurring.page').then((m) => m.RecurringPage),
-    canActivate: [cloudOnlyGuard('les récurrences')],
     title: 'Récurrences — Sereno',
     data: { headerTitle: 'Récurrences' },
   },

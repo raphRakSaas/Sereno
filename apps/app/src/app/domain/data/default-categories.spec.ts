@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { CATEGORY_ICON_PATHS } from './category-icon-paths';
+import { CATEGORY_EMOJI_NAMES } from '../../presentation/atoms/category-icon/category-icon.component';
 import { DEFAULT_CATEGORIES } from './default-categories';
+
+const KNOWN_EMOJI_NAMES = new Set<string>(CATEGORY_EMOJI_NAMES);
 
 /* Ces catégories par défaut sont partagées avec le seed Supabase : leur
    structure (id unique, icône valide) est un invariant du produit. Les tests
@@ -24,13 +26,13 @@ describe('DEFAULT_CATEGORIES', () => {
     const incomeCategories = DEFAULT_CATEGORIES.filter((category) => category.type === 'income');
     expect(incomeCategories.length).toBeGreaterThan(0);
     for (const category of incomeCategories) {
-      expect(CATEGORY_ICON_PATHS[category.icon], `icône manquante: ${category.icon}`).toBeDefined();
+      expect(KNOWN_EMOJI_NAMES.has(category.icon), `icône manquante: ${category.icon}`).toBe(true);
     }
   });
 
   it('toutes les catégories (revenus et dépenses) ont une icône connue', () => {
     for (const category of DEFAULT_CATEGORIES) {
-      expect(CATEGORY_ICON_PATHS[category.icon]).toBeDefined();
+      expect(KNOWN_EMOJI_NAMES.has(category.icon), `icône manquante: ${category.icon}`).toBe(true);
     }
   });
 

@@ -1,0 +1,144 @@
+---
+import { t, type Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tr = t(lang);
+
+const coffeeUrl = import.meta.env.PUBLIC_STRIPE_COFFEE_URL as string | undefined;
+const sandwichUrl = import.meta.env.PUBLIC_STRIPE_SANDWICH_URL as string | undefined;
+const boostUrl = import.meta.env.PUBLIC_STRIPE_BOOST_URL as string | undefined;
+
+const tiers =
+  lang === 'fr'
+    ? [
+        {
+          amount: '1 €',
+          title: 'Un café',
+          body: 'Un petit merci qui aide à garder les lumières allumées.',
+          url: coffeeUrl,
+          cta: 'Offrir un café',
+        },
+        {
+          amount: '4 €',
+          title: 'Un sandwich',
+          body: 'Le soutien qui compte vraiment pour un projet indépendant.',
+          url: sandwichUrl,
+          cta: 'Offrir un sandwich',
+          featured: true,
+        },
+        {
+          amount: '10 €',
+          title: 'Un vrai coup de pouce',
+          body: 'Tu finances une journée de travail calme sur Sereno.',
+          url: boostUrl,
+          cta: 'Donner un coup de pouce',
+        },
+      ]
+    : [
+        {
+          amount: '€1',
+          title: 'A coffee',
+          body: 'A small thank-you that helps keep the lights on.',
+          url: coffeeUrl,
+          cta: 'Buy a coffee',
+        },
+        {
+          amount: '€4',
+          title: 'A sandwich',
+          body: 'The kind of support that really matters for an indie project.',
+          url: sandwichUrl,
+          cta: 'Buy a sandwich',
+          featured: true,
+        },
+        {
+          amount: '€10',
+          title: 'A real boost',
+          body: 'You fund a calm day of work on Sereno.',
+          url: boostUrl,
+          cta: 'Give a boost',
+        },
+      ];
+---
+
+<div class="tiers">
+  {
+    tiers.map((tier) => {
+      const available = Boolean(tier.url);
+      return (
+        <article class:list={['tier card', { featured: tier.featured, soon: !available }]}>
+          <p class="amount">{tier.amount}</p>
+          <h3>{tier.title}</h3>
+          <p class="body">{tier.body}</p>
+          {available ? (
+            <a class="btn btn-primary" href={tier.url} rel="noopener noreferrer" target="_blank">
+              {tier.cta}
+            </a>
+          ) : (
+            <span class="btn btn-ghost" aria-disabled="true">
+              {tr('support.soon')}
+            </span>
+          )}
+        </article>
+      );
+    })
+  }
+</div>
+
+<style>
+  .tiers {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 760px) {
+    .tiers {
+      grid-template-columns: repeat(3, 1fr);
+      align-items: stretch;
+    }
+  }
+
+  .tier {
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .tier.featured {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 20%, transparent);
+  }
+
+  .amount {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  .body {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+    flex: 1;
+    margin-bottom: 8px;
+  }
+
+  .tier .btn {
+    width: 100%;
+  }
+
+  .tier.soon .btn {
+    opacity: 0.6;
+  }
+</style>

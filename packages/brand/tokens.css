@@ -1,44 +1,49 @@
 /* Sereno — tokens de marque partagés.
-   Copie de référence des custom properties de apps/app/src/styles.scss :
-   l'app reste la source canonique ; si elle change, répercuter ici.
-   Palette Airbnb produit actuel : #ff385c Rausch, dégradé
-   #e61e4d → #e31c5f → #d70466, #e00b41 pressed, #00a699 Babu,
-   #fc642d Arches, #484848 Hof, #767676 Foggy.
-   (L'ancien Rausch 2014 #ff5a5f est abandonné — trop terne.)
-   Règles d'usage (docs/DESIGN.md) : accent unique Rausch (dégradé sur les
-   grandes surfaces, à plat sur les CTA) ; la carte a son propre aplat
-   (--surface), distinct du fond de page (--paper) ; --clay/--clay-soft sont
-   des alias historiques de --sage/--sage-pale, conservés pour ne pas casser
-   le site (gouvernance à un seul accent désormais, plus de second accent
-   chaud distinct). */
+   Direction corail (handoff juillet 2026) : ink #14151A, accent #FF4D6D,
+   dégradé #FF4D6D → #FF7A56. L'app (apps/app/src/styles.scss) reste la
+   source canonique pour l'UI produit ; ce fichier alimente le site public.
+   Alias historiques (--sage, --clay, --mist…) conservés pour ne pas casser
+   les consommateurs existants. */
 
 :root {
-  /* Encres — Airbnb Hof / Foggy */
-  --ink: #484848;
-  --ink-soft: #767676;
-  --ink-faint: #9a9a9a;
+  /* Encres */
+  --ink-solid: #14151a;
+  --ink: #14151a;
+  --ink-soft: #6b6e76;
+  --ink-faint: #9a9da6;
 
-  /* Surfaces — la carte a son propre aplat, distinct du fond de page blanc */
+  /* Surfaces */
   --paper: #ffffff;
+  --paper-soft: #fff6f3;
   --surface: #f7f6f3;
-  --sage-pale: #ffd1da;
+  --line: #e7e5df;
 
-  /* Accents — Airbnb Rausch actuel (#ff385c) comme couleur unique de marque */
-  --sage: #ff385c;
+  /* Accent corail */
+  --accent: #ff4d6d;
+  --accent-2: #ff7a56;
+  --accent-gradient: linear-gradient(155deg, #ff4d6d 0%, #ff7a56 100%);
+  --accent-pale: #ffedef;
+  --accent-badge: #ffd9de;
+  --accent-text: #b33a52;
+  --positive: #0e9f5c;
+
+  /* Alias historiques → nouvelle direction */
+  --sage: var(--accent);
   --sage-deep: #e00b41;
-  --mist: #00a699;
-  --mist-deep: #008c82;
-  --sand: #767676;
-  --amber: #fc642d;
-  --amber-pale: #fff0e8;
-
-  /* Alias historiques — plus de second accent chaud distinct, voir note ci-dessus */
-  --clay: var(--sage);
-  --clay-soft: var(--sage-pale);
+  --sage-pale: var(--accent-pale);
+  --clay: var(--accent);
+  --clay-soft: var(--accent-pale);
+  --mist: var(--positive);
+  --mist-deep: #0b7f4a;
+  --sand: var(--ink-soft);
+  --amber: #c6862f;
+  --amber-pale: #fff4e9;
 
   /* Structure */
-  --line: #e7e5df;
   --radius: 16px;
+  --radius-lg: 24px;
+  --shadow-cta: 0 8px 20px rgba(255, 77, 109, 0.3);
+  --shadow-device: 0 24px 64px rgba(20, 20, 22, 0.18);
 
   /* Typo — charger les fonts côté consommateur :
      @fontsource-variable/sora + @fontsource/ibm-plex-sans 400/500/600 */
@@ -46,41 +51,59 @@
   --font-text: 'IBM Plex Sans', system-ui, sans-serif;
 }
 
-/* Mode sombre — mêmes valeurs que l'app : fond noir pur, la carte reste un
-   aplat légèrement plus clair que le fond, accents Rausch éclaircis pour
-   rester lisibles la nuit. */
+/* Mode sombre — fond noir, accents corail éclaircis. */
 :root[data-theme='dark'] {
+  --ink-solid: #f2f1ed;
   --ink: #f2f1ed;
   --ink-soft: #a7aab2;
   --ink-faint: #7d8088;
   --paper: #000000;
+  --paper-soft: #1a1214;
   --surface: #17181d;
-  --sage-pale: #2e1419;
-  --sage: #ff6b85;
+  --line: #26272c;
+  --accent: #ff6b85;
+  --accent-2: #ff8558;
+  --accent-pale: #2e1419;
+  --accent-badge: #3a1a22;
+  --accent-text: #ff8fa3;
+  --positive: #26c4b8;
+  --sage: var(--accent);
   --sage-deep: #ff3d6a;
-  --mist: #26c4b8;
-  --mist-deep: #26c4b8;
-  --sand: #9aa0a6;
+  --sage-pale: var(--accent-pale);
+  --clay: var(--accent);
+  --clay-soft: var(--accent-pale);
+  --mist: var(--positive);
+  --mist-deep: var(--positive);
+  --sand: var(--ink-soft);
   --amber: #ff8558;
   --amber-pale: #2c1a13;
-  --line: #26272c;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
+    --ink-solid: #f2f1ed;
     --ink: #f2f1ed;
     --ink-soft: #a7aab2;
     --ink-faint: #7d8088;
     --paper: #000000;
+    --paper-soft: #1a1214;
     --surface: #17181d;
-    --sage-pale: #2e1419;
-    --sage: #ff6b85;
+    --line: #26272c;
+    --accent: #ff6b85;
+    --accent-2: #ff8558;
+    --accent-pale: #2e1419;
+    --accent-badge: #3a1a22;
+    --accent-text: #ff8fa3;
+    --positive: #26c4b8;
+    --sage: var(--accent);
     --sage-deep: #ff3d6a;
-    --mist: #26c4b8;
-    --mist-deep: #26c4b8;
-    --sand: #9aa0a6;
+    --sage-pale: var(--accent-pale);
+    --clay: var(--accent);
+    --clay-soft: var(--accent-pale);
+    --mist: var(--positive);
+    --mist-deep: var(--positive);
+    --sand: var(--ink-soft);
     --amber: #ff8558;
     --amber-pale: #2c1a13;
-    --line: #26272c;
   }
 }

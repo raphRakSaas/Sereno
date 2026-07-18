@@ -3,101 +3,96 @@ import Base from '../layouts/Base.astro';
 import { href } from '../i18n/ui';
 
 const email = 'raphael@plumservices.co';
-const updated = '3 juillet 2026';
+const updated = '18 juillet 2026';
 ---
 
 <Base
   lang="fr"
   routeKey="terms"
   title="Conditions générales d'utilisation — Sereno"
-  description="Les CGU de Sereno, écrites pour être lues : service gratuit, tes données restent les tiennes, pas de conseil financier."
+  description="Les CGU de Sereno : service gratuit pour toujours, soutien volontaire via Stripe, tes données restent les tiennes."
 >
   <article class="section">
     <div class="wrap prose">
       <h1>Conditions générales d'utilisation</h1>
       <p>Dernière mise à jour : {updated}</p>
       <p>
-        Ces conditions sont écrites pour être lues. Elles encadrent
-        l'utilisation de l'application et du site Sereno.
+        Ces conditions encadrent l'utilisation de l'application et du site Sereno.
       </p>
 
       <h2>1. Le service</h2>
       <p>
         Sereno est une application de gestion de budget personnel à saisie
-        manuelle. Elle fonctionne sans compte (données stockées localement sur
-        ton appareil) et propose un compte optionnel gratuit pour la
-        synchronisation entre appareils.
+        manuelle. Elle fonctionne sans compte (données locales) et propose un
+        compte optionnel gratuit pour la synchronisation entre appareils. Aucune
+        fonctionnalité d'intelligence artificielle (scan de reçus, catégorisation
+        automatique opaque, etc.) n'est proposée.
       </p>
 
-      <h2>2. Gratuité</h2>
+      <h2>2. Gratuité et soutien volontaire</h2>
       <p>
-        Le service est actuellement gratuit, sans publicité ni exploitation
-        commerciale de tes données. Si une offre payante voyait le jour, elle
-        serait annoncée clairement à l'avance et n'affecterait pas
-        rétroactivement les fonctions gratuites que tu utilises déjà pour tes
-        données existantes.
+        Le service est <strong>gratuit pour toujours</strong> : mode invité et
+        compte sync, sans publicité ni exploitation commerciale de tes données.
+        Aucun plan payant ne conditionne l'accès aux fonctions. Un
+        <strong>soutien volontaire</strong> (don ponctuel) peut être proposé via
+        Stripe Payment Links sur la page
+        <a href={href('fr', 'support')}>Soutenir</a> ; il n'est jamais obligatoire
+        et n'ouvre aucun « niveau » payant.
       </p>
 
       <h2>3. Ton compte</h2>
       <p>
         Tu es responsable de la confidentialité de tes identifiants. Préviens-nous
-        rapidement en cas d'usage non autorisé de ton compte. L'âge minimal
-        d'utilisation avec compte est de 15 ans.
+        rapidement en cas d'usage non autorisé. L'âge minimal d'utilisation avec
+        compte est de 15 ans.
       </p>
 
       <h2>4. Tes données</h2>
       <p>
-        Les données que tu saisis t'appartiennent, intégralement. Tu peux les
-        exporter à tout moment (sauvegarde complète, export CSV) et demander la
-        suppression de ton compte et de toutes ses données (voir la
+        Les données que tu saisis t'appartiennent. Tu peux les exporter à tout
+        moment et demander la suppression de ton compte (voir la
         <a href={href('fr', 'privacy')}>politique de confidentialité</a>).
       </p>
 
       <h2>5. Pas un conseil financier</h2>
       <p>
-        Sereno affiche des totaux, des répartitions et des projections
-        calculées sur ce que tu saisis. Ce sont des outils de lisibilité,
+        Sereno affiche des totaux, répartitions et projections calculées sur ce
+        que tu saisis. Ce sont des outils de lisibilité,
         <strong>pas des conseils financiers, fiscaux ou d'investissement</strong>.
-        Les décisions que tu prends restent les tiennes.
       </p>
 
       <h2>6. Usage acceptable</h2>
       <p>
-        Tu t'engages à ne pas tenter de compromettre le service : pas d'accès
-        non autorisé aux données d'autres utilisateurs, pas de surcharge
-        volontaire de l'infrastructure, pas d'utilisation illégale.
+        Tu t'engages à ne pas compromettre le service : pas d'accès non autorisé
+        aux données d'autres utilisateurs, pas de surcharge volontaire, pas
+        d'utilisation illégale.
       </p>
 
       <h2>7. Disponibilité et évolution</h2>
       <p>
-        Sereno est un projet indépendant fourni « en l'état ». Nous faisons de
-        notre mieux pour que le service soit fiable et disponible, sans pouvoir
-        le garantir à 100 %. Les fonctionnalités peuvent évoluer ; en cas de
-        changement majeur ou d'arrêt du service de synchronisation, un préavis
-        raisonnable sera donné avec les moyens d'exporter tes données. Le mode
-        local, lui, ne dépend d'aucun serveur.
+        Sereno est un projet indépendant fourni « en l'état ». Les
+        fonctionnalités peuvent évoluer ; en cas d'arrêt de la synchronisation,
+        un préavis raisonnable sera donné avec les moyens d'exporter tes données.
+        Le mode local ne dépend d'aucun serveur.
       </p>
 
       <h2>8. Responsabilité</h2>
       <p>
         Dans les limites permises par la loi, la responsabilité de l'éditeur ne
         saurait être engagée pour les dommages indirects résultant de
-        l'utilisation du service, notamment une perte de données locale — pense
-        aux sauvegardes. Rien dans ces conditions n'exclut la responsabilité
-        pour faute lourde ou dol.
+        l'utilisation du service. Rien n'exclut la responsabilité pour faute
+        lourde ou dol.
       </p>
 
       <h2>9. Droit applicable</h2>
       <p>
-        Ces conditions sont régies par le droit français. En cas de litige, une
-        solution amiable sera recherchée avant toute action ; à défaut, les
-        tribunaux français sont compétents.
+        Droit français. Solution amiable recherchée avant litige ; à défaut,
+        tribunaux français compétents.
       </p>
 
       <h2>10. Contact</h2>
       <p>
-        Pour toute question sur ces conditions :
-        <a href={`mailto:${email}`}>{email}</a>.
+        <a href={`mailto:${email}`}>{email}</a>
       </p>
     </div>
   </article>

@@ -1,0 +1,125 @@
+---
+import Base from '../../layouts/Base.astro';
+import SupportTiers from '../../components/SupportTiers.astro';
+import { APP_URL, t } from '../../i18n/ui';
+
+const tr = t('en');
+---
+
+<Base
+  lang="en"
+  routeKey="support"
+  title="Support Sereno — voluntary contribution"
+  description="Sereno is free forever. If you want to support the project, pick a coffee, a sandwich, or a boost via Stripe."
+>
+  <section class="section section-soft">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="lbl">Support</span>
+        <h1>Free forever. Voluntary support.</h1>
+        <p>
+          Sereno has no paid plan, no quotas, no ads. Guest mode and the sync
+          account are free. If the app helps you and you want to contribute —
+          thank you. It’s optional, and it truly helps.
+        </p>
+      </div>
+
+      <div class="why card">
+        <img src="/illustrations/support-coffee.svg" alt="" width="64" height="64" />
+        <div>
+          <h2>Why support?</h2>
+          <p>
+            Hosting, domain, development time: an independent project has real
+            costs. A coffee or a sandwich funds a calm evening of work — without
+            ever gating access to the app.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="lbl">Pick an amount</span>
+        <h2>Three ways to say thanks.</h2>
+        <p>Secure payment via Stripe. One-time, no subscription.</p>
+      </div>
+      <SupportTiers lang="en" />
+    </div>
+  </section>
+
+  <section class="section section-surface">
+    <div class="wrap free-grid">
+      <div>
+        <h2>What stays free</h2>
+        <ul>
+          <li>Full guest mode, no limits</li>
+          <li>Multi-device sync account</li>
+          <li>Budgets, stats, recurring rules, export</li>
+          <li>No ads, no selling your data</li>
+        </ul>
+      </div>
+      <div class="cta-side">
+        <p>Prefer to just use the app? Perfect.</p>
+        <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .why {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 24px;
+    max-width: 52rem;
+  }
+
+  .why h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .why p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  .free-grid {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  .free-grid h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .free-grid ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--ink-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cta-side p {
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+
+  @media (min-width: 720px) {
+    .free-grid {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+</style>

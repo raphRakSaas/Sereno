@@ -51,8 +51,6 @@ describe('TransactionsStore', () => {
       removeByTransaction: vi.fn(),
       getPreviewUrl: vi.fn(),
       releasePreviewUrl: vi.fn(),
-      requestOcr: vi.fn(),
-      confirmExtraction: vi.fn(),
     };
     TestBed.configureTestingModule({
       providers: [

@@ -3,101 +3,90 @@ import Base from '../../layouts/Base.astro';
 import { href } from '../../i18n/ui';
 
 const email = 'raphael@plumservices.co';
-const updated = 'July 3, 2026';
+const updated = '18 July 2026';
 ---
 
 <Base
   lang="en"
   routeKey="terms"
   title="Terms of use — Sereno"
-  description="Sereno's terms, written to be read: a free service, your data stays yours, no financial advice."
+  description="Sereno’s terms: free forever, voluntary Stripe support, your data stays yours."
 >
   <article class="section">
     <div class="wrap prose">
       <h1>Terms of use</h1>
       <p>Last updated: {updated}</p>
-      <p class="notice" lang="fr">
-        Version informative — la <a href="/cgu">version française</a> fait foi.
-        <span lang="en">(Informative translation — the French version prevails.)</span>
-      </p>
       <p>
-        These terms are written to be read. They govern the use of the Sereno
-        application and website.
+        These terms govern use of the Sereno application and website.
       </p>
 
       <h2>1. The service</h2>
       <p>
-        Sereno is a manual-entry personal budgeting application. It works
-        without an account (data stored locally on your device) and offers an
-        optional free account for syncing across devices.
+        Sereno is a personal budgeting app with manual entry. It works without
+        an account (local data) and offers an optional free account for
+        cross-device sync. No artificial-intelligence features (receipt OCR
+        scanning, opaque auto-categorization, etc.) are offered.
       </p>
 
-      <h2>2. Free of charge</h2>
+      <h2>2. Free forever &amp; voluntary support</h2>
       <p>
-        The service is currently free, with no ads and no commercial use of
-        your data. If a paid tier ever appears, it will be announced clearly in
-        advance and will not retroactively affect the free features you already
-        use for your existing data.
+        The service is <strong>free forever</strong>: guest mode and sync
+        account, with no ads and no commercial exploitation of your data. No
+        paid plan gates features. <strong>Voluntary support</strong> (one-time
+        donation) may be offered via Stripe Payment Links on the
+        <a href={href('en', 'support')}>Support</a> page; it is never required
+        and unlocks no paid “tier.”
       </p>
 
       <h2>3. Your account</h2>
       <p>
-        You are responsible for keeping your credentials confidential. Let us
-        know promptly about any unauthorized use of your account. The minimum
-        age for using the service with an account is 15.
+        You are responsible for keeping your credentials confidential. Notify us
+        promptly of unauthorized use. Minimum age with an account is 15.
       </p>
 
       <h2>4. Your data</h2>
       <p>
-        The data you enter belongs to you, entirely. You can export it at any
-        time (full backup, CSV export) and request the deletion of your account
-        and all its data (see the <a href={href('en', 'privacy')}>privacy policy</a>).
+        Data you enter belongs to you. You may export it anytime and request
+        account deletion (see the
+        <a href={href('en', 'privacy')}>privacy policy</a>).
       </p>
 
       <h2>5. Not financial advice</h2>
       <p>
-        Sereno displays totals, breakdowns and projections computed from what
-        you enter. These are readability tools,
-        <strong>not financial, tax or investment advice</strong>. Your
-        decisions remain your own.
+        Sereno shows totals, breakdowns, and projections from what you enter.
+        These are readability tools,
+        <strong>not financial, tax, or investment advice</strong>.
       </p>
 
       <h2>6. Acceptable use</h2>
       <p>
-        You agree not to attempt to compromise the service: no unauthorized
-        access to other users' data, no deliberate overloading of the
-        infrastructure, no unlawful use.
+        You agree not to compromise the service: no unauthorized access to other
+        users’ data, no deliberate overload, no illegal use.
       </p>
 
-      <h2>7. Availability and changes</h2>
+      <h2>7. Availability &amp; changes</h2>
       <p>
-        Sereno is an independent project provided “as is”. We do our best to
-        keep the service reliable and available, without being able to
-        guarantee it 100%. Features may evolve; in the event of a major change
-        or discontinuation of the sync service, reasonable notice will be given
-        along with the means to export your data. Local mode depends on no
-        server at all.
+        Sereno is an independent project provided “as is.” Features may evolve;
+        if sync is discontinued, reasonable notice and export options will be
+        given. Local mode depends on no server.
       </p>
 
       <h2>8. Liability</h2>
       <p>
-        To the extent permitted by law, the publisher cannot be held liable for
-        indirect damages resulting from the use of the service, including local
-        data loss — think about backups. Nothing in these terms excludes
-        liability for gross negligence or willful misconduct.
+        To the extent permitted by law, the publisher is not liable for
+        indirect damages from using the service. Nothing excludes liability for
+        gross negligence or willful misconduct.
       </p>
 
       <h2>9. Governing law</h2>
       <p>
-        These terms are governed by French law. In the event of a dispute, an
-        amicable solution will be sought first; failing that, the French courts
-        have jurisdiction.
+        French law. Amicable resolution sought before litigation; otherwise
+        French courts have jurisdiction.
       </p>
 
       <h2>10. Contact</h2>
       <p>
-        For any question about these terms:
-        <a href={`mailto:${email}`}>{email}</a>.
+        <a href={`mailto:${email}`}>{email}</a>
       </p>
     </div>
   </article>

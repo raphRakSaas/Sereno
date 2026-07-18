@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import SupportTiers from '../components/SupportTiers.astro';
+import { APP_URL, t } from '../i18n/ui';
+
+const tr = t('fr');
+---
+
+<Base
+  lang="fr"
+  routeKey="support"
+  title="Soutenir Sereno — contribution volontaire"
+  description="Sereno est gratuit pour toujours. Si tu veux soutenir le projet, choisis un café, un sandwich ou un coup de pouce via Stripe."
+>
+  <section class="section section-soft">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="lbl">Soutenir</span>
+        <h1>Gratuit pour toujours. Soutien volontaire.</h1>
+        <p>
+          Sereno n’a pas de plan payant, pas de quota, pas de pub. Le mode
+          invité et le compte sync sont gratuits. Si l’app t’est utile et que
+          tu veux contribuer, merci — c’est optionnel, et ça aide vraiment.
+        </p>
+      </div>
+
+      <div class="why card">
+        <img src="/illustrations/support-coffee.svg" alt="" width="64" height="64" />
+        <div>
+          <h2>Pourquoi un soutien ?</h2>
+          <p>
+            Hébergement, domaine, temps de développement : un projet
+            indépendant a des coûts réels. Un café ou un sandwich finance une
+            soirée de travail calme — sans jamais conditionner l’accès à
+            l’app.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="lbl">Choisir un montant</span>
+        <h2>Trois façons de dire merci.</h2>
+        <p>Paiement sécurisé via Stripe. Une fois, pas d’abonnement.</p>
+      </div>
+      <SupportTiers lang="fr" />
+    </div>
+  </section>
+
+  <section class="section section-surface">
+    <div class="wrap free-grid">
+      <div>
+        <h2>Ce qui reste gratuit</h2>
+        <ul>
+          <li>Mode invité complet, sans limite</li>
+          <li>Compte sync multi-appareils</li>
+          <li>Budgets, stats, récurrences, export</li>
+          <li>Sans pub, sans revente de données</li>
+        </ul>
+      </div>
+      <div class="cta-side">
+        <p>Tu préfères juste utiliser l’app ? Parfait.</p>
+        <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+  }
+
+  .why {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    padding: 24px;
+    max-width: 52rem;
+  }
+
+  .why h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .why p {
+    color: var(--ink-soft);
+    font-size: 15.5px;
+  }
+
+  .free-grid {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: 1fr;
+    align-items: center;
+  }
+
+  .free-grid h2 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+
+  .free-grid ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--ink-soft);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cta-side p {
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+
+  @media (min-width: 720px) {
+    .free-grid {
+      grid-template-columns: 1.4fr 1fr;
+    }
+  }
+</style>

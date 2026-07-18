@@ -1,13 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConversionService } from '../../../application/services/conversion.service';
-import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { IconComponent } from '../../atoms/icon/icon.component';
 
 /* Seule et unique action d'ajout rapide visible sur les pages racines
    (Accueil, Historique) — pas de "+" dupliqué dans la tab bar ni les cartes.
-   Si la limite du mode invité est atteinte, ouvre le paywall au lieu du
-   formulaire. Voir docs/DESIGN.md. */
+   Voir docs/DESIGN.md. */
 @Component({
   selector: 'app-fab',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,13 +45,8 @@ import { IconComponent } from '../../atoms/icon/icon.component';
 })
 export class FabComponent {
   private readonly router = inject(Router);
-  private readonly conversion = inject(ConversionService);
-  private readonly transactions = inject(TransactionsStore);
 
   protected tapAdd(): void {
-    if (this.conversion.guardTransactionLimit(this.transactions.count())) {
-      return;
-    }
     void this.router.navigateByUrl('/transactions/nouvelle');
   }
 }

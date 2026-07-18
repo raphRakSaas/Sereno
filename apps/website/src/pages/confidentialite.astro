@@ -1,15 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
+import { href } from '../i18n/ui';
 
 const email = 'raphael@plumservices.co';
-const updated = '3 juillet 2026';
+const updated = '18 juillet 2026';
 ---
 
 <Base
   lang="fr"
   routeKey="privacy"
   title="Politique de confidentialité — Sereno"
-  description="Ce que Sereno collecte (très peu), où vont tes données (nulle part sans compte, en Union européenne avec), et tes droits RGPD."
+  description="Ce que Sereno collecte (très peu), où vont tes données, soutien Stripe, et tes droits RGPD — sans traitement IA des reçus."
 >
   <article class="section">
     <div class="wrap prose">
@@ -17,9 +18,7 @@ const updated = '3 juillet 2026';
       <p>Dernière mise à jour : {updated}</p>
       <p>
         Sereno est une app de budget : la confidentialité n'y est pas une
-        clause en petits caractères, c'est le produit. Cette page dit
-        exactement ce qui est collecté (très peu), où ça va, et comment
-        exercer tes droits.
+        clause en petits caractères, c'est le produit.
       </p>
 
       <h2>Responsable de traitement</h2>
@@ -30,15 +29,12 @@ const updated = '3 juillet 2026';
 
       <h2>Sans compte : rien ne quitte ton appareil</h2>
       <p>
-        En mode invité (le mode par défaut), toutes tes données — transactions,
-        comptes, budgets, catégories, reçus — sont stockées
+        En mode invité, toutes tes données — transactions, comptes, budgets,
+        catégories, photos de reçus éventuelles — sont stockées
         <strong>uniquement dans le stockage local de ton navigateur</strong>
-        (IndexedDB), sur ton appareil. Elles ne sont transmises à aucun
-        serveur. Nous n'y avons pas accès, et personne d'autre non plus.
-      </p>
-      <p>
-        Supprimer les données du site dans ton navigateur (ou désinstaller la
-        PWA) les efface définitivement — pense à exporter une sauvegarde avant.
+        (IndexedDB). Elles ne sont transmises à aucun serveur. Les photos de
+        reçus ne sont <strong>jamais analysées par une IA</strong> ni envoyées
+        à un service de reconnaissance optique.
       </p>
 
       <h2>Avec un compte : le minimum, en Union européenne</h2>
@@ -49,74 +45,55 @@ const updated = '3 juillet 2026';
         </thead>
         <tbody>
           <tr>
-            <td>Adresse email (et identifiant Google si tu choisis la connexion Google)</td>
-            <td>Créer et sécuriser ton compte, te reconnecter</td>
+            <td>Adresse email (et identifiant Google si tu choisis Google)</td>
+            <td>Créer et sécuriser ton compte</td>
             <td>Exécution du contrat (CGU)</td>
           </tr>
           <tr>
-            <td>Tes données budgétaires (transactions, comptes, budgets, catégories, récurrences, reçus)</td>
-            <td>Fournir la synchronisation entre tes appareils</td>
+            <td>Données budgétaires (transactions, comptes, budgets, catégories, récurrences, reçus)</td>
+            <td>Synchronisation entre tes appareils</td>
             <td>Exécution du contrat (CGU)</td>
           </tr>
         </tbody>
       </table>
       <p>
-        Ces données sont stockées chez <strong>Supabase</strong> (sous-traitant),
-        dans une base de données localisée en <strong>Union européenne</strong>
-        (région AWS eu-west-1, Irlande), cloisonnée par utilisateur
-        (row-level security) : chaque compte ne peut lire que ses propres
-        lignes. Supabase, Inc. est une société de droit étranger ; les
-        transferts éventuels hors UE (par exemple pour du support technique)
-        sont encadrés par des clauses contractuelles types.
+        Stockage chez <strong>Supabase</strong> (UE, AWS eu-west-1), cloisonné
+        par utilisateur (row-level security). Le site est servi par
+        <strong>Cloudflare</strong> (journaux techniques IP, intérêt légitime).
+      </p>
+
+      <h2>Soutien volontaire (Stripe)</h2>
+      <p>
+        Si tu choisis de soutenir Sereno via un Payment Link Stripe, le
+        paiement est traité par <strong>Stripe</strong> (sous-traitant). Sereno
+        ne stocke pas tes numéros de carte. Stripe traite les données de
+        paiement selon sa propre politique. Ce traitement repose sur
+        l'exécution de la transaction de don que tu inities.
       </p>
       <p>
-        Le site et les fichiers de l'application sont servis par
-        <strong>Cloudflare</strong> (CDN), qui traite ton adresse IP dans ses
-        journaux techniques à des fins de sécurité et d'acheminement (intérêt
-        légitime).
+        Voir aussi la page <a href={href('fr', 'support')}>Soutenir</a>.
       </p>
 
       <h2>Ce que Sereno ne fait pas</h2>
       <ul>
-        <li>Pas de connexion à ta banque — aucun identifiant bancaire n'existe chez nous.</li>
-        <li>Pas de publicité, pas de revente ni de partage commercial de données.</li>
-        <li>Pas de cookies de suivi ; pas d'outil de mesure d'audience à ce jour.
-          Si un outil respectueux (données anonymisées, hébergement UE) était
-          ajouté, cette politique serait mise à jour avant son activation.</li>
-        <li>Pas de profilage, pas de décision automatisée.</li>
+        <li>Pas de connexion bancaire.</li>
+        <li>Pas de publicité, pas de revente de données.</li>
+        <li>Pas de cookies de suivi ; pas d'outil d'audience à ce jour.</li>
+        <li>Pas de profilage, pas de décision automatisée, pas de traitement IA des reçus.</li>
       </ul>
-
-      <h2>Stockage local technique</h2>
-      <p>
-        L'app utilise le stockage local du navigateur (localStorage/IndexedDB)
-        pour fonctionner : tes données en mode invité, tes préférences (thème,
-        tri…), et le jeton de session si tu as un compte. Ce stockage strictement
-        nécessaire au service est exempté de consentement ; il ne sert à aucun
-        suivi.
-      </p>
 
       <h2>Durées de conservation</h2>
       <ul>
-        <li><strong>Mode invité :</strong> tes données restent chez toi, aussi longtemps que tu les gardes.</li>
-        <li><strong>Compte :</strong> les données sont conservées tant que le compte existe, puis supprimées à la suppression du compte.</li>
+        <li><strong>Mode invité :</strong> chez toi, aussi longtemps que tu les gardes.</li>
+        <li><strong>Compte :</strong> tant que le compte existe, puis suppression à la demande.</li>
       </ul>
 
       <h2>Tes droits</h2>
       <p>
-        Conformément au RGPD, tu disposes des droits d'accès, de rectification,
-        d'effacement, de portabilité, de limitation et d'opposition. Pour les
-        exercer — y compris <strong>supprimer ton compte et toutes ses
-        données</strong> — écris à <a href={`mailto:${email}`}>{email}</a> depuis
-        l'adresse email du compte concerné. Réponse sous 30 jours au plus.
-      </p>
-      <p>
-        L'export de tes données est aussi disponible directement dans l'app
-        (Réglages → sauvegarde complète / export CSV), sans rien demander à
-        personne.
-      </p>
-      <p>
-        Si tu estimes que tes droits ne sont pas respectés, tu peux saisir la
-        CNIL (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).
+        Droits RGPD d'accès, rectification, effacement, portabilité, limitation
+        et opposition : <a href={`mailto:${email}`}>{email}</a>. Export aussi
+        disponible dans l'app. CNIL :
+        <a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>.
       </p>
     </div>
   </article>

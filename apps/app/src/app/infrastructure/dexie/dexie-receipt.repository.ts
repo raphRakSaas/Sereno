@@ -112,23 +112,6 @@ export class DexieReceiptRepository implements ReceiptRepository {
     URL.revokeObjectURL(url);
   }
 
-  async requestOcr(receiptId: string): Promise<Receipt> {
-    const row = await this.db.receipts.get(receiptId);
-    if (!row) {
-      throw new Error(`Reçu ${receiptId} introuvable`);
-    }
-    return this.toPublic(row);
-  }
-
-  async confirmExtraction(receiptId: string): Promise<Receipt> {
-    const row = await this.db.receipts.get(receiptId);
-    if (!row) {
-      throw new Error(`Reçu ${receiptId} introuvable`);
-    }
-    await this.db.receipts.update(receiptId, { status: 'confirmed' });
-    return this.toPublic({ ...row, status: 'confirmed' });
-  }
-
   private dropPreviewUrl(receiptId: string): void {
     const url = this.objectUrls.get(receiptId);
     if (url) {

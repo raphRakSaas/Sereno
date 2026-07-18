@@ -78,7 +78,7 @@ export function breakdownByCategory(
       return {
         id: categoryId,
         name: category?.name ?? 'Sans catégorie',
-        color: category?.color ?? '#8B948C',
+        color: category?.color ?? '#6B7280',
         amount,
       };
     })

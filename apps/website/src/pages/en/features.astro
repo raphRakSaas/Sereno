@@ -1,93 +1,47 @@
 ---
 import Base from '../../layouts/Base.astro';
+import FeatureBlock from '../../components/FeatureBlock.astro';
 import { APP_URL, t } from '../../i18n/ui';
 
 const tr = t('en');
 
-const groups = [
+const blocks = [
   {
-    title: 'Log, without friction',
-    items: [
-      {
-        name: 'Two-tap entry',
-        body: 'Amount, category, saved. Today’s date and your usual account are pre-filled. A note or a color marker if you want — nothing is mandatory.',
-      },
-      {
-        name: 'Transaction templates',
-        body: 'The morning coffee, the tank of fuel: pin your recurring expenses and replay them in one tap.',
-      },
-      {
-        name: 'Receipts',
-        body: 'Attach a photo of a receipt to a transaction to find it again later.',
-      },
-      {
-        name: 'Transfers between accounts',
-        body: 'A transfer is neither income nor an expense — Sereno handles it correctly, on both sides.',
-      },
-    ],
+    label: 'Entry',
+    title: 'Two taps, and it’s logged',
+    body: 'Amount, category, done. Templates for what comes back often, transfers treated correctly — neither income nor expense.',
+    mediaSrc: '/screenshots/transactions.png',
+    mediaAlt: 'Sereno transactions screen',
   },
   {
-    title: 'See, at a glance',
-    items: [
-      {
-        name: 'The strata',
-        body: 'Sereno’s signature: your month’s spending drawn as layers of sediment. The biggest expense forms the bedrock; each layer’s thickness is its share of the total.',
-      },
-      {
-        name: 'Calm statistics',
-        body: 'Category donuts, net-worth curve, cumulative balance, a heat calendar of your spending days. Facts, never judgment.',
-      },
-      {
-        name: 'Month comparisons',
-        body: '“+€120 vs last month” — stated simply, so you can adjust without drama.',
-      },
-      {
-        name: 'Calendar',
-        body: 'Your transactions laid out over the month, connecting spending to the real days of your life.',
-      },
-    ],
+    label: 'Budgets',
+    title: 'Frame spending without punishment',
+    body: 'Category or global budgets, honest end-of-period projections. An overrun shows in calm coral: “€50 over — it happens.”',
+    mediaSrc: '/screenshots/budgets.png',
+    mediaAlt: 'Sereno budgets screen',
+    reverse: true,
   },
   {
-    title: 'Frame, without punishing yourself',
-    items: [
-      {
-        name: 'Budgets per category or global',
-        body: 'Weekly, monthly, quarterly, yearly, or a custom period. With an honest end-of-period projection, computed from your actual pace.',
-      },
-      {
-        name: 'Overruns are amber, never red',
-        body: '“€50 over — it happens.” An overrun is a fact stated calmly, not a fault to atone for.',
-      },
-      {
-        name: 'Automatic recurring rules',
-        body: 'Rent, subscriptions, salary: recurring rules generate the transactions on their own — and even catch up on missed occurrences.',
-      },
-      {
-        name: 'Installment plans',
-        body: 'Paying in three installments? Sereno tracks each one and shows what’s left to pay.',
-      },
-    ],
+    label: 'Statistics',
+    title: 'See it at a glance',
+    body: 'Category breakdown, month comparisons, calendar of spending days. Facts, never judgment.',
+    mediaSrc: '/screenshots/stats.png',
+    mediaAlt: 'Sereno statistics screen',
   },
   {
-    title: 'Everywhere, at your pace',
-    items: [
-      {
-        name: 'Works without an account',
-        body: 'Guest mode is complete: transactions, budgets, statistics, calendar — everything, locally on your device, zero setup.',
-      },
-      {
-        name: 'Optional free account',
-        body: 'When you want to sync several devices: multiple accounts, custom categories, server-side recurring rules. Your local data migrates automatically, nothing lost.',
-      },
-      {
-        name: 'Installable and offline',
-        body: 'A real PWA: add it to your home screen, browse and log even without a network.',
-      },
-      {
-        name: 'Export your data',
-        body: 'Full backup and CSV export in one tap. Your data is yours — including the day you leave.',
-      },
-    ],
+    label: 'Guest mode',
+    title: 'Full featured, no account',
+    body: 'Transactions, budgets, stats, calendar — everything works locally on your device. No quotas, no artificial limits.',
+    mediaSrc: '/screenshots/guest.png',
+    mediaAlt: 'Sereno guest mode',
+    reverse: true,
+  },
+  {
+    label: 'Sync',
+    title: 'Optional account, free',
+    body: 'When you want to sync devices: multiple accounts, custom categories, server-side recurring rules. Local data migrates without loss.',
+    mediaSrc: '/screenshots/dashboard.png',
+    mediaAlt: 'Sereno synced dashboard',
   },
 ];
 ---
@@ -96,86 +50,58 @@ const groups = [
   lang="en"
   routeKey="features"
   title="Features — Sereno"
-  description="Two-tap entry, spending strata, calm budgets, recurring rules, offline mode: everything Sereno does, without ever rushing you."
+  description="Two-tap entry, calm budgets, quiet statistics, offline mode: everything Sereno does, without ever rushing you."
 >
-  <section class="section">
+  <section class="hero-head section-soft">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Features</span>
+        <span class="lbl">Features</span>
         <h1>Everything you need to see clearly.</h1>
         <p>
-          Sereno deliberately does less than the others: no bank connection, no
-          pushy notifications, no score. What remains is carefully made.
+          Sereno deliberately does less: no bank connection, no pushy
+          notifications, no AI. What remains is carefully made — and free
+          forever.
         </p>
       </div>
+    </div>
+  </section>
 
-      {groups.map((group) => (
-        <div class="group">
-          <h2>{group.title}</h2>
-          <dl>
-            {group.items.map((item) => (
-              <div class="row">
-                <dt>{item.name}</dt>
-                <dd>{item.body}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      ))}
+  <section class="section">
+    <div class="wrap">
+      {
+        blocks.map((block) => (
+          <FeatureBlock
+            label={block.label}
+            title={block.title}
+            body={block.body}
+            mediaSrc={block.mediaSrc}
+            mediaAlt={block.mediaAlt}
+            reverse={block.reverse}
+          />
+        ))
+      }
 
       <div class="cta-row">
-        <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+        <div class="cta-band cta-band-coral">
+          <h2>Try it with zero setup.</h2>
+          <p>The app opens in guest mode. You log, you see, that’s it.</p>
+          <a class="btn btn-primary" href={APP_URL} aria-label={tr('cta.openApp.aria')}>{tr('cta.openApp')}</a>
+        </div>
       </div>
     </div>
   </section>
 </Base>
 
 <style>
+  .hero-head {
+    padding: 64px 0 24px;
+  }
+
   h1 {
     font-size: clamp(30px, 5vw, 42px);
   }
 
-  .group {
-    margin-top: 48px;
-  }
-
-  .group h2 {
-    font-size: 22px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  dl {
-    margin: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 64px;
-  }
-
-  .row {
-    padding: 18px 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  dt {
-    font-weight: 600;
-    margin-bottom: 4px;
-  }
-
-  dd {
-    margin: 0;
-    color: var(--ink-soft);
-    font-size: 15.5px;
-    max-width: 60ch;
-  }
-
-  @media (min-width: 760px) {
-    dl {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-
   .cta-row {
-    margin-top: 56px;
+    margin-top: 40px;
   }
 </style>

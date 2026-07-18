@@ -15,23 +15,26 @@ const formatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'lon
   title="Blog — Sereno"
   description="Practical guides for calm budgeting: gentle methods, manual entry, and zero guilt."
 >
-  <section class="section">
+  <section class="section section-soft">
     <div class="wrap">
       <div class="section-head">
-        <span class="eyebrow">Blog</span>
+        <span class="lbl">Blog</span>
         <h1>Calm guides for your money.</h1>
         <p>No “10 tricks to get rich”. Gentle, applicable methods, written by a human.</p>
       </div>
       <ul class="posts">
-        {posts.map((post) => (
-          <li>
-            <a href={`/en/blog/${post.id.replace(/^en\//, '')}`}>
-              <time datetime={post.data.pubDate.toISOString()}>{formatter.format(post.data.pubDate)}</time>
-              <h2>{post.data.title}</h2>
-              <p>{post.data.description}</p>
-            </a>
-          </li>
-        ))}
+        {
+          posts.map((post) => (
+            <li>
+              <a href={`/en/blog/${post.id.replace(/^en\//, '')}`}>
+                <time datetime={post.data.pubDate.toISOString()}>{formatter.format(post.data.pubDate)}</time>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description}</p>
+                <span class="read">Read →</span>
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </section>
@@ -47,17 +50,19 @@ const formatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'lon
     margin: 0;
     padding: 0;
     max-width: 46rem;
-  }
-
-  .posts li {
-    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
   }
 
   .posts a {
     display: block;
-    padding: 26px 0;
+    padding: 26px 24px;
     text-decoration: none;
     color: inherit;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
   }
 
   .posts time {
@@ -66,16 +71,24 @@ const formatter = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'lon
   }
 
   .posts h2 {
-    font-size: 23px;
-    margin: 6px 0 8px;
+    font-size: 22px;
+    margin: 8px 0 8px;
   }
 
   .posts a:hover h2 {
-    color: var(--sage);
+    color: var(--accent);
   }
 
   .posts p {
     color: var(--ink-soft);
     font-size: 15.5px;
+  }
+
+  .read {
+    display: inline-block;
+    margin-top: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: 14.5px;
   }
 </style>

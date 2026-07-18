@@ -1,6 +1,12 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { filter } from 'rxjs';
+
+/* Écrans plein écran où la feuille d'installation ne doit jamais apparaître
+   par-dessus — l'onboarding et l'auth ont déjà leur propre parcours à ne
+   pas interrompre. Voir maybeShowInstallSheet(). */
+const INSTALL_SHEET_BLOCKED_ROUTES = ['/bienvenue', '/compte'];
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
@@ -15,6 +21,8 @@ const UPDATE_DISMISSED_KEY = 'sereno.pwa.updateDismissedHash';
 
 @Injectable({ providedIn: 'root' })
 export class PwaService {
+  private readonly router = inject(Router);
+
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
   private pendingVersionHash: string | null = null;
 
@@ -58,8 +66,15 @@ export class PwaService {
       window.history.replaceState({}, '', cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
     }
 
-    // Sur mobile, proposer le choix dès l'arrivée (sans attendre BIP).
+    // Sur mobile, proposer le choix dès l'arrivée (sans attendre BIP) — sauf
+    // sur les écrans plein écran (onboarding, auth), voir maybeShowInstallSheet().
     queueMicrotask(() => this.maybeShowInstallSheet());
+
+    // Réessaie à chaque navigation : un guest qui termine l'onboarding et
+    // arrive sur le dashboard doit voir la proposition à ce moment-là.
+    this.router.events
+      .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
+      .subscribe(() => this.maybeShowInstallSheet());
   }
 
   initUpdates(swUpdate: SwUpdate): void {
@@ -171,12 +186,14 @@ export class PwaService {
   }
 
   private maybeShowInstallSheet(): void {
-    if (this.isStandalone() || this.isInstallSnoozed()) {
+    const path = new URL(this.router.url, window.location.origin).pathname;
+    if (this.isStandalone() || this.isInstallSnoozed() || INSTALL_SHEET_BLOCKED_ROUTES.includes(path)) {
       this.showInstallSheet.set(false);
       return;
     }
     // Desktop : pas de feuille intrusive — l'install reste dans Réglages.
-    // Mobile : choix « télécharger / navigateur » dès l'arrivée.
+    // Mobile : choix « télécharger / navigateur » dès l'arrivée (hors
+    // onboarding/auth, ci-dessus).
     if (this.isMobileDevice()) {
       this.showInstallSheet.set(true);
     }

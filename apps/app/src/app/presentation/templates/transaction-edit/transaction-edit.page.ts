@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConversionService } from '../../../application/services/conversion.service';
 import { ToastService } from '../../../application/services/toast.service';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
@@ -36,10 +35,7 @@ import { AccountOption, AccountPickerComponent } from '../../molecules/account-p
 import { CategoryPickerComponent } from '../../molecules/category-picker/category-picker.component';
 import { MarkerColorPickerComponent } from '../../molecules/marker-color-picker/marker-color-picker.component';
 import { NumericKeypadComponent } from '../../molecules/numeric-keypad/numeric-keypad.component';
-import {
-  ReceiptAttachComponent,
-  ReceiptSuggestionApply,
-} from '../../molecules/receipt-attach/receipt-attach.component';
+import { ReceiptAttachComponent } from '../../molecules/receipt-attach/receipt-attach.component';
 import { BottomSheetComponent } from '../../organisms/bottom-sheet/bottom-sheet.component';
 
 type TxModal = 'category' | 'account' | 'marker' | null;
@@ -95,7 +91,6 @@ export class TransactionEditPage {
   protected readonly transactions = inject(TransactionsStore);
   protected readonly templates = inject(TransactionTemplatesStore);
   protected readonly receipts = inject(ReceiptsStore);
-  private readonly conversion = inject(ConversionService);
   private readonly toast = inject(ToastService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -338,18 +333,6 @@ export class TransactionEditPage {
     this.pendingReceiptFile.set(file);
   }
 
-  protected applyReceiptSuggestion(suggestion: ReceiptSuggestionApply): void {
-    if (suggestion.amount !== undefined) {
-      this.amountText.set(suggestion.amount.toString().replace('.', ','));
-    }
-    if (suggestion.date && isIsoDate(suggestion.date)) {
-      this.date.set(suggestion.date);
-    }
-    if (suggestion.merchant) {
-      this.note.set(suggestion.merchant);
-    }
-  }
-
   protected onDateChange(value: string): void {
     this.date.set(isIsoDate(value) ? value : toIsoDate(new Date()));
   }
@@ -469,14 +452,10 @@ export class TransactionEditPage {
 
     if (transactionId || closeAfterSave) {
       this.close();
-      if (!transactionId) {
-        this.conversion.scheduleQuotaCheck();
-      }
       return;
     }
 
     this.resetForNextEntry();
-    this.conversion.scheduleQuotaCheck();
   }
 
   private buildPayload(): {

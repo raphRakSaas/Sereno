@@ -4,7 +4,6 @@ import { AppModeService } from '../../../application/services/app-mode.service';
 import { AccountsStore } from '../../../application/stores/accounts.store';
 import { BudgetsStore } from '../../../application/stores/budgets.store';
 import { CategoriesStore } from '../../../application/stores/categories.store';
-import { RecurringStore } from '../../../application/stores/recurring.store';
 import { SavingsGoalsStore } from '../../../application/stores/savings-goals.store';
 import { TransactionsStore } from '../../../application/stores/transactions.store';
 import { accountBalanceLines } from '../../../domain/utils/account-balance.util';
@@ -14,30 +13,18 @@ import { Transaction, isPosted } from '../../../domain/models/transaction.model'
 import { toIsoDate } from '../../../domain/utils/period.utils';
 import { savingsRatePercent } from '../../../domain/utils/stats.util';
 import { AmountComponent } from '../../atoms/amount/amount.component';
+import { CategoryIconComponent } from '../../atoms/category-icon/category-icon.component';
 import { IconComponent } from '../../atoms/icon/icon.component';
 import { LogoComponent } from '../../atoms/logo/logo.component';
-import { ExpenseTileComponent } from '../../molecules/expense-tile/expense-tile.component';
 import { MonthSwitcherComponent } from '../../molecules/month-switcher/month-switcher.component';
 import { TransactionListItemComponent } from '../../molecules/transaction-list-item/transaction-list-item.component';
-
-interface ExpenseTileData {
-  id: string;
-  title: string;
-  meta: string;
-  amount: number;
-  dueDate: string | null;
-  merchantTexts: string[];
-  icon: string;
-  color: string;
-  link: string | string[];
-}
 
 @Component({
   selector: 'app-dashboard-page',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AmountComponent,
-    ExpenseTileComponent,
+    CategoryIconComponent,
     IconComponent,
     LogoComponent,
     MonthSwitcherComponent,
@@ -52,7 +39,6 @@ export class DashboardPage implements OnInit {
   protected readonly accounts = inject(AccountsStore);
   protected readonly budgets = inject(BudgetsStore);
   protected readonly categories = inject(CategoriesStore);
-  protected readonly recurring = inject(RecurringStore);
   protected readonly transactions = inject(TransactionsStore);
   protected readonly savingsGoals = inject(SavingsGoalsStore);
 
@@ -68,9 +54,6 @@ export class DashboardPage implements OnInit {
       const month = this.selectedMonth();
       if (this.mode.isCloud()) {
         void this.budgets.load(month);
-        if (!this.recurring.loaded()) {
-          void this.recurring.load();
-        }
       }
     });
   }
@@ -211,7 +194,8 @@ export class DashboardPage implements OnInit {
         return {
           id: categoryId,
           name: category?.name ?? 'Sans catégorie',
-          color: category?.color ?? '#8B948C',
+          color: category?.color ?? '#6B7280',
+          icon: category?.icon ?? 'dots',
           amount,
         };
       })
@@ -259,55 +243,7 @@ export class DashboardPage implements OnInit {
     return { ...goal, progressPct: savingsGoalProgressPct(goal) };
   });
 
-  protected readonly upcomingTiles = computed((): ExpenseTileData[] => {
-    const categories = this.categories.byId();
-
-    if (this.mode.isCloud() && this.recurring.items().length > 0) {
-      return [...this.recurring.items()]
-        .filter((rule) => rule.active)
-        .sort((left, right) => left.nextRunDate.localeCompare(right.nextRunDate))
-        .slice(0, 8)
-        .map((rule) => {
-          const category = categories.get(rule.categoryId);
-          return {
-            id: rule.id,
-            title: category?.name ?? 'Récurrence',
-            meta: 'Prochaine échéance',
-            amount: rule.amount,
-            dueDate: rule.nextRunDate,
-            merchantTexts: [category?.name ?? ''],
-            icon: category?.icon ?? 'repeat',
-            color: category?.color ?? '#8B948C',
-            link: '/recurrences',
-          };
-        });
-    }
-
-    return this.transactions
-      .items()
-      .filter((transaction) => transaction.type === 'expense' && isPosted(transaction))
-      .slice(0, 8)
-      .map((transaction) => {
-        const category = transaction.categoryId ? categories.get(transaction.categoryId) : undefined;
-        return {
-          id: transaction.id,
-          title: transaction.note?.trim() || category?.name || 'Dépense',
-          meta: category?.name ?? 'Dépense',
-          amount: transaction.amount,
-          dueDate: transaction.date,
-          merchantTexts: [transaction.note, category?.name].filter((text): text is string => !!text?.trim()),
-          icon: category?.icon ?? 'dots',
-          color: category?.color ?? '#8B948C',
-          link: ['/transactions', transaction.id],
-        };
-      });
-  });
-
-  protected readonly upcomingTitle = computed(() =>
-    this.mode.isCloud() && this.recurring.items().length > 0 ? 'À venir' : 'Dépenses récentes',
-  );
-
-  protected readonly recent = computed(() => this.transactions.items().slice(0, 3));
+  protected readonly recent = computed(() => this.transactions.items().slice(0, 5));
 
   private filterByMonthPrefix(transactions: Transaction[], monthStart: string): Transaction[] {
     const prefix = monthStart.slice(0, 7);

@@ -61,7 +61,7 @@ export class SupabaseReceiptRepository implements ReceiptRepository {
         storage_path: storagePath,
         mime_type: file.type,
         file_size_bytes: file.size,
-        status: 'pending',
+        status: 'confirmed',
       })
       .select()
       .single();
@@ -102,7 +102,7 @@ export class SupabaseReceiptRepository implements ReceiptRepository {
         storage_path: storagePath,
         mime_type: file.type,
         file_size_bytes: file.size,
-        status: 'pending',
+        status: 'confirmed',
         extracted_data: null,
         ocr_processed_at: null,
       })
@@ -155,33 +155,6 @@ export class SupabaseReceiptRepository implements ReceiptRepository {
     // Les URLs signées expirent seules ; rien à révoquer côté navigateur.
   }
 
-  async requestOcr(receiptId: string): Promise<Receipt> {
-    const { data, error } = await this.supabase.require().functions.invoke('process-receipt', {
-      body: { receiptId },
-    });
-    if (error) {
-      throw error;
-    }
-    if (data?.receipt) {
-      return toReceipt(data.receipt as ReceiptRow);
-    }
-    return this.getRowMapped(receiptId);
-  }
-
-  async confirmExtraction(receiptId: string): Promise<Receipt> {
-    const { data, error } = await this.supabase
-      .require()
-      .from('receipts')
-      .update({ status: 'confirmed' })
-      .eq('id', receiptId)
-      .select()
-      .single();
-    if (error) {
-      throw error;
-    }
-    return toReceipt(data as ReceiptRow);
-  }
-
   private async getRow(receiptId: string): Promise<ReceiptRow> {
     const { data, error } = await this.supabase
       .require()
@@ -193,9 +166,5 @@ export class SupabaseReceiptRepository implements ReceiptRepository {
       throw error;
     }
     return data as ReceiptRow;
-  }
-
-  private async getRowMapped(receiptId: string): Promise<Receipt> {
-    return toReceipt(await this.getRow(receiptId));
   }
 }

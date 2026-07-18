@@ -1,6 +1,7 @@
-/* Dashboard — voir docs/DESIGN.md. Hero corail (dégradé signature), carte
-   budget en aplat cliquable (pas de + ici, le FAB s'en charge), bannière de
-   dépassement distincte, Top catégories (le donut complet vit sur Statistiques). */
+/* Dashboard — voir docs/DESIGN.md. Hero corail (carte arrondie détachée,
+   dégradé signature), carte budget à part cliquable (pas de + ici, le FAB
+   s'en charge), bannière de dépassement distincte, Top catégories avec
+   icônes de catégorie (le donut complet vit sur Statistiques). */
 
 .dash {
   display: flex;
@@ -66,20 +67,22 @@
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  background: var(--ink);
+  background: var(--ink-solid);
   display: grid;
   place-items: center;
   color: var(--paper);
   text-decoration: none;
 }
 
+/* Carte hero détachée, arrondie sur les quatre coins — cf. handoff
+   (margin latérale, radius 26px, dégradé signature). */
 .hero-balance {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: var(--space-6) var(--page-gutter);
-  margin: 0 calc(-1 * var(--page-gutter)) var(--space-4);
-  border-radius: var(--radius-hero) var(--radius-hero) 0 0;
+  gap: 8px;
+  padding: 26px;
+  margin: 0;
+  border-radius: var(--radius-hero);
   background: var(--accent-gradient);
   color: var(--on-accent);
 }
@@ -129,23 +132,23 @@
   gap: 6px;
   padding: 10px 16px;
   border-radius: 999px;
-  background: var(--ink);
+  background: var(--ink-solid);
   color: var(--paper);
   font-size: 13.5px;
   font-weight: 700;
   text-decoration: none;
 }
 
-/* ── Carte budget (chevauche le bas du hero) ──────────────────── */
+/* ── Carte budget — carte à part sous le hero ─────────────────── */
 
 .budget-card {
   display: block;
-  padding: var(--space-4);
+  padding: 18px;
   border-radius: var(--radius-lg);
   background: var(--surface);
+  border: 1px solid var(--line);
   color: var(--ink);
   text-decoration: none;
-  margin-bottom: var(--space-4);
 }
 
 .budget-card-top {
@@ -195,7 +198,7 @@
 .budget-fill {
   height: 100%;
   border-radius: 999px;
-  background: var(--ink);
+  background: var(--ink-solid);
   transition: width 0.3s ease;
 }
 
@@ -213,7 +216,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: var(--radius-lg);
+  border-radius: 16px;
   background: var(--overrun-bg);
   text-decoration: none;
 }
@@ -226,7 +229,9 @@
   background: var(--overrun-badge);
   display: grid;
   place-items: center;
-  color: var(--overrun-text);
+  /* Triangle ambre sur pastille rose, comme le pictogramme du handoff —
+     le texte du dépassement, lui, reste dans la gamme --overrun-*. */
+  color: #e9a23b;
 }
 
 .overrun-text {
@@ -261,7 +266,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px 18px;
-  border-radius: var(--radius-lg);
+  border-radius: 18px;
   background: var(--amber-pale);
   text-decoration: none;
 }
@@ -345,6 +350,23 @@
   color: var(--ink);
 }
 
+.top-category-head .name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.top-category-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+}
+
+.top-category-head app-amount {
+  color: var(--ink-soft);
+}
+
 .top-category-track {
   height: 6px;
   border-radius: 999px;
@@ -363,13 +385,7 @@
   color: var(--ink-soft);
 }
 
-/* ── Sections inférieures ─────────────────────────────────────── */
-
-.dash-lower {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-}
+/* ── Transactions récentes ────────────────────────────────────── */
 
 .section-head {
   display: flex;
@@ -392,24 +408,6 @@
   text-decoration: none;
 }
 
-.reminder-scroll {
-  display: flex;
-  gap: var(--space-3);
-  overflow-x: auto;
-  padding-bottom: 4px;
-  padding-inline: var(--page-gutter);
-  margin-inline: calc(-1 * var(--page-gutter));
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-
-.reminder-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.reminder-scroll app-expense-tile { scroll-snap-align: start; }
-
 .empty-strip {
   padding: var(--space-4);
   display: flex;
@@ -428,23 +426,17 @@
   color: var(--ink-soft);
 }
 
-.list-card {
-  padding: 4px 10px;
+/* Liste à nu sur le fond de page (pas de carte), filets entre les lignes —
+   cf. handoff. */
+.recent-list app-transaction-list-item {
+  display: block;
 }
 
-.list-card app-transaction-list-item + app-transaction-list-item {
-  display: block;
+.recent-list app-transaction-list-item + app-transaction-list-item {
   border-top: 1px solid var(--line);
 }
 
 /* ── Skeletons ────────────────────────────────────────────────── */
-
-.skeleton-tile {
-  flex: none;
-  width: 260px;
-  height: 108px;
-  border-radius: var(--radius-lg);
-}
 
 .skeleton-row {
   height: 52px;
@@ -472,17 +464,13 @@
   }
 
   .hero-balance {
-    margin: 0 calc(-1 * var(--space-5)) var(--space-4);
-    border-radius: 0;
+    margin: 0;
+    border-radius: var(--radius-hero);
     padding: var(--space-5);
   }
 
   .greeting {
     font-size: 22px;
-  }
-
-  .reminder-scroll app-expense-tile {
-    width: 300px;
   }
 }
 
@@ -500,26 +488,12 @@
     grid-column: 1 / -1;
   }
 
+  .budget-card,
   .overrun-banner,
-  .top-categories {
+  .goal-card,
+  .top-categories,
+  .recent {
     grid-column: 1 / -1;
-  }
-
-  .dash-lower {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: 7fr 5fr;
-    gap: var(--space-4);
-    align-items: start;
-  }
-
-  .reminder-scroll {
-    flex-direction: column;
-    overflow: visible;
-  }
-
-  .reminder-scroll app-expense-tile {
-    width: 100%;
   }
 
   .notice {

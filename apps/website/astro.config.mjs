@@ -14,6 +14,10 @@ export default defineConfig({
     // ce qui garde les URLs servies identiques aux canonicals sans slash.
     format: 'file',
   },
+  redirects: {
+    '/tarifs': '/soutenir',
+    '/en/pricing': '/en/support',
+  },
   i18n: {
     defaultLocale: 'fr',
     locales: ['fr', 'en'],

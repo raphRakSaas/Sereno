@@ -35,8 +35,8 @@ pendant ces cinq secondes, trois choses se produisent :
 2. **Tu le ranges toi-même.** Choisir la catégorie, c'est déjà un
    micro-arbitrage — « c'était un resto ou des courses, ce truc ? » — qui
    construit ta carte mentale du mois.
-3. **Tu vois l'effet immédiatement.** La dépense s'ajoute au mois, les strates
-   bougent. L'action a un poids visible.
+3. **Tu vois l'effet immédiatement.** La dépense s'ajoute au mois, le
+   tableau de bord se met à jour. L'action a un poids visible.
 
 Les psychologues appellent ça l'effet de génération : ce qu'on produit
 soi-même s'encode profondément ; ce qu'on regarde passer s'oublie. C'est la

@@ -1,7 +1,7 @@
 /* Sereno — feuille de style globale.
    Palette Airbnb produit actuel (mesurée 2025–2026) :
    #ff385c Rausch (CTA à plat), dégradé signature
-   #e61e4d → #e31c5f → #d70466 (search orb / branded moment),
+   #ff4d6d → #ff7a56 (handoff, rose-corail → orange),
    #e00b41 pressed, #00a699 Babu, #fc642d Arches (épargne),
    #484848 Hof, #767676 Foggy.
    L'ancien Rausch 2014 (#ff5a5f) est volontairement abandonné : trop
@@ -20,22 +20,26 @@
   --ink: color-mix(in srgb, #484848 calc((1 - var(--theme-t)) * 100%), #f2f1ed);
   --ink-soft: color-mix(in srgb, #767676 calc((1 - var(--theme-t)) * 100%), #a7aab2);
   --ink-faint: color-mix(in srgb, #9a9a9a calc((1 - var(--theme-t)) * 100%), #7d8088);
+  /* Boutons/remplissages « noirs » : vrai noir #000 en clair, encre claire en
+     sombre (un aplat #000 serait invisible sur le fond noir du dark mode). */
+  --ink-solid: color-mix(in srgb, #000000 calc((1 - var(--theme-t)) * 100%), #f2f1ed);
 
   /* Surfaces — la carte a son propre aplat (#F7F6F3), distinct du fond de page */
   --paper: color-mix(in srgb, #ffffff calc((1 - var(--theme-t)) * 100%), #000000);
   --surface: color-mix(in srgb, #f7f6f3 calc((1 - var(--theme-t)) * 100%), #17181d);
   --surface-2: color-mix(in srgb, #efece6 calc((1 - var(--theme-t)) * 100%), #1e2027);
 
-  /* Accent unique : Airbnb Rausch actuel (#ff385c) + dégradé magenta produit
-     (#e61e4d → #e31c5f → #d70466). --accent seul = à-plat CTA ; le dégradé
-     pour les grandes surfaces (hero, bannières, logo). */
+  /* Accent unique : Airbnb Rausch actuel (#ff385c) à plat sur les CTA ;
+     dégradé signature du handoff (#ff4d6d rose-corail → #ff7a56 orange,
+     155°) sur les grandes surfaces (hero, bannières, logo). Deux arrêts
+     bien écartés en teinte pour que le dégradé se voie — l'ancien dégradé
+     magenta (#e61e4d → #d70466) était trop resserré et paraissait uni. */
   --accent: color-mix(in srgb, #ff385c calc((1 - var(--theme-t)) * 100%), #ff6b85);
-  --accent-2: color-mix(in srgb, #d70466 calc((1 - var(--theme-t)) * 100%), #ff4d8a);
+  --accent-2: color-mix(in srgb, #ff7a56 calc((1 - var(--theme-t)) * 100%), #ff9270);
   --accent-gradient: linear-gradient(
     155deg,
-    color-mix(in srgb, #e61e4d calc((1 - var(--theme-t)) * 100%), #ff5a7a) 0%,
-    color-mix(in srgb, #e31c5f calc((1 - var(--theme-t)) * 100%), #ff4d7a) 50%,
-    color-mix(in srgb, #d70466 calc((1 - var(--theme-t)) * 100%), #ff4d8a) 100%
+    color-mix(in srgb, #ff4d6d calc((1 - var(--theme-t)) * 100%), #ff6b85) 0%,
+    color-mix(in srgb, #ff7a56 calc((1 - var(--theme-t)) * 100%), #ff9270) 100%
   );
   --accent-deep: color-mix(in srgb, #e00b41 calc((1 - var(--theme-t)) * 100%), #ff3d6a);
   --accent-pale: color-mix(in srgb, #ffd1da calc((1 - var(--theme-t)) * 100%), #2e1419);
@@ -48,13 +52,14 @@
   /* Neutre tertiaire (virements, budgets proches de la limite…) */
   --sand: color-mix(in srgb, #767676 calc((1 - var(--theme-t)) * 100%), #9aa0a6);
 
-  /* Objectif d'épargne — Airbnb Arches (#fc642d). N'est plus la couleur de
-     dépassement de budget (voir --overrun-* ci-dessous) : dans cette direction,
-     le dépassement est corail/rose et l'ambre est réservé à l'épargne. */
-  --amber: color-mix(in srgb, #fc642d calc((1 - var(--theme-t)) * 100%), #ff8558);
-  --amber-pale: color-mix(in srgb, #fff0e8 calc((1 - var(--theme-t)) * 100%), #2c1a13);
-  --goal-badge: color-mix(in srgb, #ffe0d0 calc((1 - var(--theme-t)) * 100%), #3a2216);
-  --goal-text: color-mix(in srgb, #a84a20 calc((1 - var(--theme-t)) * 100%), #ffb08a);
+  /* Objectif d'épargne — ors du handoff (fond #FFF4E9, badge #FFE6C7, barre
+     #C6862F, texte #8A6A38). N'est plus la couleur de dépassement de budget
+     (voir --overrun-* ci-dessous) : le dépassement est corail/rose et l'ambre
+     doré est réservé à l'épargne. */
+  --amber: color-mix(in srgb, #c6862f calc((1 - var(--theme-t)) * 100%), #e0a54c);
+  --amber-pale: color-mix(in srgb, #fff4e9 calc((1 - var(--theme-t)) * 100%), #2c2013);
+  --goal-badge: color-mix(in srgb, #ffe6c7 calc((1 - var(--theme-t)) * 100%), #3a2c16);
+  --goal-text: color-mix(in srgb, #8a6a38 calc((1 - var(--theme-t)) * 100%), #e0b57f);
 
   /* Dépassement de budget — teinte Rausch (#ff385c) dédiée (remplace l'ancien
      traitement ambre ; les écrans existants qui lisent encore --amber pour un
